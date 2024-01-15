@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_diet"
+        android:icon="@drawable/selector_bottom_diet_menu"
+        android:title="@string/Diet"/>
+    <item
+        android:id="@+id/nav_dept"
+        android:icon="@drawable/selector_bottom_dept_menu"
+        android:title="@string/Department" />
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/selector_bottom_home_menu"
+        android:title="@string/Home" />
+    <item
+        android:id="@+id/nav_dosage"
+        android:icon="@drawable/selector_bottom_dosage_menu"
+        android:title="@string/Dosage" />
+    <item
+        android:id="@+id/nav_act"
+        android:icon="@drawable/selector_bottom_act_menu"
+        android:title="@string/Activity" />
+
+</menu>

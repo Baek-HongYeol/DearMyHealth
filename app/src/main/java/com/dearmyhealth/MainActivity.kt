@@ -1,6 +1,7 @@
 package com.dearmyhealth
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -9,11 +10,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.dearmyhealth.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var drawerLayout : DrawerLayout
     private val TAG = this.javaClass.simpleName
+
+    private lateinit var binding : ActivityMainBinding
+
+    private lateinit var drawerLayout : DrawerLayout
+    private lateinit var navController: NavController
+
     private var backPressedTime: Long = 0
     private val onBackpressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -23,14 +33,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        drawerLayout = findViewById(R.id.drawer_layout)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        drawerLayout = binding.drawerLayout
         initView()
         this.onBackPressedDispatcher.addCallback(onBackpressedCallback)
     }
-    fun initView() {
-        var toolbar : Toolbar = findViewById(R.id.toolbar)
+    private fun initView() {
+        val toolbar : Toolbar = binding.appbar.toolbar
         setSupportActionBar(toolbar)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+        navController = navHostFragment.navController
+        binding.bottomNav.setupWithNavController(navController)
     }
 
     fun onBackPressedKey() {
