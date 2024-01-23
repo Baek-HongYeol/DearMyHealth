@@ -4,15 +4,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.dearmyhealth.activities.ui.BottomSheetAccountDialogFragment
 import com.dearmyhealth.databinding.ActivityMainBinding
 
 
@@ -20,7 +24,9 @@ class MainActivity : AppCompatActivity() {
     private val TAG = this.javaClass.simpleName
 
     private lateinit var binding : ActivityMainBinding
+    private val viewModel: MainViewModel by viewModels()
 
+    private var menu: Menu? = null
     private lateinit var drawerLayout : DrawerLayout
     private lateinit var navController: NavController
 
@@ -38,6 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         drawerLayout = binding.drawerLayout
         initView()
+        observeViewModel()
         this.onBackPressedDispatcher.addCallback(onBackpressedCallback)
     }
     private fun initView() {
@@ -48,6 +55,16 @@ class MainActivity : AppCompatActivity() {
 
         navController = navHostFragment.navController
         binding.bottomNav.setupWithNavController(navController)
+        binding.navigationView.getHeaderView(0)
+            ?.findViewById<TextView>(R.id.change_account)?.setOnClickListener {
+                val bottomSHeet = BottomSheetAccountDialogFragment()
+                bottomSHeet.show(supportFragmentManager, bottomSHeet.tag)
+        }
+    }
+    private fun observeViewModel() {
+        viewModel.isLoggedIn.observe(this) { value ->
+            setVisibleLoginMenu(!value)
+        }
     }
 
     fun onBackPressedKey() {
@@ -64,6 +81,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        this.menu = menu
         menuInflater.inflate(R.menu.activity_home_toolbar, menu)
         return true
     }
@@ -73,5 +91,9 @@ class MainActivity : AppCompatActivity() {
                 drawerLayout.openDrawer(GravityCompat.END)}
         }
         return super.onOptionsItemSelected(item)
+    }
+    fun setVisibleLoginMenu(isShow:Boolean) {
+        binding.navigationView.getHeaderView(0).isVisible = isShow
+        binding.navigationView.menu.findItem(R.id.drawer_login).isVisible = isShow
     }
 }

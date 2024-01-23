@@ -19,5 +19,6 @@
     <string name="Dosage">복약</string>
     <string name="Activity">운동</string>
 
+    <string name="login_another_account">다른 계정으로 로그인</string>
     <string name="sample_notice2">건강 소식! 세상에 미나리가 너무 좋다는 소식이?</string>
 </resources>
