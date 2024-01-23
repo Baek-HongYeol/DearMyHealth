@@ -1,5 +1,6 @@
 package com.dearmyhealth
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -16,6 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.dearmyhealth.activities.LoginActivity
 import com.dearmyhealth.activities.ui.BottomSheetAccountDialogFragment
 import com.dearmyhealth.databinding.ActivityMainBinding
 
@@ -39,6 +41,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        while(Session.currentUser == null){
+//            intent = Intent(this, LoginActivity::class.java)
+//            startActivity(intent)
+//        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -65,6 +71,11 @@ class MainActivity : AppCompatActivity() {
         viewModel.isLoggedIn.observe(this) { value ->
             setVisibleLoginMenu(!value)
         }
+    }
+
+    override fun onResume() {
+        viewModel.checkSession()
+        super.onResume()
     }
 
     fun onBackPressedKey() {
