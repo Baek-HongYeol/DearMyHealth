@@ -15,6 +15,7 @@ interface DosageDao {
     @Update
     fun update(dosage: Dosage)
 
+    @Query("SELECT * FROM Dosage WHERE dosageId=:dosageId")
     suspend fun getDosage(dosageId:Int) : Dosage?
 
     @Query("SELECT * FROM Dosage WHERE user=:uid")

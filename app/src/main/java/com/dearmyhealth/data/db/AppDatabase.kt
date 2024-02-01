@@ -7,11 +7,13 @@ import androidx.room.RoomDatabase
 import com.dearmyhealth.data.db.dao.AlarmDao
 import com.dearmyhealth.data.db.dao.DietDao
 import com.dearmyhealth.data.db.dao.DosageDao
+import com.dearmyhealth.data.db.dao.FoodDao
 import com.dearmyhealth.data.db.dao.MedicationDao
 import com.dearmyhealth.data.db.dao.UserDao
 import com.dearmyhealth.data.db.entities.Alarm
 import com.dearmyhealth.data.db.entities.Diet
 import com.dearmyhealth.data.db.entities.Dosage
+import com.dearmyhealth.data.db.entities.Food
 import com.dearmyhealth.data.db.entities.Goal
 import com.dearmyhealth.data.db.entities.Medication
 import com.dearmyhealth.data.db.entities.Symptom
@@ -20,14 +22,16 @@ import com.dearmyhealth.data.db.entities.User
 @Database(
     entities = [
         User::class,
+        Food::class,
         Diet::class,
         Medication::class,
         Dosage::class,
         Alarm::class,
         Goal::class,
-        Symptom::class], version = 1)
+        Symptom::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun foodDao(): FoodDao
     abstract fun dietDao(): DietDao
     abstract fun dosageDao(): DosageDao
     abstract fun medicationDao(): MedicationDao
@@ -42,7 +46,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database"
-                ).build()
+                )
+                    .createFromAsset("food.db")
+                    .build()
                 INSTANCE = instance
                 instance
             }
