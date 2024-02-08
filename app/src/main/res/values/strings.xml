@@ -1,3 +1,24 @@
 <resources>
-    <string name="app_name">Dearmyhealth</string>
+    <string name="app_name">DearMyHealth</string>
+    <string name="app_slogan">care for myself</string>
+
+    <string name="change_account">계정변경</string>
+    <string name="login">로그인</string>
+    <string name="logout">로그아웃</string>
+    <string name="my_page">마이 페이지</string>
+    <string name="setting">설정</string>
+    <string name="faq">FAQ</string>
+
+    <string name="navigation_drawer_open">navigation open</string>
+    <string name="navigation_drawer_close">navigation close</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Home">홈</string>
+    <string name="Diet">식단</string>
+    <string name="Department">분과</string>
+    <string name="Dosage">복약</string>
+    <string name="Activity">운동</string>
+
+    <string name="login_another_account">다른 계정으로 로그인</string>
+    <string name="sample_notice2">건강 소식! 세상에 미나리가 너무 좋다는 소식이?</string>
 </resources>

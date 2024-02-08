@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="name"
+            type="String" />
+        <variable
+            name="enabled"
+            type="Boolean" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_square_stroke"
+        android:padding="10sp">
+
+        <ImageView
+            android:id="@+id/view_account_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            app:srcCompat="@android:drawable/ic_menu_add" />
+
+        <TextView
+            android:id="@+id/account_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20sp"
+            android:layout_toEndOf="@id/view_account_image"
+            android:layout_toStartOf="@id/button_logout"
+            android:gravity="center_vertical"
+            android:text="@{name, default=@string/login_another_account}"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/button_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20sp"
+            android:visibility="@{enabled? View.VISIBLE : View.GONE,default=gone}"
+            android:text="@string/logout" />
+    </RelativeLayout>
+</layout>
