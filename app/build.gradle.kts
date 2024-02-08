@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.annotation:annotation:1.6.0")
     val lifecycle_version = "2.5.1"
     val room_version = "2.5.0"
     val nav_version = "2.5.3"
