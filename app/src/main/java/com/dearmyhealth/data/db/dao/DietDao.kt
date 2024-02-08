@@ -9,14 +9,14 @@ import com.dearmyhealth.data.db.entities.Diet
 
 @Dao
 interface DietDao {
-    @Query("SELECT * FROM user")
+    @Query("SELECT * FROM diet")
     fun getAll(): List<Diet>
 
-    @Query("SELECT * FROM user WHERE uid IN (:dietIds)")
-    fun loadAllByUids(dietIds: IntArray): List<Diet>
+    @Query("SELECT * FROM diet WHERE user IN (:uids)")
+    fun loadAllByUids(uids: IntArray): List<Diet>
 
-    @Query("SELECT * FROM diet WHERE dietId LIKE :id LIMIT 1")
-    fun findByUserId(id: Int): Diet
+    @Query("SELECT * FROM diet WHERE dietId LIKE :dietId LIMIT 1")
+    fun findById(dietId: Int): List<Diet>
 
     @Insert
     fun insertAll(vararg diets: Diet)
