@@ -31,4 +31,11 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <!-- Diet -->
+    <string name="carbohydrate">탄수화물</string>
+    <string name="frotein">단백질</string>
+    <string name="fat">지방</string>
+    <string name="cholesterol">콜레스테롤</string>
+
 </resources>

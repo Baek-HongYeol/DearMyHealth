@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dearmyhealth.databinding.FragmentDietBinding
 import com.dearmyhealth.modules.Diet.DietViewModel
+import com.dearmyhealth.modules.Diet.Nutrients
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,7 +36,7 @@ class DietFragment : Fragment() {
     ): View? {
         Log.d(TAG, "DietFragment Created!")
         viewModel = ViewModelProvider(this,
-                DietViewModel.Factory(this.requireContext())
+                DietViewModel.Factory(this.requireContext(), this.viewLifecycleOwner)
             )[DietViewModel::class.java]
         binding = FragmentDietBinding.inflate(layoutInflater)
 
@@ -52,16 +53,22 @@ class DietFragment : Fragment() {
                 }.show()
         }
 
+        observeViewModel()
+        viewModel.observeTodayDiet()
 
-        viewModel.list.observe(this.viewLifecycleOwner) { value ->
-            Log.d("DietFragment", "size: ${value.size}")
-        }
 
         return binding.root
     }
 
     fun observeViewModel() {
-
+        viewModel.todayNutritions.observe(viewLifecycleOwner) { value ->
+            binding.nutritionsLL.removeAllViews()
+            val names = value.getPresentNutrientsNames()
+            Log.d(TAG, "nutrients num is : ${names.size}")
+            while(binding.nutritionsLL.childCount < names.size) {
+                binding.nutritionsLL.addView(TodayNutritionItemView(requireContext()))
+            }
+        }
     }
 
     private fun searchFood(name: String, listener: OnClickListener? = null) {
@@ -84,4 +91,10 @@ class DietFragment : Fragment() {
         }
     }
 
+    private fun getNutrientString(name: String) : String {
+        val resId = Nutrients.resourceIds[name]
+
+        return if (resId != null) getString(resId)
+        else name
+    }
 }

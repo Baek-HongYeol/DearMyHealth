@@ -6,6 +6,15 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 
+/**
+ * @property dietId 데이터 identity key
+ * @property foodCode 음식 코드
+ * @property user 사용자 uid
+ * @property time milliseconds 단위의 unixtime
+ * @property type [Diet.MealType]에 따른 식사 유형
+ * @property name 별명 혹은 음식 이름
+ * @property imageURI 사진 파일 URI
+ */
 @Entity(
     indices = [Index(value=["user", "foodCode"])],
     foreignKeys = [
@@ -16,12 +25,12 @@ import androidx.room.PrimaryKey
 data class Diet(
     @PrimaryKey(autoGenerate = true)
     val dietId: Int,
-    val foodCode: Int,
+    val foodCode: String,
     val user: Int,
     val time: Long,
     val type: MealType,
     val name: String,
-    val imageURI: String,
+    val imageURI: String?,
     val calories: Double?,
     val carbohydrate: Double?,
     val frotein: Double?,

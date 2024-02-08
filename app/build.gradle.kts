@@ -76,6 +76,9 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     implementation ("androidx.health:health-connect-client:1.0.0-alpha03")
 
+    // graph
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
