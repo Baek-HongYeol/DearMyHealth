@@ -1,4 +1,4 @@
-package com.dearmyhealth.activities
+package com.dearmyhealth.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

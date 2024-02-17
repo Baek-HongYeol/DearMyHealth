@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dearmyhealth.R
-import com.dearmyhealth.data.LoginRepository
 import com.dearmyhealth.data.Result
 import com.dearmyhealth.data.db.AppDatabase
 

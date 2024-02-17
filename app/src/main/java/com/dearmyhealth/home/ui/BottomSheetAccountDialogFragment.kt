@@ -1,4 +1,4 @@
-package com.dearmyhealth.activities.ui
+package com.dearmyhealth.home.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater

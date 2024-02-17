@@ -10,7 +10,7 @@
     <include app:graph="@navigation/home"/>
     <activity
         android:id="@+id/drawer_login"
-        android:name="com.dearmyhealth.activities.LoginActivity"
+        android:name="com.dearmyhealth.modules.login.ui.LoginActivity"
         android:label="@string/app_name"
         tools:layout="@layout/activity_login">
     </activity>

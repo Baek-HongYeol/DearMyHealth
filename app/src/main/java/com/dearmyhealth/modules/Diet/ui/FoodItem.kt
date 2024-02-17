@@ -1,4 +1,4 @@
-package com.dearmyhealth.activities.ui
+package com.dearmyhealth.modules.Diet.ui
 
 import android.content.Context
 import android.util.AttributeSet

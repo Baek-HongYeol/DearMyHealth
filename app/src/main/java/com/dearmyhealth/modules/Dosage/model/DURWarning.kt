@@ -1,4 +1,4 @@
-package com.dearmyhealth.data.model
+package com.dearmyhealth.modules.Dosage.model
 
 
 data class DURWarning (

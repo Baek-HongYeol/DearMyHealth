@@ -1,6 +1,5 @@
-package com.dearmyhealth.data.model
+package com.dearmyhealth.modules.login
 
-import com.dearmyhealth.data.LoginRepository
 import com.dearmyhealth.data.db.entities.User
 import com.dearmyhealth.data.db.entities.User.Gender
 
@@ -19,7 +18,7 @@ data class LoggedInUser(
     var expireDate: Long = Long.MAX_VALUE
 ) {
     companion object {
-        fun from(user: User): LoggedInUser{
+        fun from(user: User): LoggedInUser {
             return LoggedInUser(user.uid, user.userid, user.name, user.age, user.gender)
         }
     }

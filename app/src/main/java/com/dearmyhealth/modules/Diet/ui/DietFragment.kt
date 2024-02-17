@@ -1,6 +1,5 @@
-package com.dearmyhealth.activities
+package com.dearmyhealth.modules.Diet.ui
 
-import android.content.DialogInterface
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -14,8 +13,6 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.dearmyhealth.activities.ui.DialogListAdapter
-import com.dearmyhealth.activities.ui.DialogListItem
 import com.dearmyhealth.databinding.FragmentDietBinding
 import com.dearmyhealth.modules.Diet.DietViewModel
 import kotlinx.coroutines.CoroutineScope

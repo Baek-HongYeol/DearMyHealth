@@ -1,4 +1,4 @@
-package com.dearmyhealth.activities
+package com.dearmyhealth.modules.login.ui
 
 import android.app.Activity
 import androidx.lifecycle.Observer

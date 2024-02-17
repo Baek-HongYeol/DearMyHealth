@@ -1,4 +1,4 @@
-package com.dearmyhealth.data.model
+package com.dearmyhealth.modules.login
 
 import com.dearmyhealth.data.db.dao.UserDao
 
@@ -31,12 +31,12 @@ object Session {
         return ret
     }
 
-    fun login(user:LoggedInUser) {
+    fun login(user: LoggedInUser) {
         users.add(user)
         _currentUser = user
     }
 
-    fun logout(user:LoggedInUser) {
+    fun logout(user: LoggedInUser) {
         users.remove(user)
         if(_currentUser == user && users.size > 0)
             _currentUser = users[0]

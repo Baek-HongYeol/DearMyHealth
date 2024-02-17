@@ -1,4 +1,4 @@
-package com.dearmyhealth.activities
+package com.dearmyhealth.home
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle

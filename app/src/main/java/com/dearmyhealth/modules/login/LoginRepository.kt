@@ -1,9 +1,8 @@
-package com.dearmyhealth.data
+package com.dearmyhealth.modules.login
 
+import com.dearmyhealth.data.Result
 import com.dearmyhealth.data.db.dao.UserDao
 import com.dearmyhealth.data.db.entities.User.Gender
-import com.dearmyhealth.data.model.LoggedInUser
-import com.dearmyhealth.data.model.Session
 import java.io.IOException
 import java.lang.Exception
 
@@ -14,7 +13,7 @@ import java.lang.Exception
 
 class LoginRepository(val dataSource: UserDao) {
 
-    fun logout(user:LoggedInUser? = Session.currentUser) {
+    fun logout(user: LoggedInUser? = Session.currentUser) {
         if(user != null) Session.logout(user)
     }
 
