@@ -12,8 +12,10 @@ import android.view.WindowManager
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dearmyhealth.R
 import com.dearmyhealth.databinding.FragmentDietBinding
 import com.dearmyhealth.modules.Diet.DietViewModel
 import com.dearmyhealth.modules.Diet.Nutrients
@@ -37,7 +39,7 @@ class DietFragment : Fragment() {
     ): View? {
         Log.d(TAG, "DietFragment Created!")
         viewModel = ViewModelProvider(this,
-                DietViewModel.Factory(this.requireContext(), this.viewLifecycleOwner)
+                DietViewModel.Factory(this.requireContext(), this)
             )[DietViewModel::class.java]
         binding = FragmentDietBinding.inflate(layoutInflater)
 
