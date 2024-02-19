@@ -10,4 +10,8 @@
 
     <color name="second_panel">#FFDAD7CD</color>
     <color name="primary">#FF344E41</color>
+
+    <color name="green_1">#FF3A5A40</color>
+    <color name="green_2">#FF588157</color>
+    <color name="green_3">#FFA3B18A</color>
 </resources>

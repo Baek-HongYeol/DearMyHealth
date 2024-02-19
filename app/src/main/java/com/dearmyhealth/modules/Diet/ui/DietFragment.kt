@@ -41,6 +41,10 @@ class DietFragment : Fragment() {
             )[DietViewModel::class.java]
         binding = FragmentDietBinding.inflate(layoutInflater)
 
+        binding.todayDietCL.setOnClickListener {
+            findNavController().navigate(R.id.action_dietScreen_to_dietDetailScreen)
+        }
+
         binding.foodSearchButton.setOnClickListener {
             val edtx = EditText(requireContext())
             AlertDialog.Builder(requireContext())

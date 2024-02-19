@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="image"
+            type="String" />
+        <variable
+            name="name"
+            type="String" />
+        <variable
+            name="time"
+            type="String" />
+        <variable
+            name="food"
+            type="String" />
+
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/diet_image_IV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:src="@{image}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/diet_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/diet_image_IV"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/diet_name_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="아침" />
+
+            <TextView
+                android:id="@+id/diet_time_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="오전 07:00" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/nutrients_flow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/diet_food_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
