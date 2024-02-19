@@ -37,8 +37,8 @@ class DietViewModel(val lifecycleOwner:LifecycleOwner, val foodRepository: FoodR
                 nuts.nutrients.putAll( mutableMapOf(
                     Nutrients.Names.carbohydrate to
                             (nuts.getNutrientValueByName("carbohydrate")?:0.0) + (diet.carbohydrate ?: 0.0),
-                    Nutrients.Names.frotein to
-                            (nuts.getNutrientValueByName("frotein")?:0.0) + (diet.frotein ?: 0.0),
+                    Nutrients.Names.protein to
+                            (nuts.getNutrientValueByName("protein")?:0.0) + (diet.protein ?: 0.0),
                     Nutrients.Names.fat to
                             (nuts.getNutrientValueByName("fat")?:0.0) + (diet.fat ?: 0.0)
                 ))

@@ -33,7 +33,7 @@ data class Diet(
     val imageURI: String?,
     val calories: Double?,
     val carbohydrate: Double?,
-    val frotein: Double?,
+    val protein: Double?,
     val fat: Double?,
     val cholesterol: Double?
 ) {

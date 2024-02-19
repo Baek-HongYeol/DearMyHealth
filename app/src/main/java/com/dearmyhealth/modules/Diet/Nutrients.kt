@@ -10,7 +10,7 @@ data class Nutrients(
 ) {
     enum class Names {
         carbohydrate,
-        frotein,
+        protein,
         fat,
         cholesterol
     }
@@ -29,7 +29,7 @@ data class Nutrients(
     companion object {
         val resourceIds = mapOf(
             Names.carbohydrate.name to R.string.carbohydrate,
-            Names.frotein.name to R.string.frotein,
+            Names.protein.name to R.string.protein,
             Names.fat.name to R.string.fat,
             Names.cholesterol.name to R.string.cholesterol
         )

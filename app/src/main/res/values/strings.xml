@@ -34,7 +34,7 @@
 
     <!-- Diet -->
     <string name="carbohydrate">탄수화물</string>
-    <string name="frotein">단백질</string>
+    <string name="protein">단백질</string>
     <string name="fat">지방</string>
     <string name="cholesterol">콜레스테롤</string>
 
