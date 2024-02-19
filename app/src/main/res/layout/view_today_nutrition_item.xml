@@ -8,14 +8,15 @@
             type="String" />
         <variable
             name="value"
-            type="int" />
+            type="float" />
         <variable
             name="suggested"
             type="int" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="16dp">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/nut_item_guide"
@@ -39,19 +40,19 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/nut_item_name_TV">
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:id="@+id/nut_item_value_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{value}" />
+                android:text="@{String.valueOf(value)}" />
 
             <TextView
                 android:id="@+id/nut_item_suggested_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(suggested)+'g'}" />
+                android:text="@{'/'+String.valueOf(suggested)+'g'}" />
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,7 +61,8 @@
             android:background="@drawable/shape_radius_square_stroke"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/nut_item_values_LL">
+            app:layout_constraintTop_toBottomOf="@id/nut_item_values_LL"
+            android:clipChildren="true">
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/barChart"

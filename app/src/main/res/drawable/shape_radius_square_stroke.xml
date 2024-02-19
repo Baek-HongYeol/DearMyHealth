@@ -3,8 +3,8 @@
     android:shape="rectangle">
 
     <corners android:radius="30dp"/>
-    <solid android:color="@color/second_panel"/>
+    <solid android:color="@color/white"/>
     <size android:width="100dp"
-        android:height="100dp"/>
+        android:height="50dp"/>
 
 </shape>

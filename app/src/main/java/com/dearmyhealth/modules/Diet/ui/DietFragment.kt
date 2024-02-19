@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dearmyhealth.databinding.FragmentDietBinding
@@ -67,6 +68,19 @@ class DietFragment : Fragment() {
             Log.d(TAG, "nutrients num is : ${names.size}")
             while(binding.nutritionsLL.childCount < names.size) {
                 binding.nutritionsLL.addView(TodayNutritionItemView(requireContext()))
+            }
+            binding.todayCalories.text = value.calories.toString()
+
+            var i = 0
+            for( v in binding.nutritionsLL.children) {
+                (v as TodayNutritionItemView)
+                    .setChart(
+                        getNutrientString(names[i]),
+                        value.getNutrientValueByName(names[i])?.toFloat() ?: 0f,
+                        0
+                    )
+
+                i++
             }
         }
     }
