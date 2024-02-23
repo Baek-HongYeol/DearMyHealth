@@ -71,7 +71,6 @@ class DietFragment : Fragment() {
         viewModel.todayNutritions.observe(viewLifecycleOwner) { value ->
             binding.nutritionsLL.removeAllViews()
             val names = value.getPresentNutrientsNames()
-            Log.d(TAG, "nutrients num is : ${names.size}")
             while(binding.nutritionsLL.childCount < names.size) {
                 binding.nutritionsLL.addView(TodayNutritionItemView(requireContext()))
             }

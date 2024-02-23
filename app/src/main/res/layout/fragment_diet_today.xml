@@ -35,10 +35,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <include layout="@layout/view_diet_detail_item"/>
+
             </LinearLayout>
         </ScrollView>
 
         <LinearLayout
+            android:id="@+id/diet_detail_nutritions_LL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -67,7 +70,7 @@
                     android:id="@+id/today_diet_clories_value_TV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:text="0kcal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/today_diet_calories_TV" />
@@ -175,6 +178,43 @@
                     app:layout_constraintTop_toBottomOf="@id/today_diet_fat_TV" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="탄수화물:단백질:지방"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/diet_detail_nutritions_LL" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="::"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView6" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/today_diet_carbo_color2"
+                android:layout_width="20dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@color/green_1"
+                app:layout_constraintBottom_toBottomOf="@id/today_diet_carbo_TV"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/today_diet_carbo_TV" />
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

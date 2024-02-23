@@ -42,8 +42,8 @@ class DietViewModel(val lifecycleOwner:LifecycleOwner, val foodRepository: FoodR
                     Nutrients.Names.fat to
                             (nuts.getNutrientValueByName("fat")?:0.0) + (diet.fat ?: 0.0)
                 ))
-                _todayNutritions.value = nuts
             }
+            _todayNutritions.value = nuts
         }
     }
 

@@ -38,4 +38,7 @@
     <string name="fat">지방</string>
     <string name="cholesterol">콜레스테롤</string>
 
+    <string name="default_nutrition_chip">칼로리: 0kcal</string>
+    <string name="default_diet_description">맛있는 밥!</string>
+
 </resources>

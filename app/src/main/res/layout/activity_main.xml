@@ -39,6 +39,7 @@
             app:itemBackground="?android:attr/colorBackground"
             app:itemTextColor="?android:attr/textColorPrimary"
             app:itemIconTint="?android:attr/textColorPrimary"
+            app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/menu_bottom_nav" />
