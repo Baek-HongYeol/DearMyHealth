@@ -15,6 +15,6 @@ data class User(
     val gender: Gender?
 ) {
     enum class Gender {
-        MALE, FEMALE
+        MALE, FEMALE, INFANT, TODDLER
     }
 }

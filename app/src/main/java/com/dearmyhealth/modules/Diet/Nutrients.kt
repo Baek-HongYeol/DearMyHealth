@@ -1,6 +1,10 @@
 package com.dearmyhealth.modules.Diet
 
+import com.dearmyhealth.MyApplication
 import com.dearmyhealth.R
+import com.dearmyhealth.data.db.AppDatabase
+import com.dearmyhealth.data.db.dao.NutrientStandardDao
+import com.dearmyhealth.data.db.entities.User
 
 data class Nutrients(
     val user: Int,
@@ -12,7 +16,9 @@ data class Nutrients(
         carbohydrate,
         protein,
         fat,
-        cholesterol
+        cholesterol,
+        water_liquid,
+        water_total
     }
     fun getPresentNutrientsNames(): List<String>{
         return nutrients.keys.toList().map{ v -> v.name }
@@ -33,5 +39,33 @@ data class Nutrients(
             Names.fat.name to R.string.fat,
             Names.cholesterol.name to R.string.cholesterol
         )
+        private val nutrientStandardDao: NutrientStandardDao by lazy {
+            AppDatabase.getDatabase(MyApplication.ApplicationContext())
+                    .nutrientStandardDao()
+        }
+
+        // 평균 필요 섭취량
+        suspend fun loadNutrientEAR(gender: User.Gender, age: Int): Nutrients {
+            val res = nutrientStandardDao.loadEAR(gender.name, age.toFloat())
+            val mapping = mutableMapOf(
+                Names.carbohydrate to res.carbohydrate?.toDouble(),
+                Names.protein to res.protein?.toDouble(),
+                Names.fat to res.fat?.toDouble()
+            )
+            return Nutrients(0, 0, res.calories?.toDouble(), mapping)
+        }
+
+        // 권장 섭취량 (영아는 충분 섭취량)
+        suspend fun loadNutrientRNI(gender: User.Gender, age: Int): Nutrients {
+            val res = nutrientStandardDao.loadRNI(gender.name, age.toFloat())
+            val mapping = mutableMapOf(
+                Names.carbohydrate to res.carbohydrate?.toDouble(),
+                Names.protein to res.protein?.toDouble(),
+                Names.fat to res.fat?.toDouble(),
+                Names.water_liquid to res.water_liquid?.toDouble(),
+                Names.water_total to res.water_total?.toDouble()
+            )
+            return Nutrients(0, 0, res.calories?.toDouble(), mapping)
+        }
     }
 }
