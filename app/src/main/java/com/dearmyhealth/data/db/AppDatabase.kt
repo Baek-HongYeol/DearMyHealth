@@ -48,6 +48,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "app_database"
                 )
                     .createFromAsset("food.db")
+                    .createFromAsset("standard.db")
                     .build()
                 INSTANCE = instance
                 instance
