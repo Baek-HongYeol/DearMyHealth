@@ -3,7 +3,7 @@
     android:shape="oval">
 
     <corners android:radius="10dp"/>
-    <solid android:color="@color/second_panel"/>
+    <solid android:color="@color/secondary"/>
     <size android:width="100dp"
         android:height="100dp"/>
 

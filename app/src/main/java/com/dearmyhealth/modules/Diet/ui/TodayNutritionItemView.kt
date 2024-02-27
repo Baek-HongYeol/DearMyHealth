@@ -15,8 +15,8 @@ import com.github.mikephil.charting.data.BarEntry
 
 class TodayNutritionItemView(
     @get:JvmName("getAdapterContext") val context: Context,
-    val attrs: AttributeSet? = null,
-    val defStyleAttr: Int = 0
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0) {
@@ -28,7 +28,7 @@ class TodayNutritionItemView(
     )
     init{
         val shapeDrawable = binding.barChart.background as ShapeDrawable?
-        shapeDrawable?.paint?.color = ContextCompat.getColor(context, R.color.second_panel)
+        shapeDrawable?.paint?.color = ContextCompat.getColor(context, R.color.secondary)
     }
 
     fun setChart(name:String, value:Float, suggestion:Int) {

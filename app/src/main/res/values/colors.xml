@@ -5,13 +5,36 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+
+    <!-- Material Color Define -->
+    <color name="primary">@color/green_1</color>
+    <color name="primary_surface">@color/green_3</color>
+    <color name="on_primary_surface">@color/white</color>
+    <color name="primary_container">@color/green_2</color>
+    <color name="on_primary_container">@color/white</color>
+
+
+    <color name="secondary">@color/gray_orange</color>
+    <color name="on_secondary">@color/black</color>
+    <color name="secondary_container">@color/secondary</color>
+
+    <!-- View Custom Color -->
+
+    <!-- Color Name Define -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="second_panel">#FFDAD7CD</color>
-    <color name="primary">#FF344E41</color>
-
     <color name="green_1">#FF3A5A40</color>
+    <color name="green_1_0.8">#CC3A5A40</color>
     <color name="green_2">#FF588157</color>
     <color name="green_3">#FFA3B18A</color>
+    <color name="green_3_0.4">#66A3B18A</color>
+    <color name="green_3_0.7">#B3A3B18A</color>
+    <color name="green_4">#FF344E41</color>
+
+    <color name="gray1">#FF9C9C9C</color>
+    <color name="gray2">#FFD9D9D9</color>
+    <color name="red">#FFFE0707</color>
+    <color name="gray_orange">#FFDAD7CD</color>
+    <color name="gray_orange_1">#FF6B6565</color>
 </resources>

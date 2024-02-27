@@ -8,6 +8,7 @@
     <string name="my_page">마이 페이지</string>
     <string name="setting">설정</string>
     <string name="faq">FAQ</string>
+    <string name="search">검색</string>
 
     <string name="navigation_drawer_open">navigation open</string>
     <string name="navigation_drawer_close">navigation close</string>
@@ -33,12 +34,27 @@
     <string name="login_failed">"Login failed"</string>
 
     <!-- Diet -->
+    <string name="breakfast">아침</string>
+    <string name="calory">칼로리</string>
+    <string name="unit_calory">kcal</string>
+    
     <string name="carbohydrate">탄수화물</string>
     <string name="protein">단백질</string>
     <string name="fat">지방</string>
     <string name="cholesterol">콜레스테롤</string>
+    <string name="unit_gram">g</string>
 
     <string name="default_nutrition_chip">칼로리: 0kcal</string>
     <string name="default_diet_description">맛있는 밥!</string>
+
+    <string name="a_today_diet">오늘의 식사</string>
+    <string name="addition_diet_item">식단 정보 추가</string>
+    <string name="nutrition_standard_reference">자료출처 : 보건복지부 · 한국영양학회, 2020 한국인 영양소 섭취기준 활용연구, 2021.
+
+       (Ministry of Health and Welfare, The Korean Nutrition Society. Application of Dietary reference intakes for Koreans 2020. Sejong; 2021.)
+    </string>
+    <string name="nutrition_standard_description">2020년 보건복지부와 한국영양학회를 통해 한국인 영양 섭취 기준이 정립되었습니다. 아래 표를 참조해주세요.</string>
+    <string name="nutrition_standard_info1">영유아는 권장섭취량이 아닌 충분 섭취량으로 작성되었습니다. </string>
+    <string name="nutrition_standard_info2">지방의 권장 섭취량은 몸무게 1kg 당 1g으로 알려져 있습니다. </string>
 
 </resources>
