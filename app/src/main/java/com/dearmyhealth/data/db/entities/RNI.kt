@@ -2,9 +2,9 @@ package com.dearmyhealth.data.db.entities
 
 import androidx.room.Entity
 
-@Entity
+@Entity(primaryKeys = ["gender", "age"])
 data class RNI(
-    val gender: User.Gender,
+    val gender: String,
     val age: Float,
     val calories: Int?,
     val carbohydrate: Int?,

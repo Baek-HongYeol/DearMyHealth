@@ -44,6 +44,14 @@ data class Nutrients(
                     .nutrientStandardDao()
         }
 
+        val RECOMMENDED_NUTRIENT_INTAKE: Nutrients = Nutrients(0,0,
+            2200.toDouble(),
+            mutableMapOf(
+                Names.carbohydrate to 130.toDouble(),
+                Names.protein to 55.toDouble(),
+                Names.fat to 55.toDouble()
+            ))
+
         // 평균 필요 섭취량
         suspend fun loadNutrientEAR(gender: User.Gender, age: Int): Nutrients {
             val res = nutrientStandardDao.loadEAR(gender.name, age.toFloat())
