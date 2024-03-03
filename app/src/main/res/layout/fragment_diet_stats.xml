@@ -10,13 +10,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintGuide_percent="0.08" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.92" />
+
         <LinearLayout
             android:id="@+id/chart_period_LL"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/shape_radius_square_stroke_r5dp"
+            android:backgroundTint="@color/primary_surface"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="@id/guideline7"
+            app:layout_constraintStart_toStartOf="@id/guideline6"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -24,45 +42,53 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="1주" />
+                android:background="@drawable/shape_radius_square_stroke_r5dp"
+                android:text="1주"
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="1개월" />
+                android:text="1개월"
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="3개월" />
+                android:text="3개월"
+                android:textAlignment="center" />
+
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="1년" />
+                android:text="1년"
+                android:textAlignment="center" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/chart_period_TV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="8dp"
             android:text="TextView"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline6"
             app:layout_constraintTop_toBottomOf="@id/chart_period_LL" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/today_diet_line_chart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio=""
+            app:layout_constraintEnd_toEndOf="@id/guideline7"
+            app:layout_constraintStart_toStartOf="@id/guideline6"
             app:layout_constraintTop_toBottomOf="@id/chart_period_TV" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
