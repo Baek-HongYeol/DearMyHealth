@@ -66,8 +66,12 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
     implementation ("androidx.appcompat:appcompat:1.6.1")
 
-    implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.louiscad.splitties:splitties-alertdialog:$splitties_version")
+
+    // Glide
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    kapt("android.arch.lifecycle:compiler:1.1.1")
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
 
     // Room
     implementation("androidx.room:room-runtime:$room_version")
@@ -78,6 +82,9 @@ dependencies {
 
     // graph
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    // page indicator view
+    implementation("com.romandanylyk:pageindicatorview:1.0.3")
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

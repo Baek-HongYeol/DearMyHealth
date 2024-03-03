@@ -60,6 +60,13 @@ class DietFragment : Fragment() {
                 }.show()
         }
 
+        binding.todayDietHelpIV.setOnClickListener {
+            val view = NutritionStandardReferenceView(requireContext())
+            AlertDialog.Builder(requireContext())
+                .setView(view)
+                .show()
+        }
+
         observeViewModel()
         viewModel.observeTodayDiet()
 
