@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.Diet.ui
+package com.dearmyhealth.modules.Diet.fragment
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -17,8 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dearmyhealth.R
 import com.dearmyhealth.databinding.FragmentDietBinding
-import com.dearmyhealth.modules.Diet.DietViewModel
-import com.dearmyhealth.modules.Diet.Nutrients
+import com.dearmyhealth.modules.Diet.viewmodel.DietViewModel
+import com.dearmyhealth.modules.Diet.model.Nutrients
+import com.dearmyhealth.modules.Diet.ui.DialogListAdapter
+import com.dearmyhealth.modules.Diet.ui.DialogListItem
+import com.dearmyhealth.modules.Diet.ui.NutritionStandardReferenceView
+import com.dearmyhealth.modules.Diet.ui.TodayNutritionItemView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

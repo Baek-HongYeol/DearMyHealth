@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.Diet
+package com.dearmyhealth.modules.Diet.model
 
 import com.dearmyhealth.MyApplication
 import com.dearmyhealth.R

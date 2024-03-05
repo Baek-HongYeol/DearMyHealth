@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.Diet
+package com.dearmyhealth.modules.Diet.viewmodel
 
 import android.content.Context
 import android.util.Log
@@ -11,6 +11,9 @@ import androidx.lifecycle.distinctUntilChanged
 import com.dearmyhealth.data.db.AppDatabase
 import com.dearmyhealth.data.db.entities.Diet
 import com.dearmyhealth.data.db.entities.Food
+import com.dearmyhealth.modules.Diet.DietRepository
+import com.dearmyhealth.modules.Diet.FoodRepository
+import com.dearmyhealth.modules.Diet.model.Nutrients
 import java.util.Calendar
 
 class DietViewModel(val lifecycleOwner:LifecycleOwner, val foodRepository: FoodRepository, val dietRepository: DietRepository) : ViewModel() {

@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.Diet.ui
+package com.dearmyhealth.modules.Diet.fragment
 
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.dearmyhealth.R
 import com.dearmyhealth.databinding.FragmentDietDetailBinding
-import com.dearmyhealth.modules.Diet.DietDetailViewModel
+import com.dearmyhealth.modules.Diet.viewmodel.DietDetailViewModel
 
 import com.google.android.material.tabs.TabLayout
 
@@ -26,9 +26,6 @@ class DietDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        viewModel = ViewModelProvider(this,
-            DietDetailViewModel.Factory(this.requireContext(), this.viewLifecycleOwner)
-        )[DietDetailViewModel::class.java]
         binding = FragmentDietDetailBinding.inflate(layoutInflater)
 
 

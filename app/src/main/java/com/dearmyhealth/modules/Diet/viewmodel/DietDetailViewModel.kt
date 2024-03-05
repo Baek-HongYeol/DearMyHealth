@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.Diet
+package com.dearmyhealth.modules.Diet.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
@@ -14,8 +14,6 @@ class DietDetailViewModel : ViewModel() {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, ): T {
             if (modelClass.isAssignableFrom(DietDetailViewModel::class.java)) {
-                val foodDao = AppDatabase.getDatabase(context).foodDao()
-                val dietDao = AppDatabase.getDatabase(context).dietDao()
                 return DietDetailViewModel() as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")

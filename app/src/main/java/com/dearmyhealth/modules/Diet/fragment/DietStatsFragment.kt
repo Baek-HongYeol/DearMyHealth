@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.Diet.ui
+package com.dearmyhealth.modules.Diet.fragment
 
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.dearmyhealth.R
 import com.dearmyhealth.data.db.entities.Diet
 import com.dearmyhealth.databinding.FragmentDietStatsBinding
-import com.dearmyhealth.modules.Diet.DietStatsViewModel
+import com.dearmyhealth.modules.Diet.viewmodel.DietStatsViewModel
 import com.dearmyhealth.modules.Diet.model.DietStats
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -101,9 +101,9 @@ class DietStatsFragment : Fragment() {
             background = null
         }
         ranges.getOrNull(viewModel.currentPosition)?.run {
-            background = ContextCompat.getDrawable(context, R.drawable.shape_radius_square_stroke_r5dp)
+            background =
+                ContextCompat.getDrawable(context, R.drawable.shape_radius_square_stroke_r5dp)
         }
-        Log.d(TAG, "2's background: ${ranges.get(2).background}")
     }
 
     private fun configureAxis() {
