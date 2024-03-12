@@ -19,6 +19,21 @@
     <string name="Dosage">복약</string>
     <string name="Activity">운동</string>
 
+
+    <string name="Dosage_alarm">복약 알림</string>
+    <string name="Dosage_manage">복약 일정 관리</string>
+    <string name="Dosage_schedule">복약 일정</string>
+    <string name="Dosage_info">복약 정보</string>
+    <string name="Dosage_addinfo">복약 정보 추가</string>
+    <string name="Dosage_prescription">처방전 정보 추가</string>
+    <string name="Dosage_entername">제품명을 입력해 주세요</string>
+
+    <string name="name">제품명</string>
+    <string name="amount">복용량</string>
+    <string name="start_date">복용시작일</string>
+    <string name="end_date">복용종료일</string>
+    <string name="time">복용시간</string>
+
     <string name="login_another_account">다른 계정으로 로그인</string>
     <string name="sample_notice2">건강 소식! 세상에 미나리가 너무 좋다는 소식이?</string>
 
