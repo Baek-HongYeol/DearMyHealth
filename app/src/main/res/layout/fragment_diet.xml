@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.8" />
+            app:layout_constraintGuide_percent="0.9" />
 
         <include layout="@layout/view_notices"
             android:layout_width="0dp"
@@ -42,7 +42,6 @@
             android:id="@+id/constraintLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
             android:background="@color/secondary"
             app:layout_constraintBottom_toBottomOf="@id/guideline_diet_3"
             app:layout_constraintEnd_toEndOf="@id/guideline_diet_2"
@@ -152,8 +151,9 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/create_diet_CL"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_marginStart="22dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="22dp"
@@ -186,16 +186,6 @@
                     app:srcCompat="@android:drawable/ic_menu_camera" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Button
-            android:id="@+id/food_search_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/search"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -27,6 +27,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".modules.Diet.activity.DietCreateActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Dearmyhealth"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

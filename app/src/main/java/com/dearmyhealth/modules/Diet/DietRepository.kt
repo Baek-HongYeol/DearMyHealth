@@ -36,5 +36,24 @@ class DietRepository(private val datasource: DietDao) {
     fun insert(diet: Diet) {
         return datasource.insertAll(diet)
     }
+    fun insert(time: Long, foodcode: String?, type: Diet.MealType, name: String,
+               imageURI:String?, calories: Int?, carbohydrate: Int?, protein: Int?, fat: Int?,
+               cholesterol: Int?) {
+        return insert(Diet(
+                0, foodcode, 0, time, type, name,
+                imageURI, calories?.toDouble(), carbohydrate?.toDouble(),
+                protein?.toDouble(), fat?.toDouble(), cholesterol?.toDouble()
+        ))
+
+    }
+    fun insert(time: Long, foodcode: String?, type: Diet.MealType, name: String,
+               imageURI:String?, calories: Double?, carbohydrate: Double?, protein: Double?, fat: Double?,
+               cholesterol: Double?) {
+        return insert(Diet(
+            0, foodcode, 0, time, type, name,
+            imageURI, calories, carbohydrate, protein, fat, cholesterol
+        ))
+
+    }
 
 }

@@ -1,29 +1,36 @@
 package com.dearmyhealth.modules.Diet.ui
 
 import android.app.ActionBar.LayoutParams
-import android.view.View.OnClickListener
+import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dearmyhealth.data.db.entities.Food
 
-data class DialogListItem(
-    val food: Food
-)
 
 class FoodHolder(
-    var view: FoodItem
-) : RecyclerView.ViewHolder(view)
+    var view: FoodItem,
+    val listener: (View, Int) -> Unit
+) : RecyclerView.ViewHolder(view) {
+    init {
+        view.setOnClickListener { v->
+            if (adapterPosition != RecyclerView.NO_POSITION)
+                listener(v, adapterPosition)
+        }
+    }
+}
 
 class DialogListAdapter(
-    var list: ArrayList<DialogListItem>,
-    val listener: OnClickListener?
+    var list: List<Food>,
+    val listener: (View, Int) -> Unit
 ) : RecyclerView.Adapter<FoodHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodHolder {
         val view = FoodItem(parent.context)
         val lp = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         view.layoutParams = lp
-        return FoodHolder(view)
+        Log.d("DialogListAdapter", "create view holder!")
+        return FoodHolder(view, listener)
     }
 
     override fun onBindViewHolder(holder: FoodHolder, position: Int) {
@@ -31,11 +38,15 @@ class DialogListAdapter(
         val view = holder.view
 
         view.apply {
-            title = item.food.식품명
-            entpName = item.food.제조사
-            weight = (if(item.food.내용량_단위 == "mL") item.food.총내용량mL else  item.food.총내용량g) + item.food.내용량_단위
-            calories = "${item.food.에너지kcal}kcal"
-            listener.apply { setOnClickListener(listener) }
+            category = item.식품대분류
+            title = item.식품명
+            entpName = item.제조사
+            weightUnit = item.내용량_단위 ?: ""
+            weight = if(item.내용량_단위 == "mL") item.총내용량mL  else item.총내용량g
+            if(weight == "-")
+                weight = "${item.onetime제공량}"
+            onePackWeight = if(weight != "${item.onetime제공량}")  "${item.onetime제공량}" else null
+            calories = "${item.에너지kcal}kcal"
         }
     }
 

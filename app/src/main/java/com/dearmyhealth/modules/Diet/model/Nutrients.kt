@@ -6,19 +6,25 @@ import com.dearmyhealth.data.db.AppDatabase
 import com.dearmyhealth.data.db.dao.NutrientStandardDao
 import com.dearmyhealth.data.db.entities.User
 
+/**
+ * 영양 정보만 다루기 위한 class.
+ */
 data class Nutrients(
     val user: Int,
     val date: Long,
-    var calories: Double?,
-    var nutrients: MutableMap<Names, Double?>
+    var calories: Double? = null,
+    var nutrients: MutableMap<Names, Double?> = mutableMapOf()
 ) {
-    enum class Names {
-        carbohydrate,
-        protein,
-        fat,
-        cholesterol,
-        water_liquid,
-        water_total
+    /**
+     * Nutrients class에서 다룰 수 있는 영양소를 제한.
+     */
+    enum class Names(var displayedName:String) {
+        carbohydrate("탄수화물"),
+        protein("단백질"),
+        fat("지방"),
+        cholesterol("콜레스테롤"),
+        water_liquid("액체 수분량"),
+        water_total("총 수분량")
     }
     fun getPresentNutrientsNames(): List<String>{
         return nutrients.keys.toList().map{ v -> v.name }

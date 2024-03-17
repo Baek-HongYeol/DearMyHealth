@@ -67,6 +67,8 @@ dependencies {
     implementation ("androidx.appcompat:appcompat:1.6.1")
 
     implementation("com.louiscad.splitties:splitties-alertdialog:$splitties_version")
+    implementation("com.louiscad.splitties:splitties-activities:$splitties_version")
+    implementation("com.wdullaer:materialdatetimepicker:4.2.3")
 
     // Glide
     implementation ("com.github.bumptech.glide:glide:4.16.0")
