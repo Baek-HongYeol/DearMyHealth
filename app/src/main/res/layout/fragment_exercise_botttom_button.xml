@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 가이드라인으로 버튼 위치 조정 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <!-- 취소 버튼 -->
+    <Button
+        android:id="@+id/button_cancel"
+        android:layout_width="180dp"
+        android:layout_height="45dp"
+        android:background="@drawable/shape_radius_square_stroke_secondary"
+        android:text="취소"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/button_apply"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_bottom" />
+
+    <!-- 적용 버튼 -->
+    <Button
+        android:id="@+id/button_apply"
+        android:layout_width="180dp"
+        android:layout_height="45dp"
+        android:background="@drawable/shape_radius_square_stroke_secondary"
+        android:text="적용"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_cancel"
+        app:layout_constraintTop_toTopOf="@+id/guideline_bottom" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
