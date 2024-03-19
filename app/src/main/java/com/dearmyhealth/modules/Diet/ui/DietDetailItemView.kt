@@ -42,6 +42,25 @@ class DietDetailItemView(context: Context,
         imageView.layoutParams = params
     }
 
+    fun setDiet(diet: Diet) {
+        setName(diet.name)
+        setType(diet.type)
+        setTime(diet.time)
+        val nuts = Nutrients(0,0)
+        nuts.calories = diet.calories
+        nuts.nutrients.putAll( mutableMapOf(
+            Nutrients.Names.carbohydrate to
+                    diet.carbohydrate,
+            Nutrients.Names.protein to
+                    diet.protein,
+            Nutrients.Names.fat to
+                    diet.fat,
+            Nutrients.Names.cholesterol to
+                    diet.cholesterol
+        ))
+        generateNutrientChips(Nutrients(diet.user, diet.time, diet.calories, nuts.nutrients))
+    }
+
 
     fun setName(name: String?) {
         binding.dietFoodTV.text = name ?: resources.getString(R.string.default_diet_description)
@@ -56,6 +75,12 @@ class DietDetailItemView(context: Context,
         sdf.timeZone = TimeZone.getDefault()
         val time = sdf.format(calendar.time)
         binding.dietTimeTV.text = time
+    }
+
+    fun setTime(millis: Long) {
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = millis
+        setTime(cal)
     }
 
     @SuppressLint("SetTextI18n")
@@ -78,8 +103,10 @@ class DietDetailItemView(context: Context,
 
         chip.text = resources.getString(R.string.calory_chip, nuts.calories?.toInt() ?: 0)
         for (nut in nuts.nutrients.entries) {
+            if(nut.value == null)
+                continue
             val chip = Chip(context)
-            chip.text = nut.key.displayedName + ": ${nut.value?.toInt() ?:"-"}g"
+            chip.text = nut.key.displayedName + ": ${nut.value!!.toInt()}g"
             chip.isClickable = false
             chip.backgroundDrawable = chipBackgroundDrawable
             chip.chipBackgroundColor = chipBackgroundColor

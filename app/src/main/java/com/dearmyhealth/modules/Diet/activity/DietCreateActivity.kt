@@ -11,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -176,9 +175,10 @@ class DietCreateActivity : AppCompatActivity(){
 
     /** 음식 검색 Dialog 생성 */
     private fun showSearchDialog() {
-        val view = layoutInflater.inflate(R.layout.view_food_search, null)
-        val binding = ViewFoodSearchBinding.bind(view)
-        val edtx = view.findViewById<EditText>(R.id.search_food_edtx)
+
+        val binding = ViewFoodSearchBinding.inflate(layoutInflater)
+        val edtx = binding.searchFoodEdtx
+
         edtx.setOnEditorActionListener { textView, i, _ ->
             when(i) {
                 EditorInfo.IME_ACTION_SEARCH -> {
@@ -191,7 +191,7 @@ class DietCreateActivity : AppCompatActivity(){
         }
         val dialog = alertDialog {
             setTitle("음식 검색")
-            setView(view)
+            setView(binding.root)
             setOnDismissListener {
                 viewModel.foodSearchResult.removeObservers(this@DietCreateActivity)
             }
