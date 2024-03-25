@@ -17,7 +17,7 @@ interface DietDao {
     suspend fun loadAllByUids(uids: IntArray): List<Diet>
 
     @Query("SELECT * FROM diet WHERE user=:uid AND dietId LIKE :dietId LIMIT 1")
-    suspend fun findById(uid: Int, dietId: Int): List<Diet>
+    suspend fun findById(uid: Int, dietId: Long): List<Diet>
 
     @Query("SELECT * FROM DIET WHERE user=:uid AND (time BETWEEN :start AND :end)")
     suspend fun findByPeriod(uid: Int, start: Long, end: Long): List<Diet>
@@ -26,7 +26,7 @@ interface DietDao {
     fun findByPeriodLive(uid: Int, start: Long, end: Long): LiveData<List<Diet>>
 
     @Insert
-    fun insertAll(vararg diets: Diet)
+    fun insertAll(vararg diets: Diet) : List<Long>
 
     @Update
     fun updateUser(user: Diet)

@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.dearmyhealth.data.Result
 import com.dearmyhealth.data.db.AppDatabase
 import com.dearmyhealth.data.db.entities.Diet
 import com.dearmyhealth.data.db.entities.Food
@@ -25,7 +26,6 @@ class DietCreateViewModel(
     private val dietRepository: DietRepository
 ): ViewModel() {
     private val TAG = javaClass.simpleName
-
 
     val foodSearchResult: MutableLiveData<FoodSearchResult> = MutableLiveData(FoodSearchResult())
 
@@ -140,7 +140,7 @@ class DietCreateViewModel(
      * 칼로리, 탄수화물, 단백질, 지방, 콜레스테롤은 nullable하게 접근해 저장.
      */
     fun save() {
-        dietRepository.insert(
+        val result = dietRepository.insert(
             targetDateTime.value!!.timeInMillis, targetFood.value?.code, targetType.value!!,
             targetName.value ?: "null", null, targetNutrition.value?.calories,
             targetNutrition.value?.nutrients?.get(Nutrients.Names.carbohydrate),
@@ -148,6 +148,10 @@ class DietCreateViewModel(
             targetNutrition.value?.nutrients?.get(Nutrients.Names.fat),
             targetNutrition.value?.nutrients?.get(Nutrients.Names.cholesterol),
         )
+        if(result is Result.Success)
+            _dietResult.value = DietCreateResult(success = result)
+        else
+            _dietResult.value = DietCreateResult(error = 1) // RoomDB Insert Error
     }
 
 
