@@ -8,6 +8,7 @@
     <include app:graph="@navigation/diet"/>
     <include app:graph="@navigation/dept"/>
     <include app:graph="@navigation/home"/>
+    <include app:graph="@navigation/dosage"/>
     <activity
         android:id="@+id/drawer_login"
         android:name="com.dearmyhealth.modules.login.ui.LoginActivity"
