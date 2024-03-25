@@ -14,11 +14,9 @@ import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.ui.setupWithNavController
 import com.dearmyhealth.home.ui.BottomSheetAccountDialogFragment
 import com.dearmyhealth.databinding.ActivityMainBinding
-import com.dearmyhealth.Temp.ExerciseButton
 
 
 class MainActivity : AppCompatActivity() {
@@ -51,11 +49,6 @@ class MainActivity : AppCompatActivity() {
         initView()
         observeViewModel()
         this.onBackPressedDispatcher.addCallback(onBackpressedCallback)
-        ExerciseButton.setupLayoutClickListener(
-            this,
-            Pair(R.id.constraintLayout7, R.id.exercise_chosen),
-            Pair(R.id.constraintLayout8, R.id.second_FeatureTitle),
-        )
     }
     private fun initView() {
         val toolbar : Toolbar = binding.appbar.toolbar
