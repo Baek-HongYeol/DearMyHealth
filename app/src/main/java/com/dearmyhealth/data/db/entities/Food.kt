@@ -3,6 +3,7 @@ package com.dearmyhealth.data.db.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.dearmyhealth.modules.Diet.model.Nutrients
 
 @Entity(tableName = "food")
 data class Food(
@@ -81,7 +82,7 @@ data class Food(
     val 타우린mg : String,
     val 콜레스테롤g : String,
     val 콜레스테롤mg : String,
-    val 총포화지방산g : Int,
+    val 총포화지방산g : String,
     val 리놀레산g : String,
     val 알파리놀렌산mg : String,
     val 감마리놀렌산mg : String,
@@ -96,5 +97,26 @@ data class Food(
     val 카페인mg : String,
     val 성분표출처 : String,
     val 발행기관 : String,
+) {
+    fun toNutrients(): Nutrients {
+        var nuts = Nutrients(0, 0).apply {
+            calories = 에너지kcal.toDouble()
+            nutrients = mutableMapOf()
+            if( 탄수화물g != "-")
+                nutrients[Nutrients.Names.carbohydrate] = 탄수화물g.toDouble()
+            if( 단백질g != "-")
+                nutrients[Nutrients.Names.protein] = 단백질g.toDouble()
+            if( 지방g != "-")
+                nutrients[Nutrients.Names.fat] = 지방g.toDouble()
 
-)
+        }
+
+        return nuts
+    }
+    companion object {
+        fun convertNutStringToDouble(prev: String): Double? {
+            if (prev == "-") return null
+            return prev.toDoubleOrNull()
+        }
+    }
+}

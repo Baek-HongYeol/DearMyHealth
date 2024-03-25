@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:behavior_hideable="true"
-    tools:context=".activities.ui.BottomSheetAccountDialogFragment"
+    tools:context=".home.ui.BottomSheetAccountDialogFragment"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout

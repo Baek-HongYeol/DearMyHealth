@@ -3,7 +3,7 @@ package com.dearmyhealth
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dearmyhealth.data.model.Session
+import com.dearmyhealth.modules.login.Session
 
 class MainViewModel: ViewModel() {
     private val _isLooggedin = MutableLiveData<Boolean>(false)

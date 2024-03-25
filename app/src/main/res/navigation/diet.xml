@@ -8,11 +8,19 @@
 
     <fragment
         android:id="@+id/dietScreen"
-        android:name="com.dearmyhealth.activities.DietFragment"
+        android:name="com.dearmyhealth.modules.Diet.fragment.DietFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_diet">
         <!--<action app:destination="@id/dietReportScreen"/>-->
+        <action
+            android:id="@+id/action_dietScreen_to_dietDetailScreen"
+            app:destination="@id/dietDetailScreen" />
     </fragment>
+    <fragment
+        android:id="@+id/dietDetailScreen"
+        android:name="com.dearmyhealth.modules.Diet.fragment.DietDetailFragment"
+        tools:layout="@layout/fragment_diet_detail"/>
+
     <fragment
         android:id="@+id/dietReportScreen"
         android:label="@string/app_name">
