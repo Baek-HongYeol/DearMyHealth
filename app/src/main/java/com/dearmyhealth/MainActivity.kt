@@ -104,4 +104,6 @@ class MainActivity : AppCompatActivity() {
         binding.navigationView.getHeaderView(0).isVisible = isShow
         binding.navigationView.menu.findItem(R.id.drawer_login).isVisible = isShow
     }
+
+
 }

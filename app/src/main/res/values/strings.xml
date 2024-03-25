@@ -49,7 +49,22 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-
+    <!-- Exercise -->
+    <string name="exercise_details">운동 상세 정보</string>
+    <string name="exercise_time">운동 시간</string>
+    <string name="exercise_time_ex">00:41:00</string>
+    <string name="exercise_distance">거리</string>
+    <string name="exercise_distance_ex">2.90km</string>
+    <string name="exercise_calorie">칼로리</string>
+    <string name="exercise_calorie_ex">122kcal</string>
+    <string name="exercise_speed">속도</string>
+    <string name="exercise_now">현재 운동</string>
+    <string name="exercise_more">운동 더보기</string>
+    <string name="exercise_run">달리기</string>
+    <string name="exercise_walk">걷기</string>
+    <string name="exercise_hiking">등산</string>
+    <string name="exercise_bicycle">자전거</string>
+    <string name="exercise_swim">수영</string>
     <!-- Diet -->
     <string name="breakfast">아침</string>
     <string name="calory">칼로리</string>
