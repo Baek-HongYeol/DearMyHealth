@@ -11,15 +11,18 @@ import com.dearmyhealth.data.db.AppDatabase
 import com.dearmyhealth.data.db.entities.Diet
 import com.dearmyhealth.modules.Diet.DietRepository
 import com.dearmyhealth.modules.Diet.model.Nutrients
+import com.dearmyhealth.util.DateTime
 import java.util.Calendar
 
-class DietTodayViewModel(lifecycleOwner: LifecycleOwner, dietRepository: DietRepository): ViewModel() {
+class DietTodayViewModel(dietRepository: DietRepository): ViewModel() {
     private val TAG = javaClass.simpleName
     val todayDiets: LiveData<List<Diet>> =
         dietRepository.findByPeriodLive(getTodayMsec())
 
     private val _todayNutritions = MutableLiveData<Nutrients>()
     val todayNutritions: LiveData<Nutrients> get() = _todayNutritions
+
+    val currentQueryDateString: LiveData<String> = MutableLiveData(DateTime.calToFormattedString())
 
     fun calcNutrients()  {
         val value = todayDiets.value!!
@@ -49,12 +52,12 @@ class DietTodayViewModel(lifecycleOwner: LifecycleOwner, dietRepository: DietRep
     }
 
 
-    class Factory(val application: Application, val lifecycleOwner: LifecycleOwner) : ViewModelProvider.Factory {
+    class Factory(val application: Application) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, ): T {
             if (modelClass.isAssignableFrom(DietTodayViewModel::class.java)) {
                 val dietDao = AppDatabase.getDatabase(application).dietDao()
-                return DietTodayViewModel(lifecycleOwner,
+                return DietTodayViewModel(
                     dietRepository = DietRepository(
                         datasource = dietDao
                     )

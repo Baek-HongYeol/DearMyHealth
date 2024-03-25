@@ -39,7 +39,7 @@ class DietFragment : Fragment() {
             findNavController().navigate(R.id.action_dietScreen_to_dietDetailScreen)
         }
 
-        binding.todayDietHelpIV.setOnClickListener {
+        binding.todayDietHelpTV.setOnClickListener {
             val view = NutritionStandardReferenceView(requireContext())
             AlertDialog.Builder(requireContext())
                 .setView(view)

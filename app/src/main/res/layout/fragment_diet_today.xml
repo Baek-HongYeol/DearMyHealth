@@ -18,39 +18,81 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.7" />
 
-        <ScrollView
-            android:id="@+id/diet_scroll_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toTopOf="@id/guideline5"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/today_diet_date_selector_LL"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:id="@+id/today_diet_list_LL"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/previousDayButton"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="@android:color/transparent"
+                android:text="◀"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/currentDateTextView"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <include layout="@layout/view_diet_detail_item"/>
+            <TextView
+                android:id="@+id/currentDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text=""
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/nextDayButton"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/previousDayButton"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
-        </ScrollView>
+            <Button
+                android:id="@+id/nextDayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@android:color/transparent"
+                android:text="▶"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/currentDateTextView"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/today_diet_list_RV"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/guideline5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/today_diet_date_selector_LL"/>
 
         <LinearLayout
             android:id="@+id/diet_detail_nutritions_LL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:background="@drawable/shape_radius_square_stroke"
+            android:backgroundTint="@color/secondary"
             android:gravity="center"
             android:orientation="horizontal"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/diet_scroll_view">
+            app:layout_constraintTop_toBottomOf="@id/guideline5">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
@@ -67,7 +109,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/today_diet_clories_value_TV"
+                    android:id="@+id/today_diet_calories_value_TV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0kcal"
@@ -135,7 +177,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/today_diet_protein"
+                    android:id="@+id/today_diet_protein_value_TV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0g"
@@ -184,35 +226,73 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
             android:text="탄수화물:단백질:지방"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/diet_detail_nutritions_LL" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/today_diet_nutrients_ratio_TV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="16dp"
             android:text="::"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/today_diet_help_TV"
+            app:layout_constraintTop_toTopOf="@id/textView6" />
+
+        <TextView
+            android:id="@+id/today_diet_help_TV"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/shape_circle_stroke"
+            android:backgroundTint="@color/secondary"
+            android:gravity="center"
+            android:text="\?"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/textView6"
+            app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/textView6" />
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/today_nutrient_chart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6">
 
             <View
-                android:id="@+id/today_diet_carbo_color2"
+                android:id="@+id/today_diet_carbo_bar"
                 android:layout_width="20dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="5dp"
-                android:layout_weight="1"
-                android:background="@color/green_1"
-                app:layout_constraintBottom_toBottomOf="@id/today_diet_carbo_TV"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/today_diet_carbo_TV" />
+                android:layout_height="6dp"
+                android:layout_weight="0"
+                android:background="@drawable/shape_radius_square_stroke_r16dp"
+                android:backgroundTint="@color/green_1" />
+
+            <View
+                android:id="@+id/today_diet_protein_bar"
+                android:layout_width="20dp"
+                android:layout_height="6dp"
+                android:layout_weight="5.3"
+                android:background="@drawable/shape_radius_square_stroke_r16dp"
+                android:backgroundTint="@color/green_2" />
+
+            <View
+                android:id="@+id/today_diet_fat_bar"
+                android:layout_width="20dp"
+                android:layout_height="6dp"
+                android:layout_weight="4.7"
+                android:background="@drawable/shape_radius_square_stroke_r16dp"
+                android:backgroundTint="@color/green_3" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
@@ -88,15 +89,10 @@ class DietDetailItemView(context: Context,
         // 영양소를 각각 하나의 chip으로 표현
         val chips = binding.chipGroup
         chips.removeAllViews()
-        val chipBackgroundDrawable = ResourcesCompat.getDrawable(resources,
-            R.drawable.shape_radius_square_stroke_r16dp, context.theme)
-        val chipBackgroundColor = ColorStateList.valueOf(resources.getColor(R.color.secondary, context.theme))
+
 
         // default 칩 추가
-        val chip = Chip(context)
-        chip.isClickable = false
-        chip.backgroundDrawable = chipBackgroundDrawable
-        chip.chipBackgroundColor = chipBackgroundColor
+        var chip = makeChip()
         chip.text = resources.getString(R.string.calory_chip, 0)
         chips.addView(chip)
         if (nuts == null) return
@@ -105,13 +101,27 @@ class DietDetailItemView(context: Context,
         for (nut in nuts.nutrients.entries) {
             if(nut.value == null)
                 continue
-            val chip = Chip(context)
+
+            chip = makeChip()
             chip.text = nut.key.displayedName + ": ${nut.value!!.toInt()}g"
-            chip.isClickable = false
-            chip.backgroundDrawable = chipBackgroundDrawable
-            chip.chipBackgroundColor = chipBackgroundColor
             chips.addView(chip)
         }
+    }
+
+    private fun makeChip(): Chip {
+        val chipBackgroundDrawable = ResourcesCompat.getDrawable(resources,
+            R.drawable.shape_radius_square_stroke_r16dp, context.theme)
+        val chipBackgroundColor = ColorStateList.valueOf(resources.getColor(R.color.secondary, context.theme))
+
+        val chip = Chip(context)
+        chip.isClickable = false
+        chip.backgroundDrawable = chipBackgroundDrawable
+        chip.chipBackgroundColor = chipBackgroundColor
+        chip.textStartPadding = 6f
+        chip.textEndPadding = 6f
+        chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f)
+
+        return chip
     }
 
 

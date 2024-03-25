@@ -80,14 +80,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageButton
-                    android:id="@+id/today_diet_help_IV"
+                <TextView
+                    android:id="@+id/today_diet_help_TV"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:background="@drawable/shape_circle_stroke"
-                    android:focusableInTouchMode="false"
-                    android:src="@android:drawable/ic_menu_help"
+                    android:backgroundTint="@color/secondary"
+                    android:gravity="center"
+                    android:text="\?"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@id/today_diet_TV"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintStart_toEndOf="@id/today_diet_TV"
