@@ -13,7 +13,7 @@
     <color name="primary_container">@color/green_2</color>
     <color name="on_primary_container">@color/white</color>
 
-
+    <color name="second_panel">#FFDAD7CD</color>
     <color name="secondary">@color/gray_orange</color>
     <color name="on_secondary">@color/black</color>
     <color name="secondary_container">@color/secondary</color>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/roundedRectangle"
+        android:layout_width="307dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="180dp"
+        android:background="@drawable/rectangle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/roundedRectangle2"
+        android:layout_width="334dp"
+        android:layout_height="589dp"
+        android:background="@drawable/rectangle2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.563" />
+
+    <TextView
+        android:id="@+id/textcancle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="88dp"
+        android:text="취소"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/texttemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:text="체온"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textadd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="88dp"
+        android:layout_marginEnd="52dp"
+        android:text="추가"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="날짜"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/roundedRectangle"
+        app:layout_constraintTop_toTopOf="@+id/roundedRectangle" />
+
+    <TextView
+        android:id="@+id/texttime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="60dp"
+        android:text="시간"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/roundedRectangle"
+        app:layout_constraintTop_toTopOf="@+id/roundedRectangle" />
+
+    <TextView
+        android:id="@+id/textC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="116dp"
+        android:text="°C"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/roundedRectangle"
+        app:layout_constraintTop_toTopOf="@+id/roundedRectangle" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="307dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/line"
+        app:layout_constraintEnd_toEndOf="@+id/roundedRectangle"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/roundedRectangle"
+        app:layout_constraintTop_toTopOf="@+id/roundedRectangle" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="307dp"
+        android:layout_height="2dp"
+        android:layout_marginBottom="48dp"
+        android:background="@drawable/line"
+        app:layout_constraintBottom_toBottomOf="@+id/roundedRectangle"
+        app:layout_constraintEnd_toEndOf="@+id/roundedRectangle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/roundedRectangle" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="74dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="116dp"
+        android:layout_marginEnd="12dp"
+        android:hint=""
+        app:layout_constraintEnd_toEndOf="@+id/roundedRectangle"
+        app:layout_constraintTop_toTopOf="@+id/roundedRectangle" />
+
+    <Button
+        android:id="@+id/datebutton"
+        android:layout_width="85dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="12dp"
+        android:onClick="showDatePickerDialog"
+        android:text="날짜 선택"
+        app:layout_constraintEnd_toEndOf="@+id/roundedRectangle"
+        app:layout_constraintTop_toTopOf="@+id/roundedRectangle" />
+
+    <Button
+        android:id="@+id/timebutton"
+        android:layout_width="85dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="12dp"
+        android:onClick="showTimePickerDialog"
+        android:text="시간 선택"
+        app:layout_constraintEnd_toEndOf="@+id/roundedRectangle"
+        app:layout_constraintTop_toTopOf="@+id/roundedRectangle" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
