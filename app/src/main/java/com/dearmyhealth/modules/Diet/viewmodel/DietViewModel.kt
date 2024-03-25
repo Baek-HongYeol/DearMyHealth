@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.Diet
+package com.dearmyhealth.modules.Diet.viewmodel
 
 import android.content.Context
 import android.util.Log
@@ -7,27 +7,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.distinctUntilChanged
 import com.dearmyhealth.data.db.AppDatabase
 import com.dearmyhealth.data.db.entities.Diet
-import com.dearmyhealth.data.db.entities.Food
+import com.dearmyhealth.modules.Diet.DietRepository
+import com.dearmyhealth.modules.Diet.model.Nutrients
 import java.util.Calendar
 
-class DietViewModel(val lifecycleOwner:LifecycleOwner, val foodRepository: FoodRepository, val dietRepository: DietRepository) : ViewModel() {
+class DietViewModel(val lifecycleOwner:LifecycleOwner, val dietRepository: DietRepository) : ViewModel() {
     val TAG: String = "DietViewModel"
     private val _todayNutritions = MutableLiveData<Nutrients>()
     val todayNutritions: LiveData<Nutrients> get() = _todayNutritions
 
     private val todayDiets: LiveData<List<Diet>> =
-        dietRepository.findByPeriodLive(getTodayMsec()).distinctUntilChanged()
+        dietRepository.findByPeriodLive(getTodayMsec())
 
-    suspend fun searchFood(name: String): List<Food> {
-        Log.d(TAG, "query: $name")
-        return if (name.isNotBlank())
-            foodRepository.search(name)
-        else
-            foodRepository.getAll()
-    }
     fun observeTodayDiet() {
         todayDiets.observe(lifecycleOwner) { value ->
             Log.d(TAG, "diet size is : ${value.size}")
@@ -45,10 +38,6 @@ class DietViewModel(val lifecycleOwner:LifecycleOwner, val foodRepository: FoodR
             }
             _todayNutritions.value = nuts
         }
-    }
-
-    fun setTodayDietChart() {
-
     }
 
     fun getTodayMsec(): Long {
@@ -71,13 +60,9 @@ class DietViewModel(val lifecycleOwner:LifecycleOwner, val foodRepository: FoodR
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, ): T {
             if (modelClass.isAssignableFrom(DietViewModel::class.java)) {
-                val foodDao = AppDatabase.getDatabase(context).foodDao()
                 val dietDao = AppDatabase.getDatabase(context).dietDao()
                 return DietViewModel(
                     lifecycleOwner,
-                    foodRepository = FoodRepository(
-                        dataSource = foodDao
-                    ),
                     dietRepository = DietRepository(
                         datasource = dietDao
                     )

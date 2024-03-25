@@ -1,7 +1,7 @@
 package com.dearmyhealth.modules.Diet
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.distinctUntilChanged
+import com.dearmyhealth.data.Result
 import com.dearmyhealth.data.db.dao.DietDao
 import com.dearmyhealth.data.db.entities.Diet
 import java.util.Calendar
@@ -33,8 +33,52 @@ class DietRepository(private val datasource: DietDao) {
     /**
      * valid한 diet 데이터를 저장한다.
      */
-    fun insert(diet: Diet) {
-        return datasource.insertAll(diet)
+    private fun insert(diet: Diet): Long {
+        return datasource.insertAll(diet)[0]
+    }
+    fun insert(time: Long, foodcode: String?, type: Diet.MealType, name: String,
+               imageURI:String?, calories: Int?, carbohydrate: Int?, protein: Int?, fat: Int?,
+               cholesterol: Int?): Result<Diet> {
+        try {
+            val id = insert(
+                Diet(
+                    0, foodcode, 0, time, type, name,
+                    imageURI, calories?.toDouble(), carbohydrate?.toDouble(),
+                    protein?.toDouble(), fat?.toDouble(), cholesterol?.toDouble()
+                )
+            )
+            return Result.Success(Diet(
+                id, foodcode, 0, time, type, name,
+                imageURI, calories?.toDouble(), carbohydrate?.toDouble(),
+                protein?.toDouble(), fat?.toDouble(), cholesterol?.toDouble()
+            ))
+        }
+        catch (e: Exception) {
+            return Result.Error(e)
+        }
+
+
+    }
+    fun insert(time: Long, foodcode: String?, type: Diet.MealType, name: String,
+               imageURI:String?, calories: Double?, carbohydrate: Double?, protein: Double?, fat: Double?,
+               cholesterol: Double?): Result<Diet> {
+        try {
+            val id = insert(
+                Diet(
+                    0, foodcode, 0, time, type, name,
+                    imageURI, calories, carbohydrate, protein, fat, cholesterol
+                )
+            )
+            return Result.Success(
+                Diet(
+                    id, foodcode, 0, time, type, name,
+                    imageURI, calories, carbohydrate, protein, fat, cholesterol
+                )
+            )
+        }
+        catch (e: Exception) {
+            return Result.Error(e)
+        }
     }
 
 }

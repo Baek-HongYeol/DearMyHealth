@@ -24,8 +24,8 @@ import androidx.room.PrimaryKey
 )
 data class Diet(
     @PrimaryKey(autoGenerate = true)
-    val dietId: Int,
-    val foodCode: String,
+    val dietId: Long,
+    val foodCode: String?,
     val user: Int,
     val time: Long,
     val type: MealType,
@@ -37,11 +37,11 @@ data class Diet(
     val fat: Double?,
     val cholesterol: Double?
 ) {
-    enum class MealType {
-        MEAL_TYPE_UNKNOWN,
-        MEAL_TYPE_BREAKFAST,
-        MEAL_TYPE_LUNCH,
-        MEAL_TYPE_DINNER,
-        MEAL_TYPE_SNACK,
+    enum class MealType(val displayName: String) {
+        MEAL_TYPE_UNKNOWN("기타"),
+        MEAL_TYPE_BREAKFAST("아침"),
+        MEAL_TYPE_LUNCH("점심"),
+        MEAL_TYPE_DINNER("저녁"),
+        MEAL_TYPE_SNACK("간식"),
     }
 }

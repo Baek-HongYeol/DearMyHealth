@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.Diet
+package com.dearmyhealth.modules.Diet.viewmodel
 
 import android.content.Context
 import android.util.Log
@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dearmyhealth.data.db.AppDatabase
 import com.dearmyhealth.data.db.entities.Diet
+import com.dearmyhealth.modules.Diet.DietRepository
 import com.dearmyhealth.modules.Diet.model.DietStats
 import com.dearmyhealth.modules.Diet.model.DietStats.PERIOD.*
 import java.text.SimpleDateFormat

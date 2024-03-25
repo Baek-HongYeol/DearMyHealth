@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.Diet.ui
+package com.dearmyhealth.modules.Diet.fragment
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -6,29 +6,21 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.dearmyhealth.R
 import com.dearmyhealth.databinding.FragmentDietBinding
-import com.dearmyhealth.modules.Diet.DietViewModel
-import com.dearmyhealth.modules.Diet.Nutrients
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.dearmyhealth.modules.Diet.activity.DietCreateActivity
+import com.dearmyhealth.modules.Diet.viewmodel.DietViewModel
+import com.dearmyhealth.modules.Diet.model.Nutrients
+import com.dearmyhealth.modules.Diet.ui.NutritionStandardReferenceView
+import com.dearmyhealth.modules.Diet.ui.TodayNutritionItemView
+import splitties.activities.start
 
 class DietFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = DietFragment()
-    }
     private val TAG = this.javaClass.simpleName
     private lateinit var viewModel: DietViewModel
     private lateinit var binding : FragmentDietBinding
@@ -47,24 +39,15 @@ class DietFragment : Fragment() {
             findNavController().navigate(R.id.action_dietScreen_to_dietDetailScreen)
         }
 
-        binding.foodSearchButton.setOnClickListener {
-            val edtx = EditText(requireContext())
-            AlertDialog.Builder(requireContext())
-                .setTitle("음식 검색")
-                .setView(edtx)
-                .setNegativeButton("취소"){ _, _ ->
-
-                }
-                .setPositiveButton("검색") {_, _ ->
-                    searchFood(edtx.text.toString())
-                }.show()
-        }
-
-        binding.todayDietHelpIV.setOnClickListener {
+        binding.todayDietHelpTV.setOnClickListener {
             val view = NutritionStandardReferenceView(requireContext())
             AlertDialog.Builder(requireContext())
                 .setView(view)
                 .show()
+        }
+
+        binding.createDietCL.setOnClickListener {
+            context?.start<DietCreateActivity>()
         }
 
         observeViewModel()
@@ -93,26 +76,6 @@ class DietFragment : Fragment() {
                     )
 
                 i++
-            }
-        }
-    }
-
-    private fun searchFood(name: String, listener: OnClickListener? = null) {
-        CoroutineScope(Dispatchers.IO).launch {
-            var result = ArrayList<DialogListItem>()
-            result.addAll(viewModel.searchFood(name).map { v -> DialogListItem(v) })
-            withContext(Dispatchers.Main) {
-                val recyclerView = RecyclerView(requireContext())
-                recyclerView.layoutManager = LinearLayoutManager(requireContext())
-                recyclerView.adapter = DialogListAdapter(result, listener)
-                var layoutParams = WindowManager.LayoutParams()
-                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-                AlertDialog.Builder(requireContext())
-                    .setTitle("검색 결과")
-                    .setView(recyclerView)
-                    .setPositiveButton("닫기") { _, _ -> }
-                    .show()
             }
         }
     }

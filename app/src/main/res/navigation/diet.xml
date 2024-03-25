@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/dietScreen"
-        android:name="com.dearmyhealth.modules.Diet.ui.DietFragment"
+        android:name="com.dearmyhealth.modules.Diet.fragment.DietFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_diet">
         <!--<action app:destination="@id/dietReportScreen"/>-->
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/dietDetailScreen"
-        android:name="com.dearmyhealth.modules.Diet.ui.DietDetailFragment"
+        android:name="com.dearmyhealth.modules.Diet.fragment.DietDetailFragment"
         tools:layout="@layout/fragment_diet_detail"/>
 
     <fragment
