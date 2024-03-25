@@ -51,7 +51,7 @@
         android:layout_gravity="start"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="64dp"
-        android:backgroundTint="@color/second_panel"
+        android:backgroundTint="@color/secondary"
         android:enabled="false"
         android:fallbackLineSpacing="true"
         android:text="@string/action_sign_in"
