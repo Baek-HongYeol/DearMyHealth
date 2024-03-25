@@ -1,7 +1,6 @@
 package com.dearmyhealth.modules.Diet.ui
 
 import android.app.ActionBar.LayoutParams
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -29,7 +28,6 @@ class DialogListAdapter(
         val view = FoodItem(parent.context)
         val lp = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         view.layoutParams = lp
-        Log.d("DialogListAdapter", "create view holder!")
         return FoodHolder(view, listener)
     }
 
