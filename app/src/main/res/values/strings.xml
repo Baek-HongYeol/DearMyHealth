@@ -51,6 +51,7 @@
     <string name="login_failed">"Login failed"</string>
     <!-- Exercise -->
     <string name="exercise_details">운동 상세 정보</string>
+    <string name="no_exercise_message">오늘 운동 정보가 없어요.\n운동 정보를 추가해볼까요?</string>
     <string name="exercise_time">운동 시간</string>
     <string name="exercise_time_ex">00:41:00</string>
     <string name="exercise_distance">거리</string>

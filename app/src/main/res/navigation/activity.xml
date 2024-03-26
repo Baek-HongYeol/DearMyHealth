@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_act"
+    app:startDestination="@id/exerciseScreen">
+
+    <fragment
+        android:id="@+id/exerciseScreen"
+        android:name="com.dearmyhealth.modules.exercise.ExerciseFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_exercise"/>
+
+    <fragment
+        android:id="@+id/exerciseSettingScreen"
+        android:name="com.dearmyhealth.modules.exercise.ExerciseChooseFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_exercise_choose"/>
+
+</navigation>
