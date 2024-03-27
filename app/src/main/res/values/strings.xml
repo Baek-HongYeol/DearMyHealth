@@ -51,6 +51,7 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
     <!-- Exercise -->
     <string name="exercise_details">운동 상세 정보</string>
     <string name="no_exercise_message">오늘 운동 정보가 없어요.\n운동 정보를 추가해볼까요?</string>
@@ -68,6 +69,8 @@
     <string name="exercise_hiking">등산</string>
     <string name="exercise_bicycle">자전거</string>
     <string name="exercise_swim">수영</string>
+    <string name="exercise_finish">운동 종료하기</string>
+
     <!-- Diet -->
     <string name="breakfast">아침</string>
     <string name="calory">칼로리</string>

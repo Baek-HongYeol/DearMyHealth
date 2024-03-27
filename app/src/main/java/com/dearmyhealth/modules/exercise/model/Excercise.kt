@@ -17,7 +17,7 @@ enum class ExerciseType(val id: Int, val displayName: String) {
 class Exercise {
 
     companion object {
-        val currentExerciseType: ExerciseType? = null
+        var currentExerciseType: ExerciseType? = null
 
         fun getDrawableOf(context: Context, type: ExerciseType): Drawable? {
             val resource = when(type) {
