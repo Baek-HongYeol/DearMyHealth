@@ -71,98 +71,53 @@
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
 
-        <include layout="@layout/view_exercise_type"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/exercise_more"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/exercise_list_RV"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"/>
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/exercise_more" />
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout8"
-            android:layout_width="324dp"
-            android:layout_height="68dp"
-            android:background="@drawable/shape_radius_square_stroke"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.321"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider"
-            app:layout_constraintVertical_bias="0.266">
+            app:layout_constraintStart_toStartOf="parent">
 
-            <!-- 새 기능의 아이콘 -->
-
-            <ImageView
-                android:id="@+id/second_FeatureIcon"
-                android:layout_width="52dp"
-                android:layout_height="50dp"
-                android:layout_margin="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.058"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/hiking" />
-
-            <TextView
-                android:id="@+id/second_FeatureTitle"
+            <Button
+                android:id="@+id/exercise_choose_cancel"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="52dp"
-                android:text="@string/exercise_hiking"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/second_FeatureIcon"
-                app:layout_constraintTop_toTopOf="parent" /> <!-- 새 기능의 제목 -->
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/secondary"
+                android:text="@string/cancel"
+                android:textColor="@color/on_secondary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-
-            <!-- 추가하고 싶은 뷰들이 여기에 위치 -->
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout9"
-            android:layout_width="324dp"
-            android:layout_height="68dp"
-            android:background="@drawable/shape_radius_square_stroke"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.321"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider"
-            app:layout_constraintVertical_bias="0.426">
-
-            <!-- 새 기능의 아이콘 -->
-
-            <ImageView
-                android:id="@+id/third_FeatureIcon"
-                android:layout_width="52dp"
-                android:layout_height="50dp"
-                android:layout_margin="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.058"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/swim" />
-
-            <TextView
-                android:id="@+id/third_FeatureTitle"
+            <Button
+                android:id="@+id/exercise_choose_apply"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="52dp"
-                android:text="@string/exercise_swim"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/third_FeatureIcon"
-                app:layout_constraintTop_toTopOf="parent" /> <!-- 새 기능의 제목 -->
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:text="@string/apply"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-
-            <!-- 추가하고 싶은 뷰들이 여기에 위치 -->
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

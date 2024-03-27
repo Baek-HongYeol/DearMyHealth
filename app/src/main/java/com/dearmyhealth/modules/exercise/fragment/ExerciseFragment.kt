@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.exercise
+package com.dearmyhealth.modules.exercise.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
