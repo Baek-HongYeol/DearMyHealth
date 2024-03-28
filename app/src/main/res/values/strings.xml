@@ -11,6 +11,7 @@
     <string name="search">검색</string>
     <string name="save">저장</string>
     <string name="edit">수정</string>
+    <string name="cancel">취소</string>
 
     <string name="navigation_drawer_open">navigation open</string>
     <string name="navigation_drawer_close">navigation close</string>
@@ -22,6 +23,11 @@
     <string name="Dosage">복약</string>
     <string name="Activity">운동</string>
 
+    <!-- privacy policy -->
+    <string name="privacy_policy_detail">조회된 데이터는 사용자에게 통계를 제공할 목적으로만 사용됩니다.</string>
+    <string name="privacy_policy">개인 정보 처리 방침</string>
+    <!-- Health Connect -->
+    <string name="health_connect_package">com.google.android.apps.healthdata</string>
 
     <string name="Dosage_alarm">복약 알림</string>
     <string name="Dosage_manage">복약 일정 관리</string>
