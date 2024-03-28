@@ -36,6 +36,10 @@
             android:name=".modules.login.ui.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login">
+        </activity>
+        <activity
+            android:name=".PrivacyPolicyActivity"
+            android:exported="true">
             <!-- Intent filter to handle permission rationale intent -->
             <intent-filter>
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
