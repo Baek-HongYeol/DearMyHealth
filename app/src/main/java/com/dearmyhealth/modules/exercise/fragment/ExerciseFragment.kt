@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.dearmyhealth.R
 import com.dearmyhealth.databinding.FragmentExerciseBinding
+import com.dearmyhealth.modules.exercise.model.Exercise
 
 class ExerciseFragment: Fragment() {
 
@@ -20,6 +21,12 @@ class ExerciseFragment: Fragment() {
 
         binding = FragmentExerciseBinding.inflate(inflater)
         binding.isEmpty = true
+        if(Exercise.currentExerciseType != null) {
+            binding.isEmpty = false
+            binding.todayActStatusIV.setImageDrawable(
+                Exercise.getDrawableOf(requireContext(), Exercise.currentExerciseType!!)
+            )
+        }
 
         binding.todayActStatusIV.setOnClickListener {
             findNavController().navigate(R.id.exerciseSettingScreen)
