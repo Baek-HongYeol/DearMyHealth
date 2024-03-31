@@ -9,16 +9,13 @@ import com.dearmyhealth.data.db.dao.DietDao
 import com.dearmyhealth.data.db.dao.DosageDao
 import com.dearmyhealth.data.db.dao.FoodDao
 import com.dearmyhealth.data.db.dao.MedicationDao
-import com.dearmyhealth.data.db.dao.NutrientStandardDao
 import com.dearmyhealth.data.db.dao.UserDao
 import com.dearmyhealth.data.db.entities.Alarm
 import com.dearmyhealth.data.db.entities.Diet
 import com.dearmyhealth.data.db.entities.Dosage
-import com.dearmyhealth.data.db.entities.EAR
 import com.dearmyhealth.data.db.entities.Food
 import com.dearmyhealth.data.db.entities.Goal
 import com.dearmyhealth.data.db.entities.Medication
-import com.dearmyhealth.data.db.entities.RNI
 import com.dearmyhealth.data.db.entities.Symptom
 import com.dearmyhealth.data.db.entities.User
 
@@ -27,13 +24,11 @@ import com.dearmyhealth.data.db.entities.User
         User::class,
         Food::class,
         Diet::class,
-        EAR::class,
-        RNI::class,
         Medication::class,
         Dosage::class,
         Alarm::class,
         Goal::class,
-        Symptom::class,], version = 1, exportSchema = false)
+        Symptom::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun foodDao(): FoodDao
@@ -41,7 +36,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun dosageDao(): DosageDao
     abstract fun medicationDao(): MedicationDao
     abstract fun alarmDao(): AlarmDao
-    abstract fun nutrientStandardDao(): NutrientStandardDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null
@@ -53,7 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
-                    .createFromAsset("preload.db")
+                    .createFromAsset("food.db")
                     .build()
                 INSTANCE = instance
                 instance
