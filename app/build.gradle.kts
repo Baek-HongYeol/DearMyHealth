@@ -3,17 +3,16 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("org.jetbrains.kotlin.kapt")
-    id("com.google.gms.google-services") version "4.3.10"
 }
 
 android {
     namespace = "com.dearmyhealth"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.dearmyhealth"
+        applicationId = "com.dearmyhealth.health"
         minSdk = 28
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -90,7 +89,8 @@ dependencies {
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
     // Okhttp3
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation("com.squareup.okhttp3:okhttp-urlconnection:4.10.0")
@@ -99,9 +99,10 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
     // Add a dependency of Health Connect SDK
-    implementation ("androidx.health.connect:connect-client:1.0.0-alpha11")
+    implementation ("androidx.health.connect:connect-client:1.1.0-alpha07")
     //그래프뷰
     implementation ("com.jjoe64:graphview:4.2.2")
 

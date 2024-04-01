@@ -2,7 +2,6 @@ package com.dearmyhealth.modules.bpm
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.os.Build.VERSION_CODES.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

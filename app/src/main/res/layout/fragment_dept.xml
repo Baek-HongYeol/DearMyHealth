@@ -5,178 +5,192 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".modules.bpm.DeptFragment">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_diet_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.08" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_diet_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.92" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_diet_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.08" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_diet_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="585dp" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_diet_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.92" />
 
-        <View
-            android:id="@+id/bpmrectangle"
-            android:layout_width="77dp"
-            android:layout_height="92dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="84dp"
-            android:background="@drawable/custom_rectangle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_diet_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="585dp" />
 
+            <LinearLayout
+                android:id="@+id/vitalList_LL"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="@id/guideline_diet_2"
+                app:layout_constraintStart_toStartOf="@id/guideline_diet_1"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <View
-            android:id="@+id/temprectangle"
-            android:layout_width="77dp"
-            android:layout_height="92dp"
-            android:layout_marginStart="124dp"
-            android:layout_marginTop="84dp"
-            android:background="@drawable/custom_rectangle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/bpmrectangle"
+                    android:layout_width="77dp"
+                    android:layout_height="92dp"
+                    android:background="@drawable/custom_rectangle">
 
-        <View
-            android:id="@+id/steprectangle"
-            android:layout_width="77dp"
-            android:layout_height="92dp"
-            android:layout_marginTop="84dp"
-            android:layout_marginEnd="28dp"
-            android:background="@drawable/custom_rectangle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                    <ImageButton
+                        android:id="@+id/bpmButton"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/bpm"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:id="@+id/weightrectangle"
-            android:layout_width="77dp"
-            android:layout_height="92dp"
-            android:layout_marginTop="84dp"
-            android:layout_marginEnd="116dp"
-            android:background="@drawable/custom_rectangle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:id="@+id/textbpm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="심박수"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/bpmrectangle"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/bpmButton" />
 
-        <ImageButton
-            android:id="@+id/bpmButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/bpm"
-            app:layout_constraintEnd_toEndOf="@+id/bpmrectangle"
-            app:layout_constraintStart_toStartOf="@+id/guideline_diet_1"
-            app:layout_constraintTop_toTopOf="@+id/bpmrectangle" />
-
-        <ImageButton
-            android:id="@+id/tempButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/temp"
-            app:layout_constraintEnd_toEndOf="@+id/temprectangle"
-            app:layout_constraintHorizontal_bias="0.518"
-            app:layout_constraintStart_toStartOf="@+id/temprectangle"
-            app:layout_constraintTop_toTopOf="@+id/temprectangle" />
-
-        <ImageButton
-            android:id="@+id/Buttonstep"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/step"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_diet_2"
-            app:layout_constraintTop_toTopOf="@+id/steprectangle" />
-
-        <ImageButton
-            android:id="@+id/weightButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/weight"
-            app:layout_constraintEnd_toEndOf="@+id/weightrectangle"
-            app:layout_constraintHorizontal_bias="0.481"
-            app:layout_constraintStart_toStartOf="@+id/weightrectangle"
-            app:layout_constraintTop_toTopOf="@+id/weightrectangle" />
-
-        <TextView
-            android:id="@+id/textbpm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="심박수"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/bpmrectangle"
-            app:layout_constraintStart_toStartOf="@+id/guideline_diet_1"
-            app:layout_constraintTop_toBottomOf="@+id/bpmButton" />
-
-        <TextView
-            android:id="@+id/texttemp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="체온"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/temprectangle"
-            app:layout_constraintStart_toStartOf="@+id/temprectangle"
-            app:layout_constraintTop_toBottomOf="@+id/tempButton" />
-
-        <TextView
-            android:id="@+id/textweight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="체중"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/weightrectangle"
-            app:layout_constraintStart_toStartOf="@+id/weightrectangle"
-            app:layout_constraintTop_toBottomOf="@+id/weightButton" />
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="걸음 수"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/Buttonstep"
-            app:layout_constraintStart_toStartOf="@+id/Buttonstep"
-            app:layout_constraintTop_toBottomOf="@+id/Buttonstep" />
-
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="413dp"
-            android:layout_height="482dp"
-            android:layout_marginTop="184dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </FrameLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/temprectangle"
+                    android:layout_width="77dp"
+                    android:layout_height="92dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/custom_rectangle">
+
+                    <ImageButton
+                        android:id="@+id/tempButton"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/temp"
+                        app:layout_constraintEnd_toEndOf="@id/temprectangle"
+                        app:layout_constraintHorizontal_bias="0.518"
+                        app:layout_constraintStart_toStartOf="@id/temprectangle"
+                        app:layout_constraintTop_toTopOf="@id/temprectangle" />
+
+                    <TextView
+                        android:id="@+id/texttemp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="체온"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/temprectangle"
+                        app:layout_constraintStart_toStartOf="@+id/temprectangle"
+                        app:layout_constraintTop_toBottomOf="@+id/tempButton" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/weightrectangle"
+                    android:layout_width="77dp"
+                    android:layout_height="92dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/custom_rectangle">
+
+                    <ImageButton
+                        android:id="@+id/weightButton"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/weight"
+                        app:layout_constraintEnd_toEndOf="@id/weightrectangle"
+                        app:layout_constraintHorizontal_bias="0.481"
+                        app:layout_constraintStart_toStartOf="@id/weightrectangle"
+                        app:layout_constraintTop_toTopOf="@id/weightrectangle" />
+
+                    <TextView
+                        android:id="@+id/textweight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="체중"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/weightrectangle"
+                        app:layout_constraintStart_toStartOf="@+id/weightrectangle"
+                        app:layout_constraintTop_toBottomOf="@+id/weightButton" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/steprectangle"
+                    android:layout_width="77dp"
+                    android:layout_height="92dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/custom_rectangle">
+
+                    <ImageButton
+                        android:id="@+id/Buttonstep"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/step"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/steprectangle" />
+
+                    <TextView
+                        android:id="@+id/text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="걸음 수"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/Buttonstep"
+                        app:layout_constraintStart_toStartOf="@+id/Buttonstep"
+                        app:layout_constraintTop_toBottomOf="@+id/Buttonstep" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="413dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vitalList_LL">
+
+            </FrameLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 
 </FrameLayout>

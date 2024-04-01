@@ -6,8 +6,9 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_AVAILABLE
+import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
-import androidx.health.connect.client.HealthConnectClient.Companion.sdkStatus
+import androidx.health.connect.client.HealthConnectClient.Companion.getSdkStatus
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.changes.Change
 import androidx.health.connect.client.records.ExerciseSessionRecord
@@ -29,15 +30,17 @@ import kotlinx.coroutines.flow.flow
 import java.io.IOException
 import java.time.Instant
 import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
 
 // The minimum android level that can use Health Connect
 const val MIN_SUPPORTED_SDK = Build.VERSION_CODES.O_MR1
 
 class HealthConnectManager(private val context: Context) {
+    val TAG = javaClass.simpleName
+
     val healthConnectClient by lazy { HealthConnectClient.getOrCreate(context) }
 
 
-    private fun isSupported() = Build.VERSION.SDK_INT >= MIN_SUPPORTED_SDK
     var availability = MutableLiveData(HealthConnectAvailability.NOT_SUPPORTED)
         private set
     init {
@@ -45,10 +48,14 @@ class HealthConnectManager(private val context: Context) {
     }
 
     fun checkAvailability() {
-        availability.value = when {
-            sdkStatus(context) == SDK_AVAILABLE -> HealthConnectAvailability.INSTALLED
-            sdkStatus(context) == SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> HealthConnectAvailability.NOT_INSTALLED
-            isSupported() -> HealthConnectAvailability.NOT_INSTALLED
+        availability.value = when(getSdkStatus(context)) {
+            SDK_AVAILABLE -> HealthConnectAvailability.INSTALLED
+
+            // update required
+            SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> HealthConnectAvailability.NOT_INSTALLED
+
+            // SdkVersion not Sufficient or 프로필 사용자 Context
+            SDK_UNAVAILABLE -> HealthConnectAvailability.NOT_SUPPORTED
             else -> HealthConnectAvailability.NOT_SUPPORTED
         }
     }
@@ -98,6 +105,13 @@ class HealthConnectManager(private val context: Context) {
         val response = healthConnectClient.readRecords(request)
         return response.records
     }
+
+    /**
+     * read in existing [StepsRecord]s from [start] to [end]
+     */
+    suspend fun readStepsRecords(start: Instant, end: Instant)
+        : List<StepsRecord> = readData<StepsRecord>(TimeRangeFilter.between(start, end))
+
     /**
      * Convenience function to reuse code for reading data.
      */

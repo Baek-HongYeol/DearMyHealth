@@ -29,6 +29,12 @@
     <!-- Health Connect -->
     <string name="health_connect_package">com.google.android.apps.healthdata</string>
 
+    <!-- chart -->
+    <string name="range_a_day">1일</string>
+    <string name="range_a_week">1주</string>
+    <string name="range_a_month">1개월</string>
+    <string name="range_a_year">1년</string>
+
     <string name="Dosage_alarm">복약 알림</string>
     <string name="Dosage_manage">복약 일정 관리</string>
     <string name="Dosage_schedule">복약 일정</string>
@@ -55,6 +61,12 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+
+    <!-- BPM -->
+    <string name="unit_temperature">ºC</string>
+    <string name="add_data">데이터 추가</string>
+
     <!-- Exercise -->
     <string name="exercise_details">운동 상세 정보</string>
     <string name="exercise_time">운동 시간</string>

@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/step_range_day"
+            android:id="@+id/chart_range_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -27,7 +27,7 @@
             android:text="@string/range_a_day" />
 
         <TextView
-            android:id="@+id/step_range_week"
+            android:id="@+id/chart_range_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -35,7 +35,7 @@
             android:text="@string/range_a_week" />
 
         <TextView
-            android:id="@+id/step_range_month"
+            android:id="@+id/chart_range_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -43,7 +43,7 @@
             android:text="@string/range_a_month" />
 
         <TextView
-            android:id="@+id/step_range_year"
+            android:id="@+id/chart_range_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -79,7 +79,7 @@
         app:layout_constraintStart_toStartOf="@id/metric_chart_data_TV"/>
 
     <LinearLayout
-        android:id="@+id/step_add_data_LL"
+        android:id="@+id/chart_add_data_LL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -101,7 +101,7 @@
             app:srcCompat="@drawable/dosage_add" />
 
         <TextView
-            android:id="@+id/step_add_button"
+            android:id="@+id/data_add_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="4dp"
@@ -121,7 +121,6 @@
         app:layout_constraintDimensionRatio="1:1"
         android:layout_marginHorizontal="8dp"
         android:layout_marginTop="8dp"/>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
