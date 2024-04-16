@@ -3,7 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("org.jetbrains.kotlin.kapt")
-    id("com.google.gms.google-services") version "4.3.10"
 }
 
 android {
