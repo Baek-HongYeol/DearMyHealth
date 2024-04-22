@@ -1,5 +1,6 @@
 package com.dearmyhealth.modules.bpm
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -46,6 +47,10 @@ class StepFragment : VitalChartFragment<AggregationResultGroupedByDuration>(Vita
             setupWeekGraph()
             currentRange = 1
             fetchDataInPeriod(PERIOD.WEEK)
+        }
+
+        binding.stepAddDataLL.setOnClickListener {
+            startActivity(Intent(requireContext(), StepAddActivity::class.java))
         }
 
         return binding.root
