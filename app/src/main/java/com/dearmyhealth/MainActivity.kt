@@ -15,6 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.dearmyhealth.api.RetrofitObject
 import com.dearmyhealth.home.ui.BottomSheetAccountDialogFragment
 import com.dearmyhealth.databinding.ActivityMainBinding
 
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 //            intent = Intent(this, LoginActivity::class.java)
 //            startActivity(intent)
 //        }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -49,6 +51,9 @@ class MainActivity : AppCompatActivity() {
         initView()
         observeViewModel()
         this.onBackPressedDispatcher.addCallback(onBackpressedCallback)
+
+        //retrofit 확인
+        //RetrofitObject.getDurItems()
     }
     private fun initView() {
         val toolbar : Toolbar = binding.appbar.toolbar

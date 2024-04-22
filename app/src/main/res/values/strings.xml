@@ -32,8 +32,8 @@
     <string name="Dosage_entername">제품명을 입력해 주세요</string>
     <string name="Dosage_adddirect">직접 추가하기</string>
     <string name="Dosage_noresult">검색결과가 없습니다.</string>
-    <string name="edit">수정하기</string>
-    <string name="delete">삭제하기</string>
+    <string name="Dosage_edit">수정하기</string>
+    <string name="Dosage_delete">삭제하기</string>
 
     <string name="name">제품명</string>
     <string name="amount">복용량</string>

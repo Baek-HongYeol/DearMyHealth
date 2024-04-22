@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="41dp"
             android:layout_marginTop="13dp"
-            android:text="@string/edit"
+            android:text="@string/Dosage_edit"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="41dp"
             android:layout_marginTop="53dp"
-            android:text="@string/delete"
+            android:text="@string/Dosage_delete"
             android:textColor="@color/red"
             android:textSize="16sp" />
 

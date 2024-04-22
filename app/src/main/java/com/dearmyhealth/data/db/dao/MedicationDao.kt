@@ -15,22 +15,21 @@ interface MedicationDao {
     @Update
     fun update(medication: Medication)
 
-    @Query("SELECT * FROM Medication WHERE medId=:id")
+    @Query("SELECT * FROM medication WHERE medId=:id")
     suspend fun find(id: Int) : Medication
 
-    @Query("SELECT * FROM Medication WHERE prodName LIKE (:prodName)")
-    suspend fun findByprodName(prodName:String) : List<Medication>
+    @Query("SELECT * FROM medication WHERE prodName LIKE (:prodName)")
+    suspend fun findByProdName(prodName:String) : List<Medication>
 
-    @Query("SELECT * FROM Medication WHERE entpName LIKE (:entpName)")
-    suspend fun findByentpName(entpName:String) : List<Medication>
+    @Query("SELECT * FROM medication WHERE entpName LIKE (:entpName)")
+    suspend fun findByEntpName(entpName:String) : List<Medication>
 
-    @Query("SELECT dosage FROM Medication WHERE medId=:id")
+    @Query("SELECT dosage FROM medication WHERE medId=:id")
     suspend fun dosage(id: Int) : Double
 
-    @Query("SELECT units FROM Medication WHERE medId=:id")
-    suspend fun unit(id: Int) : Medication.UNITS
+    @Query("SELECT units FROM medication WHERE medId=:id")
+    suspend fun units(id: Int) : Medication.UNITS
 
     @Delete
     fun delete(medication: Medication)
-
 }
