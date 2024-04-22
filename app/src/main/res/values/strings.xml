@@ -40,6 +40,8 @@
     <string name="start_date">복용시작일</string>
     <string name="end_date">복용종료일</string>
     <string name="time">복용시간</string>
+    <string name="no_result">검색 결과가 없습니다.</string>
+
 
     <string name="login_another_account">다른 계정으로 로그인</string>
     <string name="sample_notice2">건강 소식! 세상에 미나리가 너무 좋다는 소식이?</string>

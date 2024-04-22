@@ -1,149 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        layout="@layout/view_notices"
-        />
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_dosage_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.08"/>
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_dosage_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.92"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_dosage_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9"/>
+        <include layout="@layout/view_notices"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/guideline_dosage_1"
+            app:layout_constraintEnd_toEndOf="@id/guideline_dosage_2"/>
 
-    <FrameLayout
-        android:id="@+id/back_sq1"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/second_panel"
-        app:layout_constraintEnd_toEndOf="@+id/guideline_dosage_2"
-        app:layout_constraintStart_toStartOf="@id/guideline_dosage_1"
-        app:layout_constraintTop_toBottomOf="@id/noticeLL"
-        app:layout_constraintBottom_toBottomOf="@id/guideline_dosage_3">
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_dosage_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.08"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_dosage_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.92"/>
 
-        <LinearLayout
-            android:id="@+id/in_sq1"
-            android:layout_width="310dp"
-            android:layout_height="298dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="35dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/round_button"
-            android:orientation="vertical">
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_dosage_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.9"/>
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="15dp"
-                android:background="@color/white"
-                android:text="@string/Dosage_alarm"
-                android:textColor="@color/black"
-                android:textSize="19dp"
-                android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/back_sq1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/second_panel"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_dosage_3"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_dosage_2"
+            app:layout_constraintStart_toStartOf="@id/guideline_dosage_1"
+            app:layout_constraintTop_toBottomOf="@id/noticeLL">
 
-            <View
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/in_sq1"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/round_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/white"
+                    android:text="@string/Dosage_alarm"
+                    android:textColor="@color/black"
+                    android:textSize="19sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/dosage_divline"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textView1" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/back_sq2"
                 android:layout_width="310dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/black" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/back_sq2"
-            android:layout_width="310dp"
-            android:layout_height="57dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="370dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/round_button"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="57dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
-                android:text="@string/Dosage_manage"
-                android:textColor="@color/black"
-                android:textSize="19dp"
-                android:textStyle="bold" />
-
-
-            <ImageButton
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:layout_marginStart="120dp"
-                android:layout_marginTop="17dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/dosage_go"
-                android:clickable="false"
-                android:contentDescription="@string/Dosage_manage"
-                android:minWidth="0dp"
-                android:minHeight="0dp" />
-        </LinearLayout>
+                android:background="@drawable/round_button"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/in_sq1">
 
-        <LinearLayout
-            android:id="@+id/back_sq3"
-            android:layout_width="310dp"
-            android:layout_height="57dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="455dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/round_button"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/Dosage_manage"
+                    android:textColor="@color/black"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+                <ImageButton
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:layout_marginStart="120dp"
+                    android:layout_marginTop="17dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/dosage_go"
+                    android:clickable="false"
+                    android:contentDescription="@string/Dosage_manage"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/back_sq3"
+                android:layout_width="310dp"
+                android:layout_height="57dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
-                android:text="@string/Dosage_prescription"
-                android:textColor="@color/black"
-                android:textSize="19dp"
-                android:textStyle="bold" />
-
-
-            <ImageButton
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:layout_marginStart="110dp"
-                android:layout_marginTop="17dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/dosage_camera"
-                android:clickable="false"
-                android:contentDescription="@string/Dosage_manage"
-                android:minWidth="0dp"
-                android:minHeight="0dp" />
-        </LinearLayout>
-    </FrameLayout>
+                android:background="@drawable/round_button"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/back_sq2">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/Dosage_prescription"
+                    android:textColor="@color/black"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
 
 
+                <ImageButton
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:layout_marginStart="110dp"
+                    android:layout_marginTop="17dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/dosage_camera"
+                    android:clickable="false"
+                    android:contentDescription="@string/Dosage_manage"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-
-
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
