@@ -217,7 +217,6 @@
                     android:layout_marginEnd="12dp"
                     android:layout_marginBottom="8dp"
                     android:backgroundTint="@color/primary_container"
-                    android:onClick="showTimePickerDialog"
                     android:text="시간 선택"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -254,7 +253,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/temperatureEditText"
+                    android:id="@+id/steps_edit_text"
                     android:layout_width="85dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"

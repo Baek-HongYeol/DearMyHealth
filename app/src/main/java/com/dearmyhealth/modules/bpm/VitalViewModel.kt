@@ -2,8 +2,6 @@ package com.dearmyhealth.modules.bpm
 
 import android.os.RemoteException
 import android.util.Log
-import androidx.health.connect.client.aggregate.AggregationResultGroupedByDuration
-import androidx.health.connect.client.aggregate.AggregationResultGroupedByPeriod
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.BodyTemperatureRecord
 import androidx.health.connect.client.records.HeartRateRecord
@@ -14,10 +12,10 @@ import androidx.health.connect.client.request.AggregateGroupByPeriodRequest
 import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.dearmyhealth.modules.healthconnect.GroupedAggregationResult
 import com.dearmyhealth.modules.healthconnect.HealthConnectManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +25,8 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.Period
 import java.time.temporal.ChronoUnit
 
@@ -35,15 +35,36 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
 
     val client by lazy { healthConnectManager.healthConnectClient }
 
-    var currentDate: Instant = Instant.now().truncatedTo(ChronoUnit.DAYS)
-    var targetDate = Instant.now().truncatedTo(ChronoUnit.DAYS)
+    val today = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS)
+    var currentDate = OffsetDateTime.now()
+    var currentRange = PERIOD.DAY
+        set(value) {
+            field = value
+            endDateOfRange = today
+        }
+    var endDateOfRange = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS)
+        set(value) {
+            field = value
+            startOfDay = value.truncatedTo(ChronoUnit.DAYS)
+            endOfDay = startOfDay.plusDays(1)
+            startOfRange = when(currentRange) {
+                PERIOD.DAY -> startOfDay
+                PERIOD.WEEK -> startOfDay.minusDays(6)
+                PERIOD.MONTH -> startOfDay.minusMonths(1).plusDays(1)
+                PERIOD.YEAR -> startOfDay.minusYears(1)
+            }
+        }
+    var startOfDay = endDateOfRange.truncatedTo(ChronoUnit.DAYS)
+        private set
+    var endOfDay = startOfDay.plusDays(1)
+        private set
+
+    var startOfRange = startOfDay
+        private set
 
     var bpmSeries : MutableLiveData<List<HeartRateRecord>> = MutableLiveData(listOf())
         private set
-    var stepsIntoDurationSlices : MutableLiveData<List<AggregationResultGroupedByDuration>> =
-        MutableLiveData(listOf())
-        private set
-    var stepsIntoPeriodSlices : MutableLiveData<List<AggregationResultGroupedByPeriod>> =
+    var stepsIntoSlices : MutableLiveData<List<GroupedAggregationResult>> =
         MutableLiveData(listOf())
         private set
 
@@ -61,6 +82,7 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
         HealthPermission.getReadPermission(HeartRateRecord::class)
         )
 
+    /**************  권한 관리  ****************/
 
     suspend fun checkPermission() {
         val result = healthConnectManager.hasAllPermissions(permissions)
@@ -95,6 +117,8 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
             Log.e(TAG, illegalStateException.toString())
         }
     }
+
+    /**************  데이터 읽기 / 쓰기  **************/
 
     fun readHeartRateRecordsForDay(date: Instant): Unit {
         // 날짜의 시작 시간과 종료 시간을 계산합니다.
@@ -134,7 +158,7 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
         val startOfDay = date.truncatedTo(ChronoUnit.DAYS)
         val endOfDay = startOfDay.plus(1, ChronoUnit.DAYS)
         aggregateStepsIntoSlices(startOfDay, endOfDay, timeRangeSlicer).join()
-        val result = stepsIntoDurationSlices.value!!.map { v ->
+        val result = stepsIntoSlices.value!!.map { v ->
             v.result[StepsRecord.COUNT_TOTAL]
         }
         return if (result.isEmpty() || (result.all{it == null}))
@@ -164,17 +188,26 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
         endTime: Instant,
         timeRangeSlicer: Duration
     ): Job {
-        val result: List<AggregationResultGroupedByDuration>
         try {
-            result = client.aggregateGroupByDuration(
+            val result = client.aggregateGroupByDuration(
                 AggregateGroupByDurationRequest(
                     metrics = setOf(StepsRecord.COUNT_TOTAL),
                     timeRangeFilter = TimeRangeFilter.between(startTime, endTime),
                     timeRangeSlicer = timeRangeSlicer
                 )
             )
+            val list = mutableListOf<GroupedAggregationResult>()
+            for(record in result) {
+                list.add(
+                    GroupedAggregationResult(
+                        record.result,
+                        record.startTime,
+                        record.endTime
+                    )
+                )
+            }
             return CoroutineScope(Dispatchers.Main).launch {
-                stepsIntoDurationSlices.value = result
+                stepsIntoSlices.value = list
             }
         }
         catch(e: SecurityException) {
@@ -186,28 +219,37 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
      * this function request for aggregate data for [StepsRecord.COUNT_TOTAL] into [Period] Slices.
      */
     suspend fun aggregateStepsIntoSlices(
-        startTime: Instant,
-        endTime: Instant,
+        startTime: LocalDateTime = startOfRange.toLocalDateTime(),
+        endTime: LocalDateTime,
         timeRangeSlicer: Period
     ): Job {
-        val result: List<AggregationResultGroupedByPeriod>
         try {
-            result = client.aggregateGroupByPeriod(
+            val result = client.aggregateGroupByPeriod(
                 AggregateGroupByPeriodRequest(
                     metrics = setOf(StepsRecord.COUNT_TOTAL),
                     timeRangeFilter = TimeRangeFilter.between(startTime, endTime),
                     timeRangeSlicer = timeRangeSlicer
                 )
             )
+            val list = mutableListOf<GroupedAggregationResult>()
+            val zoneOffset = OffsetDateTime.now().offset
+            for(record in result) {
+                list.add(
+                    GroupedAggregationResult(
+                        record.result,
+                        record.startTime.toInstant(zoneOffset),
+                        record.endTime.toInstant(zoneOffset)
+                    )
+                )
+            }
             return CoroutineScope(Dispatchers.Main).launch {
-                stepsIntoPeriodSlices.value = result
+                stepsIntoSlices.value = list
             }
         }
         catch(e: SecurityException) {
             return Job()
         }
     }
-
 
 }
 

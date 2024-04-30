@@ -111,6 +111,32 @@ class StepAddActivity : AppCompatActivity() {
             binding.stepTimeTV.text = "$ampm $hour:$minuteStr"
         }
 
+        binding.timebutton2.setOnClickListener {
+            durationIdx = (durationIdx+1)%2
+            binding.timebutton2.text = durationTypes[durationIdx]
+        }
+
+        binding.addbutton.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                val startTime = startDateTime.toInstant()
+                val durationMinute = if(durationIdx==0) 60 else 1
+                val endTime = startDateTime.toInstant().plusSeconds(60*durationMinute*(binding.durationEditText.text.toString().toLongOrNull()?:0 ))
+                val value = binding.stepsEditText.text.toString().toLong()
+                try{
+                    healthConnectManager.writeStepsRecord(value, startTime, endTime)
+                    finish()
+                }
+                catch (e: Exception) {
+                    Log.e(TAG, e.toString())
+                    CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(this@StepAddActivity, e.message.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        binding.cancelbutton.setOnClickListener {
+            finish()
+        }
     }
 
     private fun checkAvailability() {

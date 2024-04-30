@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -51,14 +52,48 @@
             android:text="@string/range_a_year" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/prevDayButton"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="8dp"
+        android:scaleX="-1"
+        app:layout_constraintBottom_toBottomOf="@+id/currentDateTextView"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintStart_toEndOf="@id/currentDateTextView"
+        app:layout_constraintTop_toTopOf="@+id/currentDateTextView"
+        android:background="@drawable/baseline_navigate_next_24" />
+
+    <Button
+        android:id="@+id/nextDayButton"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toBottomOf="@id/currentDateTextView"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintStart_toEndOf="@+id/prevDayButton"
+        app:layout_constraintTop_toTopOf="@id/currentDateTextView"
+        android:background="@drawable/baseline_navigate_next_24" />
+
+    <TextView
+        android:id="@+id/currentDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:text="2024년 4월 29일"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chart_period_LL" />
+
     <TextView
         android:id="@+id/metric_chart_data_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="평균"
+        android:layout_marginTop="12dp"
+        android:text="합계"
         app:layout_constraintStart_toStartOf="@id/chart_period_LL"
-        app:layout_constraintTop_toBottomOf="@id/chart_period_LL" />
+        app:layout_constraintTop_toBottomOf="@id/currentDateTextView" />
 
     <TextView
         android:id="@+id/chart_represented_data_TV"
@@ -75,8 +110,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2024년 03월 06일 ~ 2024년 03월 12일"
-        app:layout_constraintTop_toBottomOf="@id/chart_represented_data_TV"
-        app:layout_constraintStart_toStartOf="@id/metric_chart_data_TV"/>
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/metric_chart_data_TV"
+        app:layout_constraintTop_toBottomOf="@id/chart_represented_data_TV" />
 
     <LinearLayout
         android:id="@+id/step_add_data_LL"
@@ -121,7 +157,6 @@
         app:layout_constraintDimensionRatio="1:1"
         android:layout_marginHorizontal="8dp"
         android:layout_marginTop="8dp"/>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

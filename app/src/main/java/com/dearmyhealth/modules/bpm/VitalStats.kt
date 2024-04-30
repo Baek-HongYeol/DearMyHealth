@@ -9,9 +9,9 @@ enum class VitalType {
     STEPS
 }
 
-enum class PERIOD(val unit: ChronoUnit) {
-    DAY(ChronoUnit.DAYS),
-    WEEK(ChronoUnit.WEEKS),
-    MONTH(ChronoUnit.MONTHS),
-    YEAR(ChronoUnit.YEARS)
+enum class PERIOD(val unit: ChronoUnit, val unitValue: Long, val subunit: ChronoUnit, val subunitValue: Int) {
+    DAY(ChronoUnit.DAYS, 1, ChronoUnit.HOURS, 1),
+    WEEK(ChronoUnit.DAYS, 7, ChronoUnit.DAYS, 1),
+    MONTH(ChronoUnit.MONTHS, 1, ChronoUnit.DAYS, 1),
+    YEAR(ChronoUnit.YEARS, 1, ChronoUnit.MONTHS, 1)
 }

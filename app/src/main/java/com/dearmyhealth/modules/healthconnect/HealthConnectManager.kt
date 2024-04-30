@@ -23,14 +23,16 @@ import androidx.health.connect.client.request.ChangesTokenRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.health.connect.client.units.Mass
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.time.Instant
+import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.time.temporal.ChronoUnit
 
 // The minimum android level that can use Health Connect
 const val MIN_SUPPORTED_SDK = Build.VERSION_CODES.O_MR1
@@ -104,6 +106,25 @@ class HealthConnectManager(private val context: Context) {
         )
         val response = healthConnectClient.readRecords(request)
         return response.records
+    }
+
+    /**
+     *
+     * write Steps Record
+     */
+    suspend fun writeStepsRecord(value: Long, startTime: Instant, endTime:Instant) {
+        val stepsRecord = StepsRecord(
+            count = value,
+            startTime = startTime,
+            endTime = endTime,
+            startZoneOffset = ZonedDateTime.ofInstant(startTime, ZoneId.systemDefault()).offset,
+            endZoneOffset = ZonedDateTime.ofInstant(startTime, ZoneId.systemDefault()).offset
+        )
+        val records = listOf(stepsRecord)
+        healthConnectClient.insertRecords(records)
+        CoroutineScope(Dispatchers.Main).launch {
+            Toast.makeText(context, "Successfully insert records", Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**

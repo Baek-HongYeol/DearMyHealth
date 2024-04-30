@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 import java.util.Date
 import java.util.Locale
@@ -55,7 +56,7 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
         // HealthConnectClient 초기화
 
         // 오늘 날짜
-        viewModel.currentDate = Instant.now()
+        viewModel.currentDate = OffsetDateTime.now()
 
         // 버튼 클릭 시 전날의 심박수 데이터 가져오기
         previousDayButton.setOnClickListener {
@@ -63,7 +64,7 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
 
             // 다음 날짜 버튼 활성화
             nextDayButton.isEnabled = true
-            updateDateText(viewModel.currentDate)
+            updateDateText(viewModel.currentDate.toInstant())
         }
 
         // 버튼 클릭 시 다음날의 심박수 데이터 가져오기
@@ -72,7 +73,7 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
 
             // 오늘이 아닌 경우만 다음 날짜 버튼 비활성화
             nextDayButton.isEnabled = !viewModel.currentDate.truncatedTo(ChronoUnit.DAYS).equals(Instant.now().truncatedTo(ChronoUnit.DAYS))
-            updateDateText(viewModel.currentDate)
+            updateDateText(viewModel.currentDate.toInstant())
         }
         nextDayButton.isEnabled = false
 
@@ -80,9 +81,9 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
         initializeGraph()
 
         // 초기 데이터 가져오기
-        updateDateText(viewModel.currentDate)
+        updateDateText(viewModel.currentDate.toInstant())
 
-        fetchDataForDay(viewModel.currentDate)
+        fetchDataForDay(viewModel.currentDate.toInstant())
         observeData()
     }
 
