@@ -85,6 +85,7 @@
     <string name="exercise_hiking">등산</string>
     <string name="exercise_bicycle">자전거</string>
     <string name="exercise_swim">수영</string>
+
     <!-- Diet -->
     <string name="breakfast">아침</string>
     <string name="calory">칼로리</string>
@@ -107,6 +108,8 @@
 
     <string name="default_nutrition_chip">칼로리: 0kcal</string>
     <string name="default_diet_description">오늘의 식단을 등록해보세요!</string>
+
+    <string name="positive_value_required">0보다 큰 값을 입력해주세요.</string>
 
     <string name="a_today_diet">오늘의 식사</string>
     <string name="addition_diet_item">식단 정보 추가</string>

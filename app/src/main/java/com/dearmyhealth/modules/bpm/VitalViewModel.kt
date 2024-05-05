@@ -45,7 +45,7 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
     var endDateOfRange = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS)
         set(value) {
             field = value
-            startOfDay = value.truncatedTo(ChronoUnit.DAYS)
+            val startOfDay = value.truncatedTo(ChronoUnit.DAYS)
             endOfDay = startOfDay.plusDays(1)
             startOfRange = when(currentRange) {
                 PERIOD.DAY -> startOfDay
@@ -54,12 +54,11 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
                 PERIOD.YEAR -> startOfDay.minusYears(1)
             }
         }
-    var startOfDay = endDateOfRange.truncatedTo(ChronoUnit.DAYS)
-        private set
-    var endOfDay = startOfDay.plusDays(1)
+
+    var endOfDay = endDateOfRange.truncatedTo(ChronoUnit.DAYS).plusDays(1)
         private set
 
-    var startOfRange = startOfDay
+    var startOfRange = endDateOfRange.truncatedTo(ChronoUnit.DAYS)
         private set
 
     var bpmSeries : MutableLiveData<List<HeartRateRecord>> = MutableLiveData(listOf())
@@ -120,7 +119,7 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
 
     /**************  데이터 읽기 / 쓰기  **************/
 
-    fun readHeartRateRecordsForDay(date: Instant): Unit {
+    fun readHeartRateRecordsForDay(date: Instant) {
         // 날짜의 시작 시간과 종료 시간을 계산합니다.
         val startOfDay = date.truncatedTo(ChronoUnit.DAYS)
         val endOfDay = startOfDay.plus(1, ChronoUnit.DAYS)

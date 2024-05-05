@@ -22,6 +22,7 @@ import com.dearmyhealth.databinding.ViewFoodSearchBinding
 import com.dearmyhealth.modules.Diet.ui.DialogListAdapter
 import com.dearmyhealth.modules.Diet.ui.DietDetailItemView
 import com.dearmyhealth.modules.Diet.viewmodel.DietCreateViewModel
+import com.dearmyhealth.modules.login.ui.afterTextChanged
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -124,6 +125,10 @@ class DietCreateActivity : AppCompatActivity(){
             binding.dietEditingTime.text = time
             binding.dietEditingDate.text = date
         }
+
+        viewModel.targetAmount.observe(this) { amount ->
+            dietPreview.generateNutrientChips(viewModel.targetNutrition.value, amount)
+        }
     }
 
     /** 식단의 validation 검증
@@ -132,6 +137,12 @@ class DietCreateActivity : AppCompatActivity(){
         if(viewModel.targetName.value == null){
             androidx.appcompat.app.AlertDialog.Builder(this)
                 .setMessage("식단 이름을 설정하세요.")
+                .show()
+            return false
+        }
+        if(binding.dietEditingAmount.error != null){
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setMessage("섭취량을 입력하세요.")
                 .show()
             return false
         }
@@ -253,6 +264,19 @@ class DietCreateActivity : AppCompatActivity(){
             TimePickerDialog(this, listener,
                 now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true
             ).show()
+        }
+        binding.dietEditingAmount.afterTextChanged { text: String? ->
+            try {
+                val value = text?.toFloat() ?:0f
+                if (value<=0)
+                    binding.dietEditingAmount.error = getString(R.string.positive_value_required)
+                else {
+                    binding.dietEditingAmount.error = null
+                    viewModel.setAmount(value)
+                }
+            } catch(e: NumberFormatException){
+                binding.dietEditingAmount.error = getString(R.string.positive_value_required)
+            }
         }
     }
 

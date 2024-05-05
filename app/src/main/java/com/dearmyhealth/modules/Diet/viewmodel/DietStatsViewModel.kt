@@ -14,10 +14,11 @@ import com.dearmyhealth.modules.Diet.DietRepository
 import com.dearmyhealth.modules.Diet.model.DietStats
 import com.dearmyhealth.modules.Diet.model.DietStats.PERIOD.*
 import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Date
 import java.util.Locale
-import java.util.TimeZone
 
 class DietStatsViewModel(val dietRepository: DietRepository) : ViewModel() {
     private val TAG = "DietStatsVM"
@@ -25,31 +26,52 @@ class DietStatsViewModel(val dietRepository: DietRepository) : ViewModel() {
     private var _ranges: LiveData<List<DietStats.PERIOD>> = MutableLiveData(listOf(WEEK, MONTH, ThreeMONTH, YEAR))
     val ranges: LiveData<List<DietStats.PERIOD>> get() = _ranges
 
-    var currentPeriod: MutableLiveData<String> = MutableLiveData("")
+    var currentPeriodText: MutableLiveData<String> = MutableLiveData("")
     var currentPosition: Int = 0
+        set(value) {
+            field = value
+            endDateOfRange = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS)
+        }
+
+    var endDateOfRange = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS)
+        private set(value) {
+            field = value
+            val startOfDay = value.truncatedTo(ChronoUnit.DAYS)
+            endOfDay = startOfDay.plusDays(1)
+            startOfRange = when(currentPosition) {
+                0 -> startOfDay.minusDays(6)
+                1 -> startOfDay.withDayOfMonth(1)
+                2 -> startOfDay.withDayOfMonth(1).minusMonths(2)
+                3 -> startOfDay.withDayOfMonth(1).minusYears(1).plusMonths(1)
+                else -> startOfDay.withDayOfMonth(1).minusYears(1).plusMonths(1)
+            }
+        }
+
+    var endOfDay = endDateOfRange.truncatedTo(ChronoUnit.DAYS).plusDays(1)
+        private set
+
+    var startOfRange = endDateOfRange.truncatedTo(ChronoUnit.DAYS)
+        private set
 
     private var _data: MutableLiveData<List<Diet>> = MutableLiveData(mutableListOf())
     val data:LiveData<List<Diet>> get() = _data
 
-    suspend fun selectRange(position: Int) {
+    fun selectRange(position: Int) {
         if(_ranges.value!!.getOrNull(position) == null) return
         currentPosition = position
-        val now = Calendar.getInstance()
 
-        val target = Calendar.getInstance()
-        target.add(_ranges.value!![position].unit, _ranges.value!![position].amount * (-1))
-
-        val sdf = SimpleDateFormat("yy년 M월 d일", Locale.KOREA)
-        sdf.timeZone = TimeZone.getDefault()
-        withContext(Dispatchers.Main) {
-            currentPeriod.value = "${sdf.format(target.time)} ~ ${sdf.format(now.time)}"
+        val dtf = when (position) {
+            0 -> DateTimeFormatter.ofPattern("dd일", Locale.getDefault())
+            1 -> DateTimeFormatter.ofPattern("M월 dd일", Locale.getDefault())
+            2 -> DateTimeFormatter.ofPattern("M월 dd일", Locale.getDefault())
+            else -> DateTimeFormatter.ofPattern("yyyy년 MM월", Locale.getDefault())
         }
 
-        setRangedData(target, now)
+        currentPeriodText.value = "${dtf.format(startOfRange)} ~ ${dtf.format(endDateOfRange)}"
     }
 
-    private suspend fun setRangedData(start: Calendar, end: Calendar) {
-        val data = dietRepository.findByPeriod(start.timeInMillis, end.timeInMillis)
+    suspend fun setRangedData(start: OffsetDateTime, end: OffsetDateTime) {
+        val data = dietRepository.findByPeriod(start.toEpochSecond()*1000, end.toEpochSecond()*1000)
         Log.d(TAG, "data size: ${data.size}")
 
         withContext(Dispatchers.Main) {
@@ -57,28 +79,6 @@ class DietStatsViewModel(val dietRepository: DietRepository) : ViewModel() {
         }
     }
 
-    fun changeDateText(): List<String> {
-        val dataList = data.value
-        val dataTextList = ArrayList<String>()
-        val WEEK_FORMATTER = SimpleDateFormat("d", Locale.getDefault())
-        val ThreeMONTH_FORMATTER = SimpleDateFormat("M월-W주", Locale.getDefault())
-        val YEAR_FORMATTER = SimpleDateFormat("M월", Locale.getDefault())
-        for (i in dataList!!.indices) {
-            val date = Date(dataList[i].time)
-            val formatter: SimpleDateFormat = when(_ranges.value!![currentPosition])
-            {
-                WEEK -> WEEK_FORMATTER
-                MONTH -> WEEK_FORMATTER
-                ThreeMONTH -> ThreeMONTH_FORMATTER
-                YEAR -> YEAR_FORMATTER
-                else -> SimpleDateFormat("M월 d일", Locale.getDefault())
-            }
-            dataTextList.add(formatter.format(date))
-
-        }
-        Log.d(TAG, dataTextList.toString())
-        return dataTextList
-    }
 
 
     class Factory(val context: Context): ViewModelProvider.Factory {

@@ -243,8 +243,6 @@ class StepFragment : VitalChartFragment<GroupedAggregationResult>(VitalType.STEP
             PERIOD.WEEK -> {
                 // 1일 단위로 눈금을 추가합니다.
                 graphView.gridLabelRenderer.numHorizontalLabels = 7 // X축에 표시할 눈금 수를 설정합니다.
-                //graphView.gridLabelRenderer.padding = 10
-                graphView.viewport.xAxisBoundsStatus
             }
             PERIOD.MONTH -> {
                 // 1일 단위로 눈금을 추가합니다.
