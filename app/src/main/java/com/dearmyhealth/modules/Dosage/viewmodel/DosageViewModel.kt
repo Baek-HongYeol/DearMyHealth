@@ -8,8 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DosageViewModel(private val repository: DosageRepository) : ViewModel() {
-    fun insertDosage(dosage: Dosage) {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun saveDosage(dosage: Dosage) {
+        viewModelScope.launch {
             repository.insertDosage(dosage)
         }
     }

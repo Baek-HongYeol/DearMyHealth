@@ -1,35 +1,38 @@
-package com.dearmyhealth.modules.Dosage.ui
-
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.health.platform.client.proto.Internal
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.dearmyhealth.R
 import com.dearmyhealth.data.db.entities.Medication
-import com.dearmyhealth.databinding.ViewItemMedicationBinding
 
-class MedicationAdapter : ListAdapter<Medication, MedicationAdapter.MedicationViewHolder>(DiffCallback()) {
-
-    class MedicationViewHolder(private var binding: ViewItemMedicationBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(medication: Medication) {
-            binding.medName.text = medication.prodName
-
-        // TO DO: 다른 뷰 바인딩 추가할거면
-        }
-    }
+class MedicationAdapter :
+    ListAdapter<Medication, MedicationAdapter.MedicationViewHolder>(MedicationDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicationViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = ViewItemMedicationBinding.inflate(layoutInflater, parent, false)
-        return MedicationViewHolder(binding)
+        val inflater = LayoutInflater.from(parent.context)
+        val view = inflater.inflate(R.layout.view_medication_item, parent, false)
+        return MedicationViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MedicationViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<Medication>() {
+    class MedicationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val nameTextView: TextView = itemView.findViewById(R.id.medication_name)
+        private val detailsTextView: TextView = itemView.findViewById(R.id.medication_details)
+
+        fun bind(medication: Medication) {
+            nameTextView.text = medication.prodName
+            detailsTextView.text = "Type: ${medication.typeName}\n" +
+                    "Warning: ${medication.warning}"
+        }
+    }
+
+    class MedicationDiffCallback : DiffUtil.ItemCallback<Medication>() {
         override fun areItemsTheSame(oldItem: Medication, newItem: Medication): Boolean {
             return oldItem.id == newItem.id
         }

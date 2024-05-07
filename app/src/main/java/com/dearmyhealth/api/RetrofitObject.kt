@@ -35,21 +35,4 @@ object RetrofitObject {
     val apiService: Apiservice by lazy {
         retrofit.create(Apiservice::class.java)
     }
-
-    suspend fun getDurItems(itemSeq: String): Response<DurItem> {
-        return apiService.getDurItemInfo(
-            ItemSeq = itemSeq,
-            ServiceKey = API_KEY,
-            PageNo = 1,
-            NumOfRows = 10,
-            Type = "json",
-            ItemName = "itemName",
-            EntpName = "entpName",
-            StartChangeDate = "20200101",
-            EndChangeDate = "20201231",
-            Bizrno = "bizrno",
-            TypeName = "typeName",
-            IngrCode = "ingrCode"
-        )
-    }
 }

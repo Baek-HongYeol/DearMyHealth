@@ -1,20 +1,29 @@
-package com.dearmyhealth.modules.Dosage.viewmodel
-
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.load.engine.Resource
+import com.dearmyhealth.data.Result
 import com.dearmyhealth.data.db.entities.Medication
-import com.dearmyhealth.modules.Dosage.repository.MedicationRepository
 import kotlinx.coroutines.launch
 
-//약물 검색 기능, LiveData 이용
 class MedicationViewModel(private val repository: MedicationRepository) : ViewModel() {
-    val medications = MutableLiveData<List<Medication>>()
+    private val _medications = MutableLiveData<Result<List<Medication>>>()
+    val medications: LiveData<Result<List<Medication>>> = _medications
 
-    fun searchMedications(query: String) {
+    fun searchMedications(searchText: String) {
+        _medications.value = Result.Loading
         viewModelScope.launch {
-            val results = repository.searchMedications(query)
-            medications.postValue(results)
+            try {
+                val results = repository.searchMedications(searchText)
+                if (results.isEmpty()) {
+                    _medications.postValue(Result.Error(Exception("No results found")))
+                } else {
+                    _medications.postValue(Result.Success(results))
+                }
+            } catch (e: Exception) {
+                _medications.postValue(Result.Error(e))
+            }
         }
     }
 }

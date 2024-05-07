@@ -1,34 +1,56 @@
-package com.dearmyhealth.modules.Dosage.activity
-
 import android.os.Bundle
-import androidx.activity.viewModels
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.dearmyhealth.databinding.ActivitySearchBinding
-import com.dearmyhealth.modules.Dosage.ui.MedicationAdapter
-import com.dearmyhealth.modules.Dosage.viewmodel.MedicationViewModel
+import androidx.databinding.DataBindingUtil.setContentView
+import androidx.lifecycle.ViewModelProvider
+import com.dearmyhealth.data.Result
+import com.dearmyhealth.databinding.FragmentDosageScheduleBinding
 
-
-//약물 검색 UI
 class SearchActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySearchBinding
-    private val viewModel: MedicationViewModel by viewModels()
+    private lateinit var viewModel: MedicationViewModel
+    private lateinit var adapter: MedicationAdapter
+    private lateinit var binding: FragmentDosageScheduleBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
+        binding = FragmentDosageScheduleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val adapter = MedicationAdapter()
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(MedicationViewModel::class.java)
+        setupRecyclerView()
+        setupSearch()
+    }
 
-        binding.searchButton.setOnClickListener {
-            viewModel.searchMedications(binding.searchField.text.toString())
+    private fun setupRecyclerView() {
+        adapter = MedicationAdapter()
+        binding.dosageMedSearchResultRV.adapter = adapter
+    }
+
+    private fun setupSearch() {
+        binding.search.setOnClickListener {
+            val searchText = binding.editTextText.text.toString()
+            if (searchText.isNotEmpty()) {
+                viewModel.searchMedications(searchText)
+            }
         }
 
-        viewModel.medications.observe(this) { medications ->
-            adapter.submitList(medications)
+        viewModel.medications.observe(this) { result ->
+            when (result) {
+                is Result.Success -> {
+                    adapter.submitList(result.data)
+                    binding.medNoSearchResultTV.visibility = View.GONE
+                }
+                is Result.Error -> {
+                    binding.medNoSearchResultTV.apply {
+                        text = result.exception.message ?: "검색 결과가 없습니다."
+                        visibility = View.VISIBLE
+                    }
+                }
+                Result.Loading -> {
+                    // ProgresBar로 표시?
+                    //binding.progressBar.visibility = View.VISIBLE
+                }
+            }
         }
     }
 }

@@ -4,7 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import org.json.JSONArray
+import java.io.InputStream
 import com.dearmyhealth.data.db.dao.AlarmDao
+import com.dearmyhealth.data.db.dao.AttentionDetailDao
 import com.dearmyhealth.data.db.dao.DietDao
 import com.dearmyhealth.data.db.dao.DosageDao
 import com.dearmyhealth.data.db.dao.FoodDao
@@ -12,6 +17,7 @@ import com.dearmyhealth.data.db.dao.MedicationDao
 import com.dearmyhealth.data.db.dao.NutrientStandardDao
 import com.dearmyhealth.data.db.dao.UserDao
 import com.dearmyhealth.data.db.entities.Alarm
+import com.dearmyhealth.data.db.entities.AttentionDetail
 import com.dearmyhealth.data.db.entities.Diet
 import com.dearmyhealth.data.db.entities.Dosage
 import com.dearmyhealth.data.db.entities.EAR
@@ -21,6 +27,8 @@ import com.dearmyhealth.data.db.entities.Medication
 import com.dearmyhealth.data.db.entities.RNI
 import com.dearmyhealth.data.db.entities.Symptom
 import com.dearmyhealth.data.db.entities.User
+import com.dearmyhealth.modules.login.Session.dao
+import org.json.JSONObject
 
 @Database(
     entities = [
@@ -30,16 +38,19 @@ import com.dearmyhealth.data.db.entities.User
         EAR::class,
         RNI::class,
         Medication::class,
+        AttentionDetail::class,
         Dosage::class,
         Alarm::class,
         Goal::class,
         Symptom::class,], version = 1, exportSchema = false)
+/*@TypeConverters(UnitsConverter::class)*/
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun foodDao(): FoodDao
     abstract fun dietDao(): DietDao
     abstract fun dosageDao(): DosageDao
     abstract fun medicationDao(): MedicationDao
+    abstract fun attentionDetailDao(): AttentionDetailDao
     abstract fun alarmDao(): AlarmDao
     abstract fun nutrientStandardDao(): NutrientStandardDao
 

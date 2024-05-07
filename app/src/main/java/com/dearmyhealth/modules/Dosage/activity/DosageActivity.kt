@@ -18,7 +18,7 @@ class DosageActivity : AppCompatActivity() {
         binding = ActivityDosageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.saveButton.setOnClickListener {
+        /*binding.saveButton.setOnClickListener {
             try {
                 val medicationId = binding.medIdInput.text.toString().toInt()
                 val userId = binding.userInput.text.toString().toInt()
@@ -46,6 +46,6 @@ class DosageActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
             }
-        }
+        }*/
     }
 }
