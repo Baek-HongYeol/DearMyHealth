@@ -15,16 +15,15 @@ interface DosageDao {
     @Update
     fun update(dosage: Dosage)
 
-    @Query("SELECT * FROM Dosage WHERE dosageId=:dosageId")
+    @Query("SELECT * FROM dosage WHERE dosageId=:dosageId")
     suspend fun getDosage(dosageId:Int) : Dosage?
 
-    @Query("SELECT * FROM Dosage WHERE user=:uid")
+    @Query("SELECT * FROM dosage WHERE user=:uid")
     suspend fun findDosageFor(uid: Int) : List<Dosage>
 
-    @Query("SELECT * FROM Dosage WHERE user=:uid AND endTime>:time")
+    @Query("SELECT * FROM dosage WHERE user=:uid AND endTime>:time")
     suspend fun findDosageForAfter(uid: Int, time: Long) : List<Dosage>
 
     @Delete
     fun delete(dosage: Dosage)
-
 }

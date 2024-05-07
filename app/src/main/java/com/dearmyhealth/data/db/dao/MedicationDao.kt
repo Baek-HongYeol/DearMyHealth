@@ -1,39 +1,53 @@
 package com.dearmyhealth.data.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.dearmyhealth.data.db.entities.AttentionDetail
 import com.dearmyhealth.data.db.entities.Medication
 
 @Dao
 interface MedicationDao {
-    @Insert
-    fun insert(medication: Medication)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(medications: List<Medication>): List<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(medication: Medication): Long
 
     @Update
-    fun update(medication: Medication)
+    suspend fun update(medication: Medication)
 
-    @Query("SELECT * FROM Medication WHERE id=:id")
-    suspend fun find(id: Int) : Medication
+    @Query("SELECT * FROM medication")
+    fun getAllMedications(): LiveData<List<Medication>>
 
-    @Query("SELECT * FROM Medication WHERE code=:code LIMIT 1")
-    suspend fun findByCode(code:String) : Medication
+    @Query("SELECT * FROM medication WHERE medId = :id")
+    suspend fun find(id: Int): Medication?
 
-    @Query("SELECT * FROM Medication WHERE prodName LIKE (:prodName)")
-    suspend fun findByprodName(prodName:String) : List<Medication>
+    @Query("SELECT * FROM Medication WHERE id = :itemSeq")
+    suspend fun findByItemSeq(itemSeq: String): List<Medication>
 
-    @Query("SELECT * FROM Medication WHERE entpName LIKE (:entpName)")
-    suspend fun findByentpName(entpName:String) : List<Medication>
+    @Query("SELECT * FROM medication WHERE prodName LIKE (:prodName)")
+    suspend fun findByProdName(prodName: String): List<Medication>
 
-    @Query("SELECT dosage FROM Medication WHERE id=:id")
-    suspend fun dosage(id: Int) : Double
+    @Query("SELECT * FROM medication WHERE prodName LIKE :nameOr OR id = :seq")
+    suspend fun findByNameOrSeq(nameOr: String, seq: String): List<Medication>
 
-    @Query("SELECT units FROM Medication WHERE id=:id")
-    suspend fun unit(id: Int) : Medication.UNITS
+    @Query("SELECT * FROM Medication WHERE typeCode = :typeCode")
+    suspend fun findByTypeCode(typeCode: String): List<Medication>
+
+    @Query("SELECT * FROM Medication WHERE typeName = :typeName")
+    suspend fun findByTypeName(typeName: String): List<Medication>
+
+    @Query("SELECT dosage FROM medication WHERE medId = :id")
+    suspend fun dosage(id: Int): Double
+
+    @Query("SELECT units FROM Medication WHERE medId = :id")
+    suspend fun findUnitsById(id: Int): String?
 
     @Delete
-    fun delete(medication: Medication)
-
+    suspend fun delete(medication: Medication): Int
 }
