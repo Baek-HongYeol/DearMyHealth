@@ -10,7 +10,7 @@ import com.dearmyhealth.data.db.entities.Dosage
 @Dao
 interface DosageDao {
     @Insert
-    fun insert(dosage: Dosage)
+    fun insert(dosage: Dosage): Long
 
     @Update
     fun update(dosage: Dosage)

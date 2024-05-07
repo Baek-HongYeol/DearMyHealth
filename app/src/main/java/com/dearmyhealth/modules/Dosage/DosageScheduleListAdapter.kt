@@ -17,6 +17,9 @@ class DosageScheduleListAdapter(val list: List<Dosage>): RecyclerView.Adapter<Do
 
     override fun onBindViewHolder(holder: ViewHodler, position: Int) {
         holder.binding.dosageSchduleName.text = list[position].name
+        holder.binding.dosageScheduleOptionIV.setOnClickListener {
+            // TODO 수정/삭제 메뉴 보이기 with item_position
+        }
     }
 
     override fun getItemCount(): Int = list.size
