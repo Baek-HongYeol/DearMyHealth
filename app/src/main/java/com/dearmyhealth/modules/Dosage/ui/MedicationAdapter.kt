@@ -34,7 +34,7 @@ class MedicationAdapter :
 
     class MedicationDiffCallback : DiffUtil.ItemCallback<Medication>() {
         override fun areItemsTheSame(oldItem: Medication, newItem: Medication): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.itemSeq == newItem.itemSeq
         }
 
         override fun areContentsTheSame(oldItem: Medication, newItem: Medication): Boolean {

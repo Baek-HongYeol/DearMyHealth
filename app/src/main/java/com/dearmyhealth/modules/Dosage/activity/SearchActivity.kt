@@ -28,7 +28,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun setupSearch() {
         binding.search.setOnClickListener {
-            val searchText = binding.editTextText.text.toString()
+            val searchText = binding.medSearchEditText.text.toString()
             if (searchText.isNotEmpty()) {
                 viewModel.searchMedications(searchText)
             }

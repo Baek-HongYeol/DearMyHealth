@@ -1,5 +1,6 @@
 package com.dearmyhealth.data.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -23,6 +24,9 @@ interface DosageDao {
 
     @Query("SELECT * FROM dosage WHERE user=:uid AND endTime>:time")
     suspend fun findDosageForAfter(uid: Int, time: Long) : List<Dosage>
+
+    @Query("SELECT * FROM dosage WHERE user=:uid AND endTime>:time")
+    fun findLiveDosageForAfter(uid: Int, time: Long) : LiveData<List<Dosage>>
 
     @Delete
     fun delete(dosage: Dosage)

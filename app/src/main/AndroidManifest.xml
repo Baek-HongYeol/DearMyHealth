@@ -58,6 +58,11 @@
             android:exported="false"
             android:theme="@style/Theme.Dearmyhealth"
             android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".modules.Dosage.activity.DosageActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Dearmyhealth"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

@@ -27,13 +27,13 @@ interface MedicationDao {
     @Query("SELECT * FROM medication WHERE medId = :id")
     suspend fun find(id: Int): Medication?
 
-    @Query("SELECT * FROM Medication WHERE id = :itemSeq")
+    @Query("SELECT * FROM Medication WHERE itemSeq = :itemSeq")
     suspend fun findByItemSeq(itemSeq: String): List<Medication>
 
     @Query("SELECT * FROM medication WHERE prodName LIKE (:prodName)")
     suspend fun findByProdName(prodName: String): List<Medication>
 
-    @Query("SELECT * FROM medication WHERE prodName LIKE :nameOr OR id = :seq")
+    @Query("SELECT * FROM medication WHERE prodName LIKE :nameOr OR itemSeq = :seq")
     suspend fun findByNameOrSeq(nameOr: String, seq: String): List<Medication>
 
     @Query("SELECT * FROM Medication WHERE typeCode = :typeCode")
@@ -45,7 +45,7 @@ interface MedicationDao {
     @Query("SELECT dosage FROM medication WHERE medId = :id")
     suspend fun dosage(id: Int): Double
 
-    @Query("SELECT units FROM Medication WHERE medId = :id")
+    @Query("SELECT units FROM Medication WHERE medId = :id LIMIT 1")
     suspend fun findUnitsById(id: Int): String?
 
     @Delete

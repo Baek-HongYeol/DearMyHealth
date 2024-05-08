@@ -1,13 +1,14 @@
 package com.dearmyhealth.data.db.entities
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(indices = [Index(value=["itemSeq"], unique = true)])
 data class Medication(
     @PrimaryKey(autoGenerate = true)
     val medId: Int = 0,
-    val id: String?,
+    val itemSeq: String = "",   // ItemSeq
     val prodName: String = "", //이름
     val entpName: String= "", //제조사
     val dosage: Double= 0.0, //복용량

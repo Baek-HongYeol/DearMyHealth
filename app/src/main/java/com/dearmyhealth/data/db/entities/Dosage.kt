@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = Medication::class,
-            parentColumns = ["id"], childColumns = ["medicationId"],
+            parentColumns = ["itemSeq"], childColumns = ["medicationId"],
             onDelete = ForeignKey.SET_NULL
         ),
         ForeignKey(
@@ -23,7 +23,7 @@ import androidx.room.PrimaryKey
 data class Dosage(
     @PrimaryKey(autoGenerate = true) val dosageId: Int,
     val insertedTime: Long,
-    val medicationId: Int,
+    val medicationId: String,
     val user: Int,
     val name: String,
     val startTime: Long,

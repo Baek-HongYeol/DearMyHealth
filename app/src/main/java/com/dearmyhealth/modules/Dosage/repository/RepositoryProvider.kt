@@ -24,12 +24,20 @@ object RepositoryProvider {
         AppDatabase.getDatabase(applicationContext).medicationDao()
     }
 
+    private val dosageDao by lazy {
+        AppDatabase.getDatabase(applicationContext).dosageDao()
+    }
+
     private val attentionDetailDao by lazy {
         AppDatabase.getDatabase(applicationContext).attentionDetailDao()
     }
 
     val medicationRepository: MedicationRepository by lazy {
         MedicationRepository(apiService, medicationDao, attentionDetailDao)
+    }
+
+    val dosageRepository: DosageRepository by lazy {
+        DosageRepository(dosageDao, medicationRepository)
     }
 }
 

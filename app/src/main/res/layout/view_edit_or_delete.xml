@@ -3,70 +3,83 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/edit_popup"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="121dp"
+    android:layout_height="90dp"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    app:layout_constraintTop_toTopOf="parent"
+    android:background="@drawable/round_button"
+    android:backgroundTint="@color/second_panel">
 
-    <FrameLayout
-        android:id="@+id/alllayout"
-        android:layout_width="121dp"
-        android:layout_height="90dp"
-        android:background="@drawable/round_button"
-        android:backgroundTint="@color/second_panel"
-        android:clickable="false"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/edit_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="@color/heavygray"
-            android:layout_gravity="center"/>
-
 
         <ImageButton
             android:id="@+id/edit_img"
             android:layout_width="23dp"
             android:layout_height="23dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="14dp"
             android:background="@drawable/dosage_edit"
             android:clickable="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
             android:id="@+id/edit_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="41dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginStart="12dp"
             android:text="@string/Dosage_edit"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/edit_img"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/edit_or_del_div_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:background="@color/heavygray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_view" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/del_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_or_del_div_line">
 
         <ImageButton
             android:id="@+id/delete_img"
             android:layout_width="23dp"
             android:layout_height="23dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="53dp"
             android:background="@drawable/dosage_trash"
             android:clickable="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
             android:id="@+id/delete_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="41dp"
-            android:layout_marginTop="53dp"
+            android:layout_marginStart="12dp"
             android:text="@string/Dosage_delete"
             android:textColor="@color/red"
-            android:textSize="16sp" />
-
-    </FrameLayout>
-
-
-
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/delete_img"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,8 +27,7 @@ import com.dearmyhealth.data.db.entities.Medication
 import com.dearmyhealth.data.db.entities.RNI
 import com.dearmyhealth.data.db.entities.Symptom
 import com.dearmyhealth.data.db.entities.User
-import com.dearmyhealth.modules.login.Session.dao
-import org.json.JSONObject
+import com.dearmyhealth.data.db.preload.PreloadMedicationsCallback
 
 @Database(
     entities = [
@@ -65,6 +64,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "app_database"
                 )
                     .createFromAsset("preload.db")
+                    .addCallback(PreloadMedicationsCallback(context))
                     .build()
                 INSTANCE = instance
                 instance

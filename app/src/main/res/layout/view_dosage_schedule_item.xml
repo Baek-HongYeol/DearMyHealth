@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="24.04.15~24.05.02"
-            app:layout_constraintBottom_toBottomOf="@id/dosage_schdule_name"
+            app:layout_constraintBottom_toBottomOf="@id/dosage_schedule_dosage"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
@@ -39,10 +39,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="복용량"
+            android:text="복용량:"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/dosage_schdule_name"
             app:layout_constraintTop_toBottomOf="@id/dosage_schdule_name" />
+
+        <TextView
+            android:id="@+id/dosage_schedule_dosage_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="1개"
+            app:layout_constraintBottom_toBottomOf="@id/dosage_schedule_dosage"
+            app:layout_constraintStart_toEndOf="@+id/dosage_schedule_dosage"
+            app:layout_constraintTop_toTopOf="@id/dosage_schedule_dosage" />
 
         <ImageView
             android:id="@+id/dosage_schedult_add_icon"

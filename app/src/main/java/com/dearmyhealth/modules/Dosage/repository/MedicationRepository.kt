@@ -22,6 +22,20 @@ class MedicationRepository(
         private const val TYPE_JSON = "json"
     }
 
+
+    private suspend fun insertMedication(medication: Medication): Long {
+        return medicationDao.insert(medication)
+    }
+    suspend fun insertMedication(
+        itemSeq: String = "",   // ItemSeq
+        prodName: String = "", //이름
+        entpName: String= "", //제조사
+        dosage: Double= 0.0, //복용량
+        units: String= "", //단위
+    ) : Long {
+        return insertMedication(Medication(0, itemSeq, prodName, entpName, dosage, units))
+    }
+
     // 약물 정보를 입력한 검색 조건에 따라 조회하여 저장
     suspend fun fetchAndStoreMedications(itemSeq: String? = null, prodName: String? = null, entpName: String? = null) {
         try {
@@ -32,7 +46,7 @@ class MedicationRepository(
             if (response.isSuccessful) {
                 response.body()?.response?.body?.items?.forEach { item ->
                     val medication = Medication(
-                        id = item.itemSeq,
+                        itemSeq = item.itemSeq,
                         prodName = item.itemName,
                         entpName = item.entpName,
                         description = item.chart,
@@ -40,7 +54,7 @@ class MedicationRepository(
                         units = item.udDocID,
                         warning = item.nbDocId,
                         typeName = item.typeName,
-                        typeCode = item.typeCode
+                        typeCode = item.typeCode,
                     )
                     medicationDao.insert(medication)
 
@@ -55,6 +69,17 @@ class MedicationRepository(
         }
     }
 
+    /** 정확한 이름 혹은 일련번호로 검색 **/
+    suspend fun findMedication(itemSeq: String, name: String?=null): Medication? {
+        val searchName = name ?: itemSeq
+        val medications = medicationDao.findByNameOrSeq(searchName, itemSeq)
+        return if(medications.isEmpty())
+            null
+        else
+            medications[0]
+    }
+
+    /** 이름 혹은 일련번호 검색 **/
     suspend fun searchMedications(searchText: String): List<Medication> {
         // 먼저 DB에서 제품 이름 || 일련번호로 검색
         var medications = medicationDao.findByNameOrSeq("%$searchText%", searchText)
@@ -69,7 +94,7 @@ class MedicationRepository(
             if (response.isSuccessful && response.body() != null) {
                 medications = response.body()!!.response.body.items.map { item ->
                     Medication(
-                        id = item.itemSeq,
+                        itemSeq = item.itemSeq,
                         prodName = item.itemName,
                         entpName = item.entpName,
                         description = item.chart,
