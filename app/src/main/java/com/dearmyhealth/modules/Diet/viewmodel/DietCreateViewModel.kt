@@ -31,6 +31,7 @@ class DietCreateViewModel(
 
     private var isNameFromFood = false
     val targetName: MutableLiveData<String?> = MutableLiveData()
+    val targetAmount: MutableLiveData<Float> = MutableLiveData(1f)
     val targetFood: MutableLiveData<Food?> = MutableLiveData(null)
     val targetNutrition: MutableLiveData<Nutrients?> = MutableLiveData(null)
     val targetType: MutableLiveData<Diet.MealType> = MutableLiveData(Diet.MealType.MEAL_TYPE_BREAKFAST)
@@ -123,8 +124,10 @@ class DietCreateViewModel(
      * TimePicker를 통해 지정한 시간, 분을 targetDateTime에 설정한다.
      */
     fun setTime(hour: Int, minute: Int) {
-        targetDateTime.value!!.set(Calendar.HOUR_OF_DAY, hour)
-        targetDateTime.value!!.set(Calendar.MINUTE, minute)
+        val datetime = targetDateTime.value!!
+        datetime.set(Calendar.HOUR_OF_DAY, hour)
+        datetime.set(Calendar.MINUTE, minute)
+        targetDateTime.value = datetime
     }
 
     /** 식단 취급 날짜 설정
@@ -136,22 +139,30 @@ class DietCreateViewModel(
         targetDateTime.value!!.set(Calendar.DAY_OF_MONTH, dayOfMonth)
     }
 
+    fun setAmount(amount: Float) {
+        targetAmount.value = amount
+    }
+
     /** 설정된 데이터를 repository를 통해 저장한다.
      * 칼로리, 탄수화물, 단백질, 지방, 콜레스테롤은 nullable하게 접근해 저장.
      */
-    fun save() {
+    suspend fun save() {
         val result = dietRepository.insert(
             targetDateTime.value!!.timeInMillis, targetFood.value?.code, targetType.value!!,
-            targetName.value ?: "null", null, targetNutrition.value?.calories,
+            targetName.value ?: "null", targetAmount.value!!, null, targetNutrition.value?.calories,
             targetNutrition.value?.nutrients?.get(Nutrients.Names.carbohydrate),
             targetNutrition.value?.nutrients?.get(Nutrients.Names.protein),
             targetNutrition.value?.nutrients?.get(Nutrients.Names.fat),
             targetNutrition.value?.nutrients?.get(Nutrients.Names.cholesterol),
         )
-        if(result is Result.Success)
-            _dietResult.value = DietCreateResult(success = result)
-        else
-            _dietResult.value = DietCreateResult(error = 1) // RoomDB Insert Error
+        withContext(Dispatchers.Main) {
+            if(result is Result.Success)
+                _dietResult.value = DietCreateResult(success = result)
+            else {
+                _dietResult.value = DietCreateResult(error = 1) // RoomDB Insert Error
+                Log.e(TAG, (result as Result.Error).exception.message.toString())
+            }
+        }
     }
 
 

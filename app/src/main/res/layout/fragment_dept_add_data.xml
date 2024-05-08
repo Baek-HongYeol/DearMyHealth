@@ -27,8 +27,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.563" />
 
-    <TextView
-        android:id="@+id/textcancle"
+    <Button
+        android:id="@+id/cancelbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/texttemp"
+        android:id="@+id/dept_add_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="96dp"
@@ -51,8 +51,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textadd"
+    <Button
+        android:id="@+id/addbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="88dp"
@@ -118,7 +118,7 @@
         app:layout_constraintStart_toStartOf="@+id/roundedRectangle" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/temperatureEditText"
         android:layout_width="74dp"
         android:layout_height="26dp"
         android:layout_marginTop="116dp"

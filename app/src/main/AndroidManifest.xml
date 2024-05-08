@@ -38,6 +38,10 @@
             android:name=".modules.login.ui.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login">
+        </activity>
+        <activity
+            android:name=".PrivacyPolicyActivity"
+            android:exported="true">
             <!-- Intent filter to handle permission rationale intent -->
             <intent-filter>
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
@@ -59,10 +63,15 @@
             android:theme="@style/Theme.Dearmyhealth"
             android:parentActivityName=".MainActivity"/>
         <activity
+            android:name=".modules.bpm.StepAddActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Dearmyhealth"
+            android:parentActivityName=".MainActivity"/>
+        <activity
             android:name=".modules.Dosage.activity.DosageActivity"
             android:exported="false"
             android:theme="@style/Theme.Dearmyhealth"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

@@ -30,6 +30,7 @@ data class Diet(
     val time: Long,
     val type: MealType,
     val name: String,
+    val amount: Float,
     val imageURI: String?,
     val calories: Double?,
     val carbohydrate: Double?,

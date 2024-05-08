@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
+import kotlin.math.roundToInt
 
 class DietDetailItemView(context: Context,
                          _binding: ViewDietDetailItemBinding? = null,
@@ -44,7 +45,7 @@ class DietDetailItemView(context: Context,
     }
 
     fun setDiet(diet: Diet) {
-        setName(diet.name)
+        setName(diet.name, diet.amount)
         setType(diet.type)
         setTime(diet.time)
         val nuts = Nutrients(0,0)
@@ -62,6 +63,15 @@ class DietDetailItemView(context: Context,
         generateNutrientChips(Nutrients(diet.user, diet.time, diet.calories, nuts.nutrients))
     }
 
+
+    @SuppressLint("SetTextI18n")
+    fun setName(name: String?, amount: Float) {
+        val am = "%d".format(amount.roundToInt())
+        if(name == null)
+            binding.dietFoodTV.text = resources.getString(R.string.default_diet_description)
+        else
+            binding.dietFoodTV.text = "${am}x $name"
+    }
 
     fun setName(name: String?) {
         binding.dietFoodTV.text = name ?: resources.getString(R.string.default_diet_description)
@@ -85,7 +95,7 @@ class DietDetailItemView(context: Context,
     }
 
     @SuppressLint("SetTextI18n")
-    fun generateNutrientChips(nuts: Nutrients?) {
+    fun generateNutrientChips(nuts: Nutrients?, amount: Float = 1f) {
         // 영양소를 각각 하나의 chip으로 표현
         val chips = binding.chipGroup
         chips.removeAllViews()
@@ -97,13 +107,13 @@ class DietDetailItemView(context: Context,
         chips.addView(chip)
         if (nuts == null) return
 
-        chip.text = resources.getString(R.string.calory_chip, nuts.calories?.toInt() ?: 0)
+        chip.text = resources.getString(R.string.calory_chip, ((nuts.calories?:0.0) * amount).toInt())
         for (nut in nuts.nutrients.entries) {
             if(nut.value == null)
                 continue
 
             chip = makeChip()
-            chip.text = nut.key.displayedName + ": ${nut.value!!.toInt()}g"
+            chip.text = nut.key.displayedName + ": ${(nut.value!!*amount).toInt()}g"
             chips.addView(chip)
         }
     }

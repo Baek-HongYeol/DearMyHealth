@@ -36,19 +36,19 @@ class DietRepository(private val datasource: DietDao) {
     private fun insert(diet: Diet): Long {
         return datasource.insertAll(diet)[0]
     }
-    fun insert(time: Long, foodcode: String?, type: Diet.MealType, name: String,
+    fun insert(time: Long, foodcode: String?, type: Diet.MealType, name: String, amount:Float,
                imageURI:String?, calories: Int?, carbohydrate: Int?, protein: Int?, fat: Int?,
                cholesterol: Int?): Result<Diet> {
         try {
             val id = insert(
                 Diet(
-                    0, foodcode, 0, time, type, name,
+                    0, foodcode, 0, time, type, name, amount,
                     imageURI, calories?.toDouble(), carbohydrate?.toDouble(),
                     protein?.toDouble(), fat?.toDouble(), cholesterol?.toDouble()
                 )
             )
             return Result.Success(Diet(
-                id, foodcode, 0, time, type, name,
+                id, foodcode, 0, time, type, name, amount,
                 imageURI, calories?.toDouble(), carbohydrate?.toDouble(),
                 protein?.toDouble(), fat?.toDouble(), cholesterol?.toDouble()
             ))
@@ -59,19 +59,19 @@ class DietRepository(private val datasource: DietDao) {
 
 
     }
-    fun insert(time: Long, foodcode: String?, type: Diet.MealType, name: String,
+    fun insert(time: Long, foodcode: String?, type: Diet.MealType, name: String, amount: Float,
                imageURI:String?, calories: Double?, carbohydrate: Double?, protein: Double?, fat: Double?,
                cholesterol: Double?): Result<Diet> {
         try {
             val id = insert(
                 Diet(
-                    0, foodcode, 0, time, type, name,
+                    0, foodcode, 0, time, type, name, amount,
                     imageURI, calories, carbohydrate, protein, fat, cholesterol
                 )
             )
             return Result.Success(
                 Diet(
-                    id, foodcode, 0, time, type, name,
+                    id, foodcode, 0, time, type, name, amount,
                     imageURI, calories, carbohydrate, protein, fat, cholesterol
                 )
             )

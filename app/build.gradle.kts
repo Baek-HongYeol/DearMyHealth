@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.dearmyhealth"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.dearmyhealth"
         minSdk = 28
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -101,7 +101,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     // Add a dependency of Health Connect SDK
-    implementation ("androidx.health.connect:connect-client:1.0.0-alpha11")
+    implementation ("androidx.health.connect:connect-client:1.1.0-alpha07")
     //그래프뷰
     implementation ("com.jjoe64:graphview:4.2.2")
 

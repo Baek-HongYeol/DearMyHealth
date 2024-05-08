@@ -13,16 +13,16 @@ interface DietDao {
     @Query("SELECT * FROM diet")
     fun getAll(): List<Diet>
 
-    @Query("SELECT * FROM diet WHERE user IN (:uids)")
+    @Query("SELECT * FROM diet WHERE user IN (:uids) ORDER BY time ASC")
     suspend fun loadAllByUids(uids: IntArray): List<Diet>
 
     @Query("SELECT * FROM diet WHERE user=:uid AND dietId LIKE :dietId LIMIT 1")
     suspend fun findById(uid: Int, dietId: Long): List<Diet>
 
-    @Query("SELECT * FROM DIET WHERE user=:uid AND (time BETWEEN :start AND :end)")
+    @Query("SELECT * FROM DIET WHERE user=:uid AND (time BETWEEN :start AND :end) ORDER BY time ASC")
     suspend fun findByPeriod(uid: Int, start: Long, end: Long): List<Diet>
 
-    @Query("SELECT * FROM DIET WHERE user=:uid AND (time BETWEEN :start AND :end)")
+    @Query("SELECT * FROM DIET WHERE user=:uid AND (time BETWEEN :start AND :end) ORDER BY time ASC")
     fun findByPeriodLive(uid: Int, start: Long, end: Long): LiveData<List<Diet>>
 
     @Insert
