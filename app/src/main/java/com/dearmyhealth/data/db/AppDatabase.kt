@@ -4,10 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import org.json.JSONArray
-import java.io.InputStream
 import com.dearmyhealth.data.db.dao.AlarmDao
 import com.dearmyhealth.data.db.dao.AttentionDetailDao
 import com.dearmyhealth.data.db.dao.DietDao
@@ -28,6 +24,7 @@ import com.dearmyhealth.data.db.entities.RNI
 import com.dearmyhealth.data.db.entities.Symptom
 import com.dearmyhealth.data.db.entities.User
 import com.dearmyhealth.data.db.preload.PreloadMedicationsCallback
+import com.dearmyhealth.data.db.preload.PreloadTestUserCallback
 
 @Database(
     entities = [
@@ -65,6 +62,7 @@ abstract class AppDatabase : RoomDatabase() {
                 )
                     .createFromAsset("preload.db")
                     .addCallback(PreloadMedicationsCallback(context))
+                    .addCallback(PreloadTestUserCallback(context))
                     .build()
                 INSTANCE = instance
                 instance
