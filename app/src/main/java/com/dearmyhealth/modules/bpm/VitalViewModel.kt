@@ -28,6 +28,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.Period
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel() {
@@ -40,26 +41,30 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
     var currentRange = PERIOD.DAY
         set(value) {
             field = value
-            endDateOfRange = today
-        }
-    var endDateOfRange = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS)
-        set(value) {
-            field = value
-            val startOfDay = value.truncatedTo(ChronoUnit.DAYS)
-            endOfDay = startOfDay.plusDays(1)
             startOfRange = when(currentRange) {
-                PERIOD.DAY -> startOfDay
-                PERIOD.WEEK -> startOfDay.minusDays(6)
-                PERIOD.MONTH -> startOfDay.minusMonths(1).plusDays(1)
-                PERIOD.YEAR -> startOfDay.minusYears(1)
+                PERIOD.DAY -> today
+                PERIOD.WEEK -> today.minusDays(7)
+                PERIOD.MONTH -> today.withDayOfMonth(1)
+                PERIOD.YEAR -> today.withDayOfMonth(1).minusYears(1).plusMonths(1)
             }
         }
+    var startOfRange = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS)
+        set(value) {
+            field = value
 
-    var endOfDay = endDateOfRange.truncatedTo(ChronoUnit.DAYS).plusDays(1)
+            endOfRange = when(currentRange) {
+                PERIOD.DAY -> value.plusDays(1).minusNanos(1)
+                PERIOD.WEEK -> value.plusDays(7).minusNanos(1)
+                PERIOD.MONTH -> value.plusMonths(1).minusNanos(1)
+                PERIOD.YEAR -> value.plusYears(1).minusNanos(1)
+            }
+        }
+    var endOfRange = startOfRange
+        .withHour(23)
+        .withMinute(59)
+        .withSecond(59)
         private set
 
-    var startOfRange = endDateOfRange.truncatedTo(ChronoUnit.DAYS)
-        private set
 
     var bpmSeries : MutableLiveData<List<HeartRateRecord>> = MutableLiveData(listOf())
         private set
@@ -78,7 +83,13 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
 
     val permissions = setOf(
         HealthPermission.getReadPermission(StepsRecord::class),
-        HealthPermission.getReadPermission(HeartRateRecord::class)
+        HealthPermission.getWritePermission(StepsRecord::class),
+        HealthPermission.getReadPermission(HeartRateRecord::class),
+        HealthPermission.getWritePermission(HeartRateRecord::class),
+        HealthPermission.getReadPermission(WeightRecord::class),
+        HealthPermission.getWritePermission(WeightRecord::class),
+        HealthPermission.getReadPermission(BodyTemperatureRecord::class),
+        HealthPermission.getWritePermission(BodyTemperatureRecord::class)
         )
 
     /**************  권한 관리  ****************/
@@ -247,6 +258,42 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
         }
         catch(e: SecurityException) {
             return Job()
+        }
+    }
+
+    /*** Weight ***/
+    suspend fun readWeightRecords(startTime: Instant, endTime: Instant) {
+        try {
+            val response = client.readRecords<WeightRecord>(
+                ReadRecordsRequest(
+                    recordType = WeightRecord::class,
+                    timeRangeFilter = TimeRangeFilter.between(startTime, endTime),
+                    //dataOriginFilter = setOf(DataOrigin("com.dearmyhealth"))
+                )
+            )
+            withContext(Dispatchers.Main) {
+                weightRecords.value = response.records
+            }
+        }
+        catch (e: Exception) {
+            // Run error handling here
+        }
+    }
+
+    suspend fun readTempRecords(startTime: Instant, endTime: Instant) {
+        try {
+            val response = client.readRecords(
+                ReadRecordsRequest(
+                    recordType = BodyTemperatureRecord::class,
+                    timeRangeFilter = TimeRangeFilter.Companion.between(startTime, endTime)
+                )
+            )
+            withContext(Dispatchers.Main) {
+                tempRecords.value = response.records
+            }
+        }
+        catch (e: Exception) {
+            // Run error handling here
         }
     }
 

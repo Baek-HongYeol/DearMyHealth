@@ -15,7 +15,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.dearmyhealth.api.RetrofitObject
 import com.dearmyhealth.home.ui.BottomSheetAccountDialogFragment
 import com.dearmyhealth.databinding.ActivityMainBinding
 

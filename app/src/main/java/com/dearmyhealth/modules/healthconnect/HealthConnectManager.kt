@@ -2,7 +2,8 @@ package com.dearmyhealth.modules.healthconnect
 
 import android.content.Context
 import android.os.Build
-import android.widget.Toast
+import android.os.RemoteException
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_AVAILABLE
@@ -24,11 +25,8 @@ import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.health.connect.client.units.Mass
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import java.io.IOException
 import java.time.Instant
 import java.time.ZoneId
@@ -77,6 +75,29 @@ class HealthConnectManager(private val context: Context) {
         return PermissionController.createRequestPermissionResultContract()
     }
 
+    suspend fun tryWithPermissionsCheck(permissions: Set<String>, block: suspend () -> Unit) {
+        val isPermitted = hasAllPermissions(permissions)
+
+        try {
+            if (isPermitted) {
+                block()
+            }
+            else {
+                Log.e(TAG, "try failed via permission lackage.")
+            }
+        } catch (remoteException: RemoteException) {
+            Log.e(TAG, remoteException.toString())
+        } catch (securityException: SecurityException) {
+            Log.e(TAG, securityException.toString())
+            securityException.printStackTrace()
+        } catch (ioException: IOException) {
+            Log.e(TAG, ioException.toString())
+            ioException.printStackTrace()
+        } catch (illegalStateException: IllegalStateException) {
+            Log.e(TAG, illegalStateException.toString())
+        }
+    }
+
     /**
      * TODO: Writes [WeightRecord] to Health Connect.
      */
@@ -88,12 +109,7 @@ class HealthConnectManager(private val context: Context) {
             zoneOffset = time.offset
         )
         val records = listOf(weightRecord)
-        try {
-            healthConnectClient.insertRecords(records)
-            Toast.makeText(context, "Successfully insert records", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            Toast.makeText(context, e.message.toString(), Toast.LENGTH_SHORT).show()
-        }
+        healthConnectClient.insertRecords(records)
     }
 
     /**
@@ -122,9 +138,6 @@ class HealthConnectManager(private val context: Context) {
         )
         val records = listOf(stepsRecord)
         healthConnectClient.insertRecords(records)
-        CoroutineScope(Dispatchers.Main).launch {
-            Toast.makeText(context, "Successfully insert records", Toast.LENGTH_SHORT).show()
-        }
     }
 
     /**
@@ -151,7 +164,7 @@ class HealthConnectManager(private val context: Context) {
     /**
      * TODO: Returns the weekly average of [WeightRecord]s.
      */
-    suspend fun computeWeeklyAverage(start: Instant, end: Instant): Mass? {
+    suspend fun computeWeightAverage(start: Instant, end: Instant): Mass? {
         val request = AggregateRequest(
             metrics = setOf(WeightRecord.WEIGHT_AVG),
             timeRangeFilter = TimeRangeFilter.between(start, end)

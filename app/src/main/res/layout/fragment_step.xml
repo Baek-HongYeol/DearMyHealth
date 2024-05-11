@@ -14,7 +14,8 @@
         android:background="@drawable/shape_radius_square_stroke_r5dp"
         android:backgroundTint="@color/secondary"
         android:orientation="horizontal"
-        android:paddingVertical="6dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,7 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/shape_radius_square_stroke_r5dp"
             android:gravity="center"
+            android:paddingVertical="4dp"
             android:text="@string/range_a_day" />
 
         <TextView
@@ -32,7 +35,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/shape_radius_square_stroke_r5dp"
+            android:backgroundTint="@color/secondary"
             android:gravity="center"
+            android:paddingVertical="4dp"
             android:text="@string/range_a_week" />
 
         <TextView
@@ -40,7 +46,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/shape_radius_square_stroke_r5dp"
+            android:backgroundTint="@color/secondary"
             android:gravity="center"
+            android:paddingVertical="4dp"
             android:text="@string/range_a_month" />
 
         <TextView
@@ -48,7 +57,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/shape_radius_square_stroke_r5dp"
+            android:backgroundTint="@color/secondary"
             android:gravity="center"
+            android:paddingVertical="4dp"
             android:text="@string/range_a_year" />
     </LinearLayout>
 
@@ -146,6 +158,16 @@
             android:text="@string/add_data" />
     </LinearLayout>
 
+    <com.github.mikephil.charting.charts.CombinedChart
+        android:id="@+id/step_bar_chart"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chart_period_TV"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="8dp"/>
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graphView2"
@@ -156,7 +178,8 @@
         app:layout_constraintTop_toBottomOf="@id/chart_period_TV"
         app:layout_constraintDimensionRatio="1:1"
         android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:visibility="gone"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

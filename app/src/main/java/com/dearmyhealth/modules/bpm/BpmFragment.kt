@@ -32,8 +32,7 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
     private lateinit var minBpmTextView: TextView
     private lateinit var avgBpmTextView: TextView
     private lateinit var maxBpmTextView: TextView
-    private lateinit var binding: FragmentBpmBinding
-    private val viewModel: VitalViewModel by viewModels({requireParentFragment()})
+    lateinit var _binding: FragmentBpmBinding
 
 
     override fun onCreateView(
@@ -41,9 +40,9 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentBpmBinding.inflate(inflater)
-        graphView = binding.graphView
-        return binding.root
+        _binding = FragmentBpmBinding.inflate(inflater)
+        graphView = _binding.graphView
+        return _binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,7 +95,7 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
 
     fun updateDateText(date: Instant) {
         val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
-        binding.currentDateTextView.text = dateFormat.format(Date.from(date))
+        _binding.currentDateTextView.text = dateFormat.format(Date.from(date))
     }
 
     private fun fetchDataForDay(date: Instant) {
@@ -112,7 +111,7 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
         }
     }
 
-    override fun initializeGraph() {
+    fun initializeGraph() {
 
         // X축의 시간 간격을 설정합니다.
         graphView.viewport.isXAxisBoundsManual = true
@@ -142,10 +141,6 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
             }
         }
 
-        // Y축의 눈금 간격을 설정합니다.
-        graphView.gridLabelRenderer.numVerticalLabels = 7 // Y축에 표시할 눈금 수를 설정합니다.
-
-
         // X축과 Y축의 레이블을 추가합니다.
         graphView.gridLabelRenderer.horizontalAxisTitle = "시간"
         graphView.gridLabelRenderer.verticalAxisTitle = "심박수"
@@ -153,7 +148,7 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
 
 
     // displayHeartRateData 및 displayHeartRateStats 함수는 필요에 따라 구현하세요.
-    override fun drawGraph(data: List<HeartRateRecord>){
+    fun drawGraph(data: List<HeartRateRecord>){
         // 그래프를 초기화합니다.
         graphView.removeAllSeries()
 

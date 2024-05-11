@@ -124,6 +124,10 @@ class StepAddActivity : AppCompatActivity() {
                 val value = binding.stepsEditText.text.toString().toLong()
                 try{
                     healthConnectManager.writeStepsRecord(value, startTime, endTime)
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(this@StepAddActivity, "Successfully insert records", Toast.LENGTH_SHORT).show()
+                    }
                     finish()
                 }
                 catch (e: Exception) {
