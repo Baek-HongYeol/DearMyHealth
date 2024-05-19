@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.dearmyhealth.data.db.dao.AlarmDao
 import com.dearmyhealth.data.db.dao.AttentionDetailDao
 import com.dearmyhealth.data.db.dao.DietDao
@@ -39,7 +40,7 @@ import com.dearmyhealth.data.db.preload.PreloadTestUserCallback
         Alarm::class,
         Goal::class,
         Symptom::class,], version = 1, exportSchema = false)
-/*@TypeConverters(UnitsConverter::class)*/
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun foodDao(): FoodDao

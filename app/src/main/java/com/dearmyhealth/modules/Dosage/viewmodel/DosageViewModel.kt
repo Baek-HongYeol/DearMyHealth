@@ -8,9 +8,11 @@ import com.dearmyhealth.data.Result
 import com.dearmyhealth.data.db.entities.Dosage
 import com.dearmyhealth.modules.Dosage.repository.DosageRepository
 import com.dearmyhealth.modules.login.Session
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.OffsetTime
 
 class DosageViewModel(private val repository: DosageRepository) : ViewModel() {
 
@@ -21,6 +23,8 @@ class DosageViewModel(private val repository: DosageRepository) : ViewModel() {
 
     val getResult: MutableLiveData<Dosage> = MutableLiveData()
 
+    val dosageTimeList: MutableLiveData<MutableList<OffsetTime>> = MutableLiveData(mutableListOf())
+
     fun saveDosage(dosage: Dosage) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertDosage(dosage)
@@ -28,7 +32,7 @@ class DosageViewModel(private val repository: DosageRepository) : ViewModel() {
     }
 
     suspend fun insertDosage(medicationCode: String?=null, name:String, startTime: Long, endTime: Long,
-                     dosageTime: Long, dosage: Double?=1.0) {
+                     dosageTime: List<Long>, dosage: Double?=1.0) {
         val result = repository.insert(medicationCode, name, startTime, endTime, dosageTime, dosage, Session.currentUser?.uid?:0)
         withContext(Dispatchers.Main) {
             _addResult.value = result
@@ -40,11 +44,13 @@ class DosageViewModel(private val repository: DosageRepository) : ViewModel() {
     }
 
     fun deleteDosage(dosage: Dosage) {
-        repository.deleteDosage(dosage)
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.deleteDosage(dosage)
+        }
     }
 
     suspend fun getDosage(dosageId: Int) {
-        val result = repository.getDosage(dosageId)
+        val result = repository.getDosage(dosageId) ?: return
         withContext(Dispatchers.Main) {
             getResult.value = result
         }

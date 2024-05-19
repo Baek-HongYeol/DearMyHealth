@@ -18,7 +18,7 @@ class DosageRepository(private val dosageDao: DosageDao, private val medicationS
         return dosageDao.insert(dosage).toInt()
     }
     suspend fun insert(medItemSeq: String?=null, name:String, startTime: Long, endTime: Long,
-                       dosageTime: Long, dosage: Double?=1.0, user:Int =0): Result<Dosage> {
+                       dosageTime: List<Long>, dosage: Double?=1.0, user:Int =0): Result<Dosage> {
         var itemSeq = "0"
         if (medItemSeq!=null) {
             try {
@@ -58,7 +58,7 @@ class DosageRepository(private val dosageDao: DosageDao, private val medicationS
         dosageDao.update(dosage)
     }
 
-    fun deleteDosage(dosage: Dosage) {
+    suspend fun deleteDosage(dosage: Dosage) {
         dosageDao.delete(dosage)
     }
 

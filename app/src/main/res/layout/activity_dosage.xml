@@ -64,12 +64,12 @@
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:text="@string/time"
                 android:textColor="@color/black"
                 android:textSize="19dp"
+                app:layout_constraintBottom_toBottomOf="@id/dosage_time_LL"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/end" />
+                app:layout_constraintTop_toTopOf="@id/dosage_time_LL" />
 
             <TextView
                 android:id="@+id/memo"
@@ -169,14 +169,14 @@
 
             <DatePicker
                 android:id="@+id/dosage_add_start_datepicker"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:datePickerMode="spinner"
                 android:spinnersShown="false"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/start"
                 app:layout_constraintTop_toBottomOf="@id/dosage_start_date_LL" />
 
             <LinearLayout
@@ -210,15 +210,14 @@
 
             <DatePicker
                 android:id="@+id/dosage_add_end_datepicker"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:clipToPadding="false"
                 android:datePickerMode="spinner"
                 android:spinnersShown="false"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/end"
                 app:layout_constraintTop_toBottomOf="@id/dosage_end_date_LL" />
 
             <LinearLayout
@@ -231,9 +230,19 @@
                 app:layout_constraintStart_toStartOf="@id/name_input"
                 app:layout_constraintTop_toBottomOf="@id/dosage_add_end_datepicker">
 
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="4dp"
+                    app:chipSpacing="4dp">
+
+                </com.google.android.material.chip.ChipGroup>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:background="@color/second_panel"
                     android:orientation="vertical">
 

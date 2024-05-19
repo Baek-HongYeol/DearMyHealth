@@ -29,5 +29,5 @@ interface DosageDao {
     fun findLiveDosageForAfter(uid: Int, time: Long) : LiveData<List<Dosage>>
 
     @Delete
-    fun delete(dosage: Dosage)
+    suspend fun delete(dosage: Dosage)
 }

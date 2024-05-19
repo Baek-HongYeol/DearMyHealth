@@ -28,7 +28,7 @@ data class Dosage(
     val name: String,
     val startTime: Long,
     val endTime: Long,
-    val dosageTime: Long,
+    val dosageTime: List<Long>,
     val dosage: Double?,
     val memo: String,
 )

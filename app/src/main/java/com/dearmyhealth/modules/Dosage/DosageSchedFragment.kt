@@ -82,7 +82,7 @@ class DosageSchedFragment: Fragment() {
             Intent(requireContext(), DosageActivity::class.java).apply {
                 putExtra("operation","CREATE")
                 putExtra("medName", selectedMedication?.prodName ?: "")
-                putExtra("medItemSeq", selectedMedication?.itemSeq ?: "0")
+                putExtra("medItemSeq", selectedMedication?.itemSeq ?: "")
                 startActivity(this)
             }
         }
