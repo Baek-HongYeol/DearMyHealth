@@ -1,5 +1,7 @@
 package com.dearmyhealth.modules.bpm
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.RemoteException
 import android.util.Log
 import androidx.health.connect.client.permission.HealthPermission
@@ -15,6 +17,7 @@ import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.dearmyhealth.R
 import com.dearmyhealth.modules.healthconnect.GroupedAggregationResult
 import com.dearmyhealth.modules.healthconnect.HealthConnectManager
 import kotlinx.coroutines.CoroutineScope
@@ -22,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import java.io.IOException
 import java.time.Duration
 import java.time.Instant
@@ -297,6 +301,65 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
         }
     }
 
+
+    suspend fun preloadSteps(context: Context) {
+        if(!healthConnectManager.hasAllPermissions(setOf(
+                HealthPermission.getWritePermission(StepsRecord::class)
+            )))
+        {
+            Log.e(TAG, "preload steps count data failed caused by permission denied.")
+            return
+        }
+
+        // Preference에 저장한 값 조회
+        val sharedPreferences: SharedPreferences =
+            context.getSharedPreferences("preload steps", Context.MODE_PRIVATE)
+        if(sharedPreferences.getBoolean("already_preload", false))
+            return
+        val preloadCount = sharedPreferences.getInt("step_preload_count", 0)
+        var writtenCount = preloadCount
+
+        try {
+            val stepsList: JSONArray =
+                context.resources.openRawResource(R.raw.preload_steps).bufferedReader().use {
+                    JSONArray(it.readText())
+                }
+            val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
+            val offset = OffsetDateTime.now().offset
+
+            Log.d("Preload_Step", "list size: ${stepsList.length()}")
+            Log.d("Preload_Step", stepsList.getJSONObject(0).getString("start_time"))
+            stepsList.takeIf { it.length() > 0 }?.let { list ->
+
+                for (index in preloadCount until list.length()) {
+                    val stepObj = list.getJSONObject(index)
+                    val count = stepObj.getInt("count")
+                    if(count==0)
+                        continue
+                    healthConnectManager.writeStepsRecord(
+                        stepObj.getInt("count").toLong(),
+                        LocalDateTime.parse(stepObj.getString("start_time"), dtf).toInstant(offset),
+                        LocalDateTime.parse(stepObj.getString("end_time"), dtf).toInstant(offset)
+                    )
+                    writtenCount++
+                }
+                Log.e("Preload_Step", "successfully pre-load steps into database")
+                //  Preference에 로드한 값 저장
+                val editor = sharedPreferences.edit()
+                editor.putBoolean("already_preload", true)
+                editor.apply()
+            }
+        } catch (exception: Exception) {
+            Log.e(
+                "Preload_Step",
+                exception.localizedMessage ?: "failed to pre-load steps into database"
+            )
+            val editor = sharedPreferences.edit()
+            editor.putInt("step_preload_count", writtenCount)
+            editor.apply()
+        }
+    }
 }
 
 class VitalViewModelFactory(val healthConnectManager: HealthConnectManager): ViewModelProvider.Factory {
