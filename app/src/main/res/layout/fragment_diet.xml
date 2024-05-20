@@ -87,7 +87,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@drawable/shape_circle_stroke"
+                    android:background="@drawable/shape_circle"
                     android:backgroundTint="@color/secondary"
                     android:gravity="center"
                     android:text="\?"

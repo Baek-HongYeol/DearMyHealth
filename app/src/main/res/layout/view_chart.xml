@@ -96,7 +96,7 @@
             android:layout_height="16dp"
             android:layout_margin="4dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_circle_stroke"
+            android:background="@drawable/shape_circle"
             android:padding="3dp"
             app:srcCompat="@drawable/dosage_add" />
 

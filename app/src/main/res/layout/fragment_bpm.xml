@@ -46,7 +46,19 @@
         android:layout_marginTop="64dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/currentDateTextView" />
+        app:layout_constraintTop_toTopOf="@id/currentDateTextView"
+        android:visibility="gone"/>
+
+    <com.github.mikephil.charting.charts.CombinedChart
+        android:id="@+id/bar_chart"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentDateTextView"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="8dp"/>
 
     <ImageView
         android:id="@+id/customRectangleImageView"
@@ -57,7 +69,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/graphView"
+        app:layout_constraintTop_toBottomOf="@id/bar_chart"
         app:layout_constraintVertical_bias="0.4" />
 
     <TextView
