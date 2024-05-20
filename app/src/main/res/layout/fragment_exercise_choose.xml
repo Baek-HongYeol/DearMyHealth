@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".modules.Diet.ui.DietFragment">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,37 +14,49 @@
             android:id="@+id/exercise_now"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
             android:layout_marginTop="16dp"
             android:text="@string/exercise_now"
             android:textColor="@color/green_1"
             android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.087"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/exercise_now_is"
+            android:id="@+id/exercise_finish_TV"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="72dp"
-            android:text="@string/exercise_run"
-            android:textSize="20sp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/shape_radius_square_stroke_r5dp"
+            android:backgroundTint="@color/grape"
+            android:gravity="center"
+            android:paddingHorizontal="8dp"
+            android:text="@string/exercise_finish"
+            android:textColor="@color/on_primary_surface"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.363"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/exercise_now" />
 
         <ImageView
             android:id="@+id/exercise_status_IV"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="60dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.085"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/run" />
+
+        <TextView
+            android:id="@+id/exercise_now_is"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/exercise_run"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/exercise_status_IV"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/exercise_status_IV" />
 
         <View
             android:id="@+id/divider"
@@ -73,128 +83,54 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout7"
 
-            android:layout_width="324dp"
-            android:layout_height="68dp"
-            android:background="@drawable/shape_radius_square_stroke_secondary"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/exercise_list_RV"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/exercise_more" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.356"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider"
-            app:layout_constraintVertical_bias="0.102">
+            app:layout_constraintStart_toStartOf="parent">
 
-            <!-- 새 기능의 아이콘 -->
-
-            <ImageView
-                android:id="@+id/exercise_chose"
-                android:layout_width="52dp"
-                android:layout_height="50dp"
-                android:layout_margin="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.058"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/walk" />
-
-            <TextView
-                android:id="@+id/exercise_chosen"
+            <Button
+                android:id="@+id/exercise_choose_cancel"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="52dp"
-                android:text="@string/exercise_walk"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/exercise_chose"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/secondary"
+                android:text="@string/cancel"
+                android:textColor="@color/on_secondary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout8"
-            android:layout_width="324dp"
-            android:layout_height="68dp"
-            android:background="@drawable/shape_radius_square_stroke"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.321"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider"
-            app:layout_constraintVertical_bias="0.266">
-
-            <!-- 새 기능의 아이콘 -->
-
-            <ImageView
-                android:id="@+id/second_FeatureIcon"
-                android:layout_width="52dp"
-                android:layout_height="50dp"
-                android:layout_margin="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.058"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/hiking" />
-
-            <TextView
-                android:id="@+id/second_FeatureTitle"
+            <Button
+                android:id="@+id/exercise_choose_apply"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="52dp"
-                android:text="@string/exercise_hiking"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/second_FeatureIcon"
-                app:layout_constraintTop_toTopOf="parent" /> <!-- 새 기능의 제목 -->
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:text="@string/apply"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-
-            <!-- 추가하고 싶은 뷰들이 여기에 위치 -->
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout9"
-            android:layout_width="324dp"
-            android:layout_height="68dp"
-            android:background="@drawable/shape_radius_square_stroke"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.321"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider"
-            app:layout_constraintVertical_bias="0.426">
-
-            <!-- 새 기능의 아이콘 -->
-
-            <ImageView
-                android:id="@+id/third_FeatureIcon"
-                android:layout_width="52dp"
-                android:layout_height="50dp"
-                android:layout_margin="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.058"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/swim" />
-
-            <TextView
-                android:id="@+id/third_FeatureTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="52dp"
-                android:text="@string/exercise_swim"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/third_FeatureIcon"
-                app:layout_constraintTop_toTopOf="parent" /> <!-- 새 기능의 제목 -->
-
-
-            <!-- 추가하고 싶은 뷰들이 여기에 위치 -->
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
