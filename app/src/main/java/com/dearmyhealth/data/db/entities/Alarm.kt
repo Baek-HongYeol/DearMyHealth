@@ -6,7 +6,9 @@ import androidx.room.PrimaryKey
 @Entity
 data class Alarm(
     @PrimaryKey val alarmId: Int,
-    val requestCode: String,
-    val time: Long,
-    val description: String
+    val dosageId: Int,
+    val requestCode: Int,
+    var time: Long,
+    val description: String,
+    var isEnabled: Boolean
 )

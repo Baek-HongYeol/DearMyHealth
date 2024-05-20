@@ -30,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="24.04.15~24.05.02"
-            app:layout_constraintBottom_toBottomOf="@id/dosage_schedule_dosage"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/dosage_schdule_name" />
 
         <TextView
             android:id="@+id/dosage_schedule_dosage"
@@ -53,6 +53,15 @@
             app:layout_constraintBottom_toBottomOf="@id/dosage_schedule_dosage"
             app:layout_constraintStart_toEndOf="@+id/dosage_schedule_dosage"
             app:layout_constraintTop_toTopOf="@id/dosage_schedule_dosage" />
+
+        <Switch
+            android:id="@+id/dosage_schedule_isalarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="알람"
+            app:layout_constraintBottom_toBottomOf="@id/dosage_schedule_dosage_amount"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
             android:id="@+id/dosage_schedult_add_icon"

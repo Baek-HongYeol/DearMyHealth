@@ -16,10 +16,16 @@ interface AlarmDao {
     fun update(alarm: Alarm)
 
     @Query("SELECT * FROM Alarm WHERE requestCode=:code")
-    suspend fun findByRequestCode(code: String) : Alarm
+    suspend fun findByRequestCode(code: Int) : Alarm?
 
     @Query("SELECT * FROM Alarm WHERE time=:time")
     suspend fun findByTime(time:Long) : List<Alarm>
+
+    @Query("SELECT * FROM Alarm WHERE dosageId=:dosageId")
+    suspend fun findByDosageId(dosageId: Int) : Alarm
+
+    @Query("SELECT * FROM Alarm WHERE isEnabled=:enabled")
+    suspend fun findIsEnabled(enabled: Boolean): List<Alarm>
 
     @Delete
     fun delete(alarm: Alarm)

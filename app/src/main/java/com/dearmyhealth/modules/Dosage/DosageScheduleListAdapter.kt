@@ -16,7 +16,10 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-class DosageScheduleListAdapter(var list: List<Dosage>, var listener: DosageSchedFragment.DosageOperateClickListener): RecyclerView.Adapter<DosageScheduleListAdapter.ViewHodler>() {
+class DosageScheduleListAdapter(
+    var list: List<Dosage>,
+    var operateClickListener: DosageSchedFragment.DosageOperateClickListener,
+    var bindListener: ((dosageId: Int) -> Unit)): RecyclerView.Adapter<DosageScheduleListAdapter.ViewHodler>() {
     class ViewHodler(val binding: ViewDosageScheduleItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
@@ -53,19 +56,26 @@ class DosageScheduleListAdapter(var list: List<Dosage>, var listener: DosageSche
         Log.d("DosageScheListAdapter", "item name: ${list[position].name}")
 
         // 버튼 클릭 이벤트 처리하기
+        holder.binding.dosageScheduleIsalarm.setOnCheckedChangeListener { _, isChecked ->
+            operateClickListener.onAlarmSwitchListener(list[position], isChecked)
+        }
         holder.binding.dosageScheduleOptionIV.setOnClickListener {
             val editOrDeleteBinding = ViewEditOrDeleteBinding.inflate(LayoutInflater.from(holder.binding.root.context))
+            val popup = PopupWindow(editOrDeleteBinding.root, 200, 150, true)
             editOrDeleteBinding.apply{
                 editView.setOnClickListener {
-                    listener.onEditClickListener(list[position])
+                    operateClickListener.onEditClickListener(list[position])
+                    popup.dismiss()
                 }
                 delView.setOnClickListener {
-                    listener.onDeleteClickListener(list[position])
+                    operateClickListener.onDeleteClickListener(list[position])
+                    popup.dismiss()
                 }
             }
-            val popup = PopupWindow(editOrDeleteBinding.root, 200, 150, true)
             popup.showAsDropDown(holder.binding.dosageScheduleOptionIV)
         }
+
+        bindListener(item.dosageId)
     }
 
     override fun getItemCount(): Int = list.size
