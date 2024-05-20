@@ -64,6 +64,7 @@
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="22dp"
                 android:background="@drawable/shape_radius_square_stroke"
+                android:backgroundTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="@id/guideline_diet_main_1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -107,51 +108,15 @@
                     app:layout_constraintTop_toBottomOf="@id/today_diet_TV"
                     tools:layout_editor_absoluteX="16dp" />
 
-                <LinearLayout
-                    android:id="@+id/calories_LL"
+                <include
+                    layout="@layout/view_diet_today_nutritions"
+                    android:id="@+id/today_nutrient"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view">
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
-                    <TextView
-                        android:id="@+id/today_calories"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/suggested_calories"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="/2100 kcal"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/today_diet_status_IV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15sp"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/calories_LL"
-                    app:srcCompat="@drawable/face" />
-
-                <LinearLayout
-                    android:id="@+id/nutritions_LL"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/today_diet_status_IV"></LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -163,6 +128,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="22dp"
                 android:background="@drawable/shape_radius_square_stroke"
+                android:backgroundTint="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/guideline_diet_main_1">
@@ -193,6 +159,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </FrameLayout>

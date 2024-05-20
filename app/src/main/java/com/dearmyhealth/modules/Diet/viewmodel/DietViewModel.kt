@@ -11,20 +11,22 @@ import com.dearmyhealth.data.db.AppDatabase
 import com.dearmyhealth.data.db.entities.Diet
 import com.dearmyhealth.modules.Diet.DietRepository
 import com.dearmyhealth.modules.Diet.model.Nutrients
+import java.time.OffsetDateTime
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 
 class DietViewModel(val lifecycleOwner:LifecycleOwner, val dietRepository: DietRepository) : ViewModel() {
     val TAG: String = "DietViewModel"
-    private val _todayNutritions = MutableLiveData<Nutrients>()
-    val todayNutritions: LiveData<Nutrients> get() = _todayNutritions
+    private val _todayNutrients = MutableLiveData<Nutrients>()
+    val todayNutrients: LiveData<Nutrients> get() = _todayNutrients
 
     private val todayDiets: LiveData<List<Diet>> =
-        dietRepository.findByPeriodLive(getTodayMsec())
+        dietRepository.findByPeriodLive(getTodayMSec())
 
     fun observeTodayDiet() {
         todayDiets.observe(lifecycleOwner) { value ->
             Log.d(TAG, "diet size is : ${value.size}")
-            var nuts: Nutrients = Nutrients(0, getTodayMsec(),0.0, mutableMapOf())
+            var nuts: Nutrients = Nutrients(0, getTodayMSec(),0.0, mutableMapOf())
             for(diet in value) {
                 nuts.calories = nuts.calories!! + (diet.calories ?: 0.0)
                 nuts.nutrients.putAll( mutableMapOf(
@@ -36,20 +38,13 @@ class DietViewModel(val lifecycleOwner:LifecycleOwner, val dietRepository: DietR
                             (nuts.getNutrientValueByName("fat")?:0.0) + (diet.fat ?: 0.0)
                 ))
             }
-            _todayNutritions.value = nuts
+            _todayNutrients.value = nuts
         }
     }
 
-    fun getTodayMsec(): Long {
-        val now = Calendar.getInstance()
-        now.set(Calendar.HOUR_OF_DAY, 0)
-        now.set(Calendar.MINUTE, 0)
-        now.set(Calendar.SECOND, 0)
-        now.set(Calendar.MILLISECOND, 0)
-        return now.timeInMillis
-    }
+    fun getTodayMSec(): Long = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS).toEpochSecond()*1000
 
-    fun getCalendarFromMsec(msec: Long) : Calendar {
+    fun getCalendarFromMSec(msec: Long) : Calendar {
         var cal = Calendar.getInstance()
         cal.timeInMillis = msec
         return cal

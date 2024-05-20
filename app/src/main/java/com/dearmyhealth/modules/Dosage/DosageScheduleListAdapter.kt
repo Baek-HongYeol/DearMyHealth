@@ -18,8 +18,7 @@ import java.util.Locale
 
 class DosageScheduleListAdapter(
     var list: List<Dosage>,
-    var operateClickListener: DosageSchedFragment.DosageOperateClickListener,
-    var bindListener: ((dosageId: Int) -> Unit)): RecyclerView.Adapter<DosageScheduleListAdapter.ViewHodler>() {
+    var operateClickListener: DosageSchedFragment.DosageOperateClickListener): RecyclerView.Adapter<DosageScheduleListAdapter.ViewHodler>() {
     class ViewHodler(val binding: ViewDosageScheduleItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
@@ -74,8 +73,6 @@ class DosageScheduleListAdapter(
             }
             popup.showAsDropDown(holder.binding.dosageScheduleOptionIV)
         }
-
-        bindListener(item.dosageId)
     }
 
     override fun getItemCount(): Int = list.size

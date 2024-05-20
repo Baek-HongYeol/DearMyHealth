@@ -259,7 +259,7 @@
             app:layout_constraintTop_toTopOf="@id/textView6" />
 
         <LinearLayout
-            android:id="@+id/today_nutrient_chart"
+            android:id="@+id/today_nutrient_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

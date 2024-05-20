@@ -18,6 +18,7 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dearmyhealth.data.Result
 import com.dearmyhealth.data.db.entities.Dosage
 import com.dearmyhealth.data.db.entities.Medication
@@ -153,8 +154,10 @@ class DosageSchedFragment: Fragment() {
                 if(isEnabled) setAlarm(dosage)
                 else {
                     CoroutineScope(Dispatchers.IO).launch {
-                        val alarm = AlarmRepository.getInstance(requireContext()).findByDosageId(dosage.dosageId)
-                        cancelAlarm(alarm.alarmId)
+                        val alarm = alarmRepository.findByDosageId(dosage.dosageId)
+                        alarm?.let {
+                            cancelAlarm(alarm.requestCode)
+                        }
                     }
                 }
             }
@@ -170,24 +173,37 @@ class DosageSchedFragment: Fragment() {
                 Toast.makeText(requireContext(), "삭제가 완료되었습니다.", Toast.LENGTH_LONG).show()
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    val alarms = alarmRepository.findByDosageId(dosage.dosageId)
-                    alarmRepository.deleteAlarms(alarms)
-                }
-            }
-        }) { dosageId -> // onBindViewListener
-            CoroutineScope(Dispatchers.IO).launch {
-                val alarmRepository = AlarmRepository.getInstance(requireContext())
-                val alarm = alarmRepository.getEnabledAlarms().filter { v -> v.dosageId == dosageId }
-                Log.d("DosageSchedule", "alarm: $alarm")
-                Log.d("DosageSchedule", "dosagelist:  ${binding.dosageScheduleListRV.children.toList().size}")
-                for(el in binding.dosageScheduleListRV.children) {
-                    val binding = ViewDosageScheduleItemBinding.bind(el)
-                    withContext(Dispatchers.Main) {
-                        binding.dosageScheduleIsalarm.isChecked = true
+                    val alarm = alarmRepository.findByDosageId(dosage.dosageId)
+                    alarm?.let {
+                        alarmRepository.deleteAlarms(alarm)
                     }
                 }
             }
-        }
+        })
+
+        binding.dosageScheduleListRV.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
+            override fun onChildViewAttachedToWindow(view: View) {
+                val parent = view.parent as RecyclerView
+                val childBinding = ViewDosageScheduleItemBinding.bind(view)
+                val idx = parent.indexOfChild(view)
+                val dosageId = (parent.adapter as DosageScheduleListAdapter).list[idx].dosageId
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val alarms =
+                        alarmRepository.getEnabledAlarms().filter { v -> v.dosageId == dosageId }
+                    Log.d("DosageSchedule", "alarm: $alarms")
+                    Log.d(
+                        "DosageSchedule",
+                        "dosagelist:  ${binding.dosageScheduleListRV.children.toList().size}"
+                    )
+                    withContext(Dispatchers.Main) {
+                        childBinding.dosageScheduleIsalarm.isChecked = alarms.isNotEmpty()
+                    }
+                }
+            }
+            override fun onChildViewDetachedFromWindow(view: View) {}
+
+        })
         dosageViewModel.dosageList.observe(viewLifecycleOwner) { list ->
             scheduleList = list.toMutableList()
             (binding.dosageScheduleListRV.adapter as DosageScheduleListAdapter).list = list
@@ -212,37 +228,37 @@ class DosageSchedFragment: Fragment() {
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
         calendar.set(Calendar.HOUR_OF_DAY, nextAlarmMinutes.toInt()/60)
-        calendar.set(Calendar.HOUR_OF_DAY, nextAlarmMinutes.toInt()%60)
-        val requestId = dosage.dosageId*1000+dosage.dosageTime[0].toInt()
+        calendar.set(Calendar.MINUTE, nextAlarmMinutes.toInt()%60)
+        var requestId = dosage.dosageId*1000+dosage.dosageTime[0].toInt()
 
-        val alarmRepository = AlarmRepository.getInstance(requireContext())
         CoroutineScope(Dispatchers.IO).launch {
-            val alarm = alarmRepository.findByRequestId(requestId)
+            val alarm = alarmRepository.findByDosageId(dosage.dosageId)
             if(alarm != null) {
                 alarm.isEnabled = true
                 alarm.time = calendar.timeInMillis
                 alarmRepository.updateAlarm(alarm)
+                requestId = alarm.requestCode
             }
             else
                 alarmRepository.insertAlarm(requestId, dosage.dosageId, calendar.timeInMillis, dosage.name)
-        }
 
-        val alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
-            intent.putExtra("requestId", requestId)
-            PendingIntent.getBroadcast(context, requestId, intent, PendingIntent.FLAG_IMMUTABLE)
+            val alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+                intent.putExtra("requestId", requestId)
+                intent.putExtra("dosageName", dosage.name)
+                PendingIntent.getBroadcast(context, requestId, intent, PendingIntent.FLAG_IMMUTABLE)
+            }
+            alarmManager!!.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                AlarmManager.INTERVAL_DAY,
+                alarmIntent
+            )
         }
-        alarmManager!!.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            alarmIntent
-        )
     }
 
-    suspend fun cancelAlarm(alarmId: Int) {
+    suspend fun cancelAlarm(requestId: Int) {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+        val alarm = alarmRepository.findByRequestId(requestId) ?: return
 
-        val alarmRepository = AlarmRepository.getInstance(requireContext())
-        val alarm = alarmRepository.findByRequestId(alarmId) ?: return
         alarm.isEnabled = false
         alarmRepository.updateAlarm(alarm)
         val pendingIntent = Intent(context, AlarmReceiver::class.java).let { intent ->

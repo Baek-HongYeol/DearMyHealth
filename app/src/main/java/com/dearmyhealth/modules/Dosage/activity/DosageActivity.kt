@@ -167,6 +167,9 @@ class DosageActivity : AppCompatActivity() {
                     setText(medicationItemSeq)
                     isEnabled = false
                 }
+                val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
+                binding.dosageStartDate.text = dtf.format(startdate)
+                binding.dosageEndDate.text = dtf.format(endDate)
             }
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -243,6 +246,7 @@ class DosageActivity : AppCompatActivity() {
                     }
                 }
             }
+
         }
     }
 

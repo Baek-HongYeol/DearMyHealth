@@ -15,7 +15,7 @@ class AlarmRepository(private val alarmDao: AlarmDao) {
         return alarmDao.findByRequestCode(requestId)
     }
 
-    suspend fun findByDosageId(dosageId: Int): Alarm {
+    suspend fun findByDosageId(dosageId: Int): Alarm? {
         return alarmDao.findByDosageId(dosageId)
     }
 
