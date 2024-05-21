@@ -24,7 +24,6 @@ class MedicationAdapter :
     class MedicationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.medication_name)
         private val detailsTextView: TextView = itemView.findViewById(R.id.medication_details)
-
         fun bind(medication: Medication) {
             nameTextView.text = medication.prodName
             detailsTextView.text = "Type: ${medication.typeName}\n" +

@@ -43,5 +43,6 @@
     <color name="red">#FFFE0707</color>
     <color name="gray_orange">#FFDAD7CD</color>
     <color name="gray_orange_1">#FF6B6565</color>
+    <color name="orange">#FF9C1B</color>
     <color name="grape">#BE5189</color>
 </resources>

@@ -1,15 +1,20 @@
 import android.util.Log
 import com.dearmyhealth.api.Apiservice
-import com.dearmyhealth.api.DurItem
+import com.dearmyhealth.api.DurResponse
+import com.dearmyhealth.api.Item
 import com.dearmyhealth.api.RetrofitObject
 import com.dearmyhealth.data.db.dao.AttentionDetailDao
 import com.dearmyhealth.data.db.dao.MedicationDao
 import com.dearmyhealth.data.db.entities.AttentionDetail
 import com.dearmyhealth.data.db.entities.Medication
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import retrofit2.Response
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.awaitResponse
 
 class MedicationRepository(
     private val apiService: Apiservice,
@@ -21,7 +26,6 @@ class MedicationRepository(
         private const val NUM_OF_ROWS = 100
         private const val TYPE_JSON = "json"
     }
-
 
     private suspend fun insertMedication(medication: Medication): Long {
         return medicationDao.insert(medication)
@@ -37,46 +41,48 @@ class MedicationRepository(
     }
 
     // 약물 정보를 입력한 검색 조건에 따라 조회하여 저장
-    suspend fun fetchAndStoreMedications(itemSeq: String? = null, prodName: String? = null, entpName: String? = null) {
+    suspend fun fetchAndStoreMedications(itemSeq: String? = null, prodName: String? = null, entpName: String? = null):List<Medication> {
         try {
             val response = apiService.getDurItemInfo(
                 ItemSeq = itemSeq, ServiceKey = RetrofitObject.API_KEY, PageNo = PAGE_NO, NumOfRows = NUM_OF_ROWS, ItemName = prodName, EntpName = entpName, StartChangeDate = null, EndChangeDate = null, Bizrno = null, TypeName = null, IngrCode = null
-            )
+            ).awaitResponse()
 
             if (response.isSuccessful) {
-                response.body()?.response?.body?.items?.forEach { item ->
+                val medications = response.body()?.body?.items?.map { item ->
                     val medication = Medication(
                         itemSeq = item.itemSeq,
                         prodName = item.itemName,
                         entpName = item.entpName,
                         description = item.chart,
-                        dosage = parseDosage(null), // TO DO: 복용량 파싱 로직 구현하기
+                        dosage = parseDosage(item.udDocID), // TO DO: 복용량 파싱 로직 구현하기
                         units = item.udDocID,
                         warning = item.nbDocId,
                         typeName = item.typeName,
                         typeCode = item.typeCode,
                     )
                     medicationDao.insert(medication)
-
-                    // 병용금기, 효능군중복주의, 서방정분할주의, 그리고 기타 주의사항들을 병렬로 조회
-                    fetchAllAttentionDetails(item.itemSeq)
+                    medication
+                } ?: emptyList()
+                CoroutineScope(Dispatchers.IO).launch {
+                    medications.forEach { medication ->
+                        fetchAllAttentionDetails(medication.itemSeq)
+                    }
                 }
+                return medications
             } else {
                 Log.e("API Error", "Could not fetch medications: ${response.errorBody()?.string()}")
             }
         } catch (e: Exception) {
             Log.e("MedicationRepository", "Error fetching medications: ${e.message}")
         }
+        return emptyList()
     }
 
     /** 정확한 이름 혹은 일련번호로 검색 **/
     suspend fun findMedication(itemSeq: String, name: String?=null): Medication? {
         val searchName = name ?: itemSeq
         val medications = medicationDao.findByNameOrSeq(searchName, itemSeq)
-        return if(medications.isEmpty())
-            null
-        else
-            medications[0]
+        return if(medications.isEmpty()) null else medications[0]
     }
 
     /** 이름 혹은 일련번호 검색 **/
@@ -86,27 +92,13 @@ class MedicationRepository(
 
         if (medications.isEmpty()) {
             // DB에 결과가 없다면 API에서 검색
-            val response = apiService.getDurItemInfo(
-                ItemSeq = null, ServiceKey = RetrofitObject.API_KEY, PageNo = PAGE_NO,
-                NumOfRows = NUM_OF_ROWS, ItemName = searchText, EntpName = null,
-                StartChangeDate = null, EndChangeDate = null, Bizrno = null, TypeName = null, IngrCode = null
-            )
-            if (response.isSuccessful && response.body() != null) {
-                medications = response.body()!!.response.body.items.map { item ->
-                    Medication(
-                        itemSeq = item.itemSeq,
-                        prodName = item.itemName,
-                        entpName = item.entpName,
-                        description = item.chart,
-                        dosage = parseDosage(item.udDocID),  // TO DO: 파싱 로직
-                        units = item.udDocID,
-                        warning = item.nbDocId,
-                        typeName = item.typeName,
-                        typeCode = item.typeCode
-                    )
+            medications=fetchAndStoreMedications(prodName = searchText)
+        }
+        else {
+            CoroutineScope(Dispatchers.IO).launch {
+                medications.forEach { medication ->
+                    fetchAllAttentionDetails(medication.itemSeq)
                 }
-                // DB에 결과 저장
-                medicationDao.insertAll(medications)
             }
         }
         return medications
@@ -114,40 +106,68 @@ class MedicationRepository(
     // 각 유형에 따라 병렬로 주의사항 정보를 가져오기
     private suspend fun fetchAllAttentionDetails(itemSeq: String) = coroutineScope {
         val attentionTypes = mapOf(
-            "병용금기" to { apiService.getJointTabooInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null,null) },
+            "병용금기" to { apiService.getJointTabooInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS,TYPE_JSON,null,null,null,null,null,null) },
             "효능군중복" to { apiService.getEfficacyDuplicationInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null,null) },
             "서방정분할주의" to { apiService.getReleaseTabletSplittingInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null) },
-            "B" to { apiService.getSpecificAgeTabooInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null) },  // 특정연령대금기
-            "C" to { apiService.getPregnancyCautionInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null) },  // 임부금기
-            "D" to { apiService.getCapacityAttentionInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null) },  // 용량주의
-            "E" to { apiService.getPeriodCautionInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null) },  // 투여기간주의
-            "F" to { apiService.getElderlyCautionInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null) }   // 노인주의
+            "특정연령대금기" to { apiService.getSpecificAgeTabooInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null) },
+            "임부금기" to { apiService.getPregnancyCautionInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null) },
+            "용량주의" to { apiService.getCapacityAttentionInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null) },
+            "투여기간주의" to { apiService.getPeriodCautionInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null) },
+            "노인주의" to { apiService.getElderlyCautionInfo(itemSeq, RetrofitObject.API_KEY, PAGE_NO, NUM_OF_ROWS, TYPE_JSON,null,null,null,null,null) }
         )
 
-        attentionTypes.map { (typeCode, fetchFunction) ->
-            async { genericFetchAttentionInfo(itemSeq, typeCode, fetchFunction) }
-        }.awaitAll()
+        attentionTypes.map { (typeName, fetchFunction) ->
+            async { genericFetchAttentionInfo(itemSeq, typeName, fetchFunction) }
+        }.awaitAll().flatten()
     }
 
     private suspend fun genericFetchAttentionInfo(
         itemSeq: String,
-        typeCode: String,
-        fetchFunction: suspend () -> Response<DurItem>
-    ) {
-        val response = fetchFunction()
-        if (response.isSuccessful && response.body() != null) {
-            response.body()!!.response.body.items.forEach { detail ->
-                val attentionDetail = AttentionDetail(
-                    itemseq = detail.itemSeq,
-                    typeCode = typeCode,
-                    prhbtContent = detail.prohibitContent
-                )
-                attentionDetailDao.insert(attentionDetail)
+        typeName: String,
+        fetchFunction: suspend () -> Call<DurResponse<List<Item>>>
+    ): List<AttentionDetail> {
+        val attentionDetails = mutableListOf<AttentionDetail>()
+        try {
+            Log.d("FetchAttentionInfo", "Fetching attention details for $typeName with itemSeq: $itemSeq")
+            val response = fetchFunction().awaitResponse()
+            if (response.isSuccessful) {
+                val responseBody = response.body()
+                Log.d("FetchAttentionInfo", "Full Response: ${responseBody.toString()}")
+                val items = responseBody?.body?.items
+                if (items != null && items.isNotEmpty()) {
+                    items.forEach { detail ->
+                        Log.d("FetchAttentionInfo", "Item: $detail")
+                        val attentionDetail = AttentionDetail(
+                            itemSeq = detail.itemSeq,
+                            typeName = typeName,
+                            prhbtContent = detail.prohibitContent
+                        )
+                        attentionDetailDao.insert(attentionDetail)
+                        attentionDetails.add(attentionDetail)
+                    }
+                } else {
+                    Log.e("API Error", "No items found for $typeName, items: $items")
+                }
+            } else {
+                Log.e("API Error", "Could not fetch attention details for $typeName: ${response.errorBody()?.string()}")
             }
+        } catch (e: Exception) {
+            Log.e("MedicationRepository", "Error fetching attention details for $typeName: ${e.message}")
         }
+        return attentionDetails
     }
 
-    /* TO DO:용량 값을 파싱하는 함수*/
+    suspend fun getMedication(medId: Int): Medication? {
+        return medicationDao.find(medId)
+    }
+
+    /** 약물의 주의사항 정보를 가져오기 **/
+    suspend fun getAttentionDetailsByItemSeq(itemSeq: String): List<AttentionDetail> {
+        Log.d("MedicationRepository", "Fetching all attention details for itemSeq: $itemSeq")
+        return attentionDetailDao.findByItemSeq(itemSeq)
+    }
+
+    /** TO DO:용량 값을 파싱하는 함수 **/
     private fun parseDosage(dosageInfo: String?): Double {
         return dosageInfo?.toDoubleOrNull() ?: 0.0
     }

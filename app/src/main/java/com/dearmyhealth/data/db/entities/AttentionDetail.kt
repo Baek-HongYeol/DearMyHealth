@@ -7,7 +7,9 @@ import androidx.room.PrimaryKey
 data class AttentionDetail(
     @PrimaryKey(autoGenerate = true)
     val attid: Int=0,
-    val itemseq: String="",
-    val typeCode: String="",
+    val itemSeq: String="",
+    val typeName: String="",
     val prhbtContent: String=""
+    //val mainIngr: String=""
 )
+

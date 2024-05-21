@@ -1,6 +1,7 @@
 package com.dearmyhealth.api
 
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
@@ -12,9 +13,10 @@ object RetrofitObject {
     const val API_KEY =
         "SBuPOuYlnFu3bWXmWOYjCrFUEVE4xTbOMtIo0vH+/fgUEpkJakKQbu4t4/t7+ZVhErj5S8Z+bHRd/cwPPNd51w=="
 
-    private val retrofit: Retrofit by lazy {
+    val retrofit: Retrofit by lazy {
         val gson = GsonBuilder()
-            .setLenient()
+            //.setLenient()
+            .registerTypeAdapter(object : TypeToken<DurResponse<List<Item>>>() {}.type, DurResponseTypeAdapter<List<Item>>())
             .create()
 
         val loggingInterceptor = HttpLoggingInterceptor().apply {

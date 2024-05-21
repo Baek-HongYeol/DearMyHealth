@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- 약품명 -->
+        <TextView
+            android:id="@+id/medication_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="약품명"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/medication_name_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medication_name"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 업체명 -->
+        <TextView
+            android:id="@+id/company_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="업체명"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medication_name_detail"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/company_name_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/company_name"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- 성상 -->
+        <TextView
+            android:id="@+id/medication_chart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="성상"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/company_name_detail"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/medication_chart_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medication_chart"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 병용금기 -->
+        <TextView
+            android:id="@+id/jointTaboo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="병용금기"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/orange"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medication_chart_detail"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/jointTabooDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellowgray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/jointTaboo"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="설명" />
+
+        <!-- 특정연령대금기 -->
+        <TextView
+            android:id="@+id/specificAgeTaboo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="특정연령대금기"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/orange"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/jointTabooDetail"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/specificAgeTabooDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellowgray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/specificAgeTaboo"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="설명" />
+
+        <!-- 임부금기 -->
+        <TextView
+            android:id="@+id/pregnancyCaution"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="임부금기"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/orange"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/specificAgeTabooDetail"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/pregnancyCautionDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellowgray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pregnancyCaution"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 용량주의 -->
+        <TextView
+            android:id="@+id/capacityAttention"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="용량주의"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/orange"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pregnancyCautionDetail"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/capacityAttentionDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellowgray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/capacityAttention"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="설명" />
+
+        <!-- 투여기간주의 -->
+        <TextView
+            android:id="@+id/periodCaution"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="투여기간주의"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/orange"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/capacityAttentionDetail"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/periodCautionDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellowgray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/periodCaution"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="설명" />
+
+        <!-- 노인주의 -->
+        <TextView
+            android:id="@+id/elderlyCaution"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="노인주의"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/orange"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/periodCautionDetail"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/elderlyCautionDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellowgray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/elderlyCaution"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="설명" />
+
+        <!-- 효능군중복 -->
+        <TextView
+            android:id="@+id/effectDuplication"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="효능군중복"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/orange"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/elderlyCautionDetail"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/effectDuplicationDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellowgray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/effectDuplication"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="설명" />
+
+        <!-- 서방정분할주의 -->
+        <TextView
+            android:id="@+id/releaseTabletSplitting"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="서방정분할주의"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/orange"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/effectDuplicationDetail"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/releaseTabletSplittingDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellowgray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/releaseTabletSplitting"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="설명" />
+
+        <!-- 추가 버튼 -->
+        <Button
+            android:id="@+id/add_medication_schedule_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="해당 약 일정에 추가하기"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/releaseTabletSplittingDetail" />
+
+        <ImageButton
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/dosage_add"
+            android:backgroundTint="@color/white"
+            android:clickable="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.231"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/releaseTabletSplittingDetail"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

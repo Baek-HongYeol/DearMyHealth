@@ -16,10 +16,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.view.children
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dearmyhealth.R
 import com.dearmyhealth.data.Result
 import com.dearmyhealth.data.db.entities.Dosage
 import com.dearmyhealth.data.db.entities.Medication
@@ -73,6 +76,10 @@ class DosageSchedFragment: Fragment() {
         binding.dosageMedSearchResultRV.layoutManager = LinearLayoutManager(context)
         binding.dosageMedSearchResultRV.adapter = MedicationListAdapter(medicationList) { med ->
             selectedMedication = med
+            //특정 약물을 클릭하면 DosageDescriptFragment로 이동
+            medicationViewModel.selectMedication(med)
+            val bundle = bundleOf("medId" to med.medId)
+            findNavController().navigate(R.id.action_dosagesched_to_dosagedescript, bundle)
         }
 
         if (medicationList.isEmpty()) {
@@ -82,7 +89,6 @@ class DosageSchedFragment: Fragment() {
             binding.medNoSearchResultTV.visibility = View.GONE
             binding.dosageMedSearchResultRV.visibility = View.VISIBLE
         }
-
 
         // 복약 일정 목록 초기화
         setupScheduleFunctionality()
@@ -106,8 +112,6 @@ class DosageSchedFragment: Fragment() {
                 startActivity(this)
             }
         }
-
-
         return binding.root
     }
 
@@ -160,7 +164,6 @@ class DosageSchedFragment: Fragment() {
                 }
                 Result.Loading -> {
                 }
-                //else -> {}
             }
         }
     }

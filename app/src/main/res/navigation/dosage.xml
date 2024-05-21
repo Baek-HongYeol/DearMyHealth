@@ -19,5 +19,15 @@
         android:id="@+id/dosagesched"
         android:name="com.dearmyhealth.modules.Dosage.DosageSchedFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_dosage_schedule"/>
+        tools:layout="@layout/fragment_dosage_schedule">
+        <action
+            android:id="@+id/action_dosagesched_to_dosagedescript"
+            app:destination="@id/dosagedescript" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/dosagedescript"
+        android:name="com.dearmyhealth.modules.Dosage.DosageDescriptFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_dosage_descript"/>
 </navigation>

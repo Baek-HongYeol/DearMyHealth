@@ -21,8 +21,8 @@ interface AttentionDetailDao {
     suspend fun find(id: Int) : AttentionDetail
     @Query("SELECT * FROM attentionDetail WHERE itemSeq = :itemSeq")
     suspend fun findByItemSeq(itemSeq: String): List<AttentionDetail>
-    @Query("SELECT * FROM AttentionDetail WHERE typeCode = :typeCode")
-    suspend fun findByTypeCode(typeCode: String): List<AttentionDetail>
+    @Query("SELECT * FROM attentionDetail WHERE typeName = :typeName")
+    suspend fun findByTypeName(typeName: String): List<AttentionDetail>
     @Delete
     fun delete(attentionDetail: AttentionDetail)
 }
