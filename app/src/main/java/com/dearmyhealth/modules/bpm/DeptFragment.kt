@@ -40,9 +40,6 @@ class DeptFragment : Fragment() {
             if (granted.containsAll(viewModel.permissions)) {
                 Log.d(TAG, "1 ALL PERMISSIONS GRANTED")
                 // Permissions successfully granted
-                CoroutineScope(Dispatchers.Default).launch {
-                    viewModel.preloadSteps(requireActivity().applicationContext)
-                }
             } else {
                 // Lack of required permissions
                 Log.e(TAG, "1 LACKING PERMISSIONS")
