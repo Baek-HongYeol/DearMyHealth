@@ -60,7 +60,7 @@ class DosageScheduleListAdapter(
         }
         holder.binding.dosageScheduleOptionIV.setOnClickListener {
             val editOrDeleteBinding = ViewEditOrDeleteBinding.inflate(LayoutInflater.from(holder.binding.root.context))
-            val popup = PopupWindow(editOrDeleteBinding.root, 200, 150, true)
+            val popup = PopupWindow(editOrDeleteBinding.root, 1,1, true)
             editOrDeleteBinding.apply{
                 editView.setOnClickListener {
                     operateClickListener.onEditClickListener(list[position])
@@ -71,6 +71,8 @@ class DosageScheduleListAdapter(
                     popup.dismiss()
                 }
             }
+            popup.width = LayoutParams.WRAP_CONTENT
+            popup.height = LayoutParams.WRAP_CONTENT
             popup.showAsDropDown(holder.binding.dosageScheduleOptionIV)
         }
     }
