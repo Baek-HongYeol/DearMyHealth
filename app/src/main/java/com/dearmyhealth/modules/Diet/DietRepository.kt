@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.dearmyhealth.data.Result
 import com.dearmyhealth.data.db.dao.DietDao
 import com.dearmyhealth.data.db.entities.Diet
+import com.dearmyhealth.modules.login.Session
 import java.util.Calendar
 
 class DietRepository(private val datasource: DietDao) {
@@ -27,7 +28,7 @@ class DietRepository(private val datasource: DietDao) {
      * @return [LiveData]<[List]<[Diet]>> for query result distinct until changed.
      */
     fun findByPeriodLive(start:Long = 0, end:Long = Calendar.getInstance().timeInMillis):LiveData<List<Diet>> {
-        return datasource.findByPeriodLive(0, start, end)
+        return datasource.findByPeriodLive(Session.currentUser.uid, start, end)
     }
 
     /**
@@ -40,18 +41,13 @@ class DietRepository(private val datasource: DietDao) {
                imageURI:String?, calories: Int?, carbohydrate: Int?, protein: Int?, fat: Int?,
                cholesterol: Int?): Result<Diet> {
         try {
-            val id = insert(
-                Diet(
-                    0, foodcode, 0, time, type, name, amount,
-                    imageURI, calories?.toDouble(), carbohydrate?.toDouble(),
-                    protein?.toDouble(), fat?.toDouble(), cholesterol?.toDouble()
-                )
-            )
-            return Result.Success(Diet(
-                id, foodcode, 0, time, type, name, amount,
+            val diet = Diet(
+                0, foodcode, Session.currentUser.uid, time, type, name, amount,
                 imageURI, calories?.toDouble(), carbohydrate?.toDouble(),
                 protein?.toDouble(), fat?.toDouble(), cholesterol?.toDouble()
-            ))
+            )
+            val id = insert(diet)
+            return Result.Success(diet.apply { dietId = id })
         }
         catch (e: Exception) {
             return Result.Error(e)
@@ -63,17 +59,13 @@ class DietRepository(private val datasource: DietDao) {
                imageURI:String?, calories: Double?, carbohydrate: Double?, protein: Double?, fat: Double?,
                cholesterol: Double?): Result<Diet> {
         try {
-            val id = insert(
-                Diet(
-                    0, foodcode, 0, time, type, name, amount,
-                    imageURI, calories, carbohydrate, protein, fat, cholesterol
-                )
+            val diet = Diet(
+                0, foodcode, Session.currentUser.uid, time, type, name, amount,
+                imageURI, calories, carbohydrate, protein, fat, cholesterol
             )
+            val id = insert(diet)
             return Result.Success(
-                Diet(
-                    id, foodcode, 0, time, type, name, amount,
-                    imageURI, calories, carbohydrate, protein, fat, cholesterol
-                )
+                diet.apply { dietId = id }
             )
         }
         catch (e: Exception) {

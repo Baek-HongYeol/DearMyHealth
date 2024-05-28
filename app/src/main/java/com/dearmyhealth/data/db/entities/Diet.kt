@@ -24,7 +24,7 @@ import androidx.room.PrimaryKey
 )
 data class Diet(
     @PrimaryKey(autoGenerate = true)
-    val dietId: Long,
+    var dietId: Long,
     val foodCode: String?,
     val user: Int,
     val time: Long,

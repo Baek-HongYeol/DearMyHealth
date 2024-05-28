@@ -5,8 +5,10 @@ import com.dearmyhealth.data.db.dao.UserDao
 object Session {
 
     private var users : MutableList<LoggedInUser> = mutableListOf()
-    private var _currentUser: LoggedInUser? = null
-    val currentUser: LoggedInUser? get() = _currentUser
+    val anonymous = LoggedInUser(1, "test", "testName", 24, null)
+
+    private var _currentUser: LoggedInUser = anonymous
+    val currentUser: LoggedInUser get() = _currentUser
     lateinit var dao: UserDao
 
     fun checkExpire():Boolean {
@@ -26,7 +28,7 @@ object Session {
         expired.forEach { user ->
             users.remove(user)
             if(_currentUser == user)
-                _currentUser = null
+                _currentUser = anonymous
         }
         return ret
     }
@@ -40,5 +42,7 @@ object Session {
         users.remove(user)
         if(_currentUser == user && users.size > 0)
             _currentUser = users[0]
+        else if(users.size == 0)
+            _currentUser = anonymous
     }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import com.dearmyhealth.data.Result
 import com.dearmyhealth.data.db.dao.DosageDao
 import com.dearmyhealth.data.db.entities.Dosage
+import com.dearmyhealth.modules.login.Session
 import java.time.Instant
 
 class DosageRepository(private val dosageDao: DosageDao, private val medicationSource: MedicationRepository) {
@@ -18,7 +19,7 @@ class DosageRepository(private val dosageDao: DosageDao, private val medicationS
         return dosageDao.insert(dosage).toInt()
     }
     suspend fun insert(medItemSeq: String?=null, name:String, startTime: Long, endTime: Long,
-                       dosageTime: List<Long>, dosage: Double?=1.0, user:Int =0): Result<Dosage> {
+                       dosageTime: List<Long>, dosage: Double?=1.0, user:Int = Session.currentUser.uid): Result<Dosage> {
         var itemSeq = "0"
         if (medItemSeq!=null) {
             try {
@@ -68,10 +69,10 @@ class DosageRepository(private val dosageDao: DosageDao, private val medicationS
         return dosageDao.getDosage(id)
     }
     suspend fun listDosage(): List<Dosage> {
-        return dosageDao.findDosageForAfter(0, Instant.now().toEpochMilli())
+        return dosageDao.findDosageForAfter(Session.currentUser.uid, Instant.now().toEpochMilli())
     }
 
     fun listLiveDosage(): LiveData<List<Dosage>> {
-        return dosageDao.findLiveDosageForAfter(0, Instant.now().toEpochMilli())
+        return dosageDao.findLiveDosageForAfter(Session.currentUser.uid, Instant.now().toEpochMilli())
     }
 }

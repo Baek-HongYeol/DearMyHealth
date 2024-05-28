@@ -33,7 +33,7 @@ class DosageViewModel(private val repository: DosageRepository) : ViewModel() {
 
     suspend fun insertDosage(medicationCode: String?=null, name:String, startTime: Long, endTime: Long,
                      dosageTime: List<Long>, dosage: Double?=1.0) {
-        val result = repository.insert(medicationCode, name, startTime, endTime, dosageTime, dosage, Session.currentUser?.uid?:0)
+        val result = repository.insert(medicationCode, name, startTime, endTime, dosageTime, dosage, Session.currentUser.uid)
         withContext(Dispatchers.Main) {
             _addResult.value = result
         }

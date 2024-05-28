@@ -25,5 +25,5 @@ interface FoodDao {
     fun insert(food: Food)
 
     @Delete
-    fun delete(user: Food)
+    fun delete(food: Food)
 }

@@ -2,9 +2,7 @@ package com.dearmyhealth.modules.login
 
 import com.dearmyhealth.data.Result
 import com.dearmyhealth.data.db.dao.UserDao
-import com.dearmyhealth.data.db.entities.User.Gender
 import java.io.IOException
-import java.lang.Exception
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -21,7 +19,6 @@ class LoginRepository(val dataSource: UserDao) {
         lateinit var result: Result<LoggedInUser>
         try {
             // TODO: handle loggedInUser authentication
-            val fakeUser = LoggedInUser(0, "", "Jane Doe", 20, Gender.MALE)
             val target = dataSource.findByUserId(username).value
             result =
                 if(target?.password == password)
