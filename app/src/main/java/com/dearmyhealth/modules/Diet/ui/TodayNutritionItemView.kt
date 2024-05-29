@@ -31,20 +31,19 @@ class TodayNutritionItemView(
         shapeDrawable?.paint?.color = ContextCompat.getColor(context, R.color.secondary)
     }
 
-    fun setChart(name:String, value:Float, suggestion:Int) {
+    fun setChart(name:String, value:Float, suggestion:Int, isSimple: Boolean) {
         binding.name = name
         binding.value = value
         binding.suggested = suggestion
 
         val entries = ArrayList<BarEntry>() // entries를 선언
-        entries.add(BarEntry(0f, value.toFloat()))
+        entries.add(BarEntry(0f, value))
         var set1 = BarDataSet(entries, "DataSet 1")
         set1.color = Color.GREEN // Bar의 컬러
-        set1.highLightColor = resources.getColor(R.color.primary) // highLight의 컬러
+        set1.highLightColor = ContextCompat.getColor(context, R.color.primary) // highLight의 컬러
         set1.highLightAlpha = 255 // highLight의 투명도
-        set1.formLineWidth = 10f
         binding.barChart.run {
-            setDrawBarShadow(true) // 그래프 그림자
+            setDrawBarShadow(false) // 그래프 그림자
             setTouchEnabled(false) // 차트 터치 막기
             setMaxVisibleValueCount(1) // 그래프 최대 갯수
             legend.isEnabled = false // 차트 범례 설정(legend object chart)
@@ -54,18 +53,22 @@ class TodayNutritionItemView(
                 setDrawGridLines(false)
                 setDrawLabels(false)
                 setDrawAxisLine(false)
-
             }
             axisLeft.run {
-                isEnabled = true
+                isEnabled = false
+                axisLineWidth = 0f
                 axisMinimum = 0f
-                axisMaximum = if (suggestion < value) value.toFloat() else suggestion.toFloat()
+                axisMaximum = if (suggestion < value) value else suggestion.toFloat()
             }
             axisRight.run {
                 isEnabled = false
+                axisLineWidth = 0f
             }
         }
-        binding.barChart.data = BarData(BarDataSet(entries, "NutData"))
+        val bardata = BarData(BarDataSet(entries, "NutData"))
+        bardata.barWidth = if(isSimple) 0.5f else 1f
+        binding.barChart.data = bardata
+        binding.barChart.invalidate()
     }
 
 }

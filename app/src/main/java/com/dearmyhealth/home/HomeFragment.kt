@@ -32,8 +32,8 @@ class HomeFragment : Fragment() {
         viewModel.observeTodayDiet()
         viewModel.todayNutrients.observe(viewLifecycleOwner) { nutrients ->
             val todayNutrientsView = TodayNutrientsView(requireContext(), binding.todayNutrient.root)
+            todayNutrientsView.isSimpleView = true
             todayNutrientsView.setNutrients(nutrients)
-
         }
 
         return binding.root

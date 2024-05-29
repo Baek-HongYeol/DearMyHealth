@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.9" />
+            app:layout_constraintGuide_percent="0.95" />
 
         <include layout="@layout/view_notices"
             android:layout_width="0dp"
@@ -43,7 +43,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/secondary"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_diet_3"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline_diet_2"
             app:layout_constraintStart_toStartOf="@id/guideline_diet_1"
             app:layout_constraintTop_toBottomOf="@id/noticeLL">
@@ -54,7 +54,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.8" />
+                app:layout_constraintGuide_percent="0.85" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/today_diet_CL"
@@ -113,9 +113,9 @@
                     android:id="@+id/today_nutrient"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/view"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintTop_toBottomOf="@id/view" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

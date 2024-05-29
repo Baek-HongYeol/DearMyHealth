@@ -108,6 +108,8 @@
     <string name="fat">지방</string>
     <string name="cholesterol">콜레스테롤</string>
     <string name="unit_gram">g</string>
+    <string name="liquid_water">액체 수분량</string>
+    <string name="total_water">총 수분량</string>
 
     <string name="calory_chip">칼로리: %1$dkcal</string>
     <string name="carbo_chip">탄수화물: %1$g</string>

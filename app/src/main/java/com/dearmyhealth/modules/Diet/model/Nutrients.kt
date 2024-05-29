@@ -1,5 +1,6 @@
 package com.dearmyhealth.modules.Diet.model
 
+import androidx.annotation.StringRes
 import com.dearmyhealth.MyApplication
 import com.dearmyhealth.R
 import com.dearmyhealth.data.db.AppDatabase
@@ -18,33 +19,34 @@ data class Nutrients(
     /**
      * Nutrients class에서 다룰 수 있는 영양소를 제한.
      */
-    enum class Names(var displayedName:String) {
-        carbohydrate("탄수화물"),
-        protein("단백질"),
-        fat("지방"),
-        cholesterol("콜레스테롤"),
-        water_liquid("액체 수분량"),
-        water_total("총 수분량")
+    enum class Names(@StringRes var displayedName:Int) {
+        carbohydrate(R.string.carbohydrate),
+        protein(R.string.protein),
+        fat(R.string.fat),
+        cholesterol(R.string.cholesterol),
+        water_liquid(R.string.liquid_water),
+        water_total(R.string.total_water)
     }
     fun getPresentNutrientsNames(): List<String>{
-        return nutrients.keys.toList().map{ v -> v.name }
+        val list = nutrients.keys.toList().map{ v -> v.name }.toMutableList()
+        if(!list.contains("carbohydrate"))
+            list.add("carbohydrate")
+        if(!list.contains("protein"))
+            list.add("protein")
+        if(!list.contains("fat"))
+            list.add("fat")
+        return list
     }
     fun getNutrientValueByName(name: String): Double? {
         return try {
             val cons = Names.valueOf(name)
-            nutrients[cons]
+            nutrients[cons] ?:0.0
         } catch (e: IllegalArgumentException) {
-            null
+            0.0
         }
     }
 
     companion object {
-        val resourceIds = mapOf(
-            Names.carbohydrate.name to R.string.carbohydrate,
-            Names.protein.name to R.string.protein,
-            Names.fat.name to R.string.fat,
-            Names.cholesterol.name to R.string.cholesterol
-        )
         private val nutrientStandardDao: NutrientStandardDao by lazy {
             AppDatabase.getDatabase(MyApplication.ApplicationContext())
                     .nutrientStandardDao()
@@ -59,7 +61,7 @@ data class Nutrients(
             ))
 
         // 평균 필요 섭취량
-        suspend fun loadNutrientEAR(gender: User.Gender, age: Int): Nutrients {
+        suspend fun loadNutrientEAR(gender: User.Gender = User.Gender.MALE, age: Int = 20): Nutrients {
             val res = nutrientStandardDao.loadEAR(gender.name, age.toFloat())
             val mapping = mutableMapOf(
                 Names.carbohydrate to res.carbohydrate?.toDouble(),

@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.dearmyhealth.R
 import com.dearmyhealth.data.db.entities.Diet
@@ -113,7 +114,7 @@ class DietDetailItemView(context: Context,
                 continue
 
             chip = makeChip()
-            chip.text = nut.key.displayedName + ": ${(nut.value!!*amount).toInt()}g"
+            chip.text = ContextCompat.getString(this.context, nut.key.displayedName) + ": ${(nut.value!!*amount).toInt()}g"
             chips.addView(chip)
         }
     }
