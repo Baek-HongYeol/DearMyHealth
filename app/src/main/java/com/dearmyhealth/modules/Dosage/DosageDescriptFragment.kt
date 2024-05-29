@@ -2,27 +2,30 @@ package com.dearmyhealth.modules.Dosage
 
 import MedicationViewModel
 import MedicationViewModelFactory
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.dearmyhealth.data.db.entities.AttentionDetail
+import com.dearmyhealth.data.db.entities.Medication
 import com.dearmyhealth.databinding.FragmentDosageDescriptBinding
+import com.dearmyhealth.modules.Dosage.activity.DosageActivity
 import com.dearmyhealth.modules.Dosage.repository.RepositoryProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.dearmyhealth.data.db.entities.Medication
 
 class DosageDescriptFragment : Fragment() {
     private lateinit var binding: FragmentDosageDescriptBinding
     private lateinit var viewModel: MedicationViewModel
+    private var selectedMedication: Medication? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +43,9 @@ class DosageDescriptFragment : Fragment() {
             Log.d("DescriptionFragment", "Fetched Medication: $medication")
             withContext(Dispatchers.Main) {
                 medication?.let { med ->
+                    selectedMedication = med
                     displayMedicationDetails(med)
+                    setAddButtonlistener()
                     med.itemSeq?.let { itemSeq ->
                         fetchAndDisplayAttentionDetails(itemSeq)
                     } ?: run {
@@ -53,6 +58,18 @@ class DosageDescriptFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun setAddButtonlistener() {
+        binding.addMedicationScheduleButton.setOnClickListener {
+            Intent(requireContext(), DosageActivity::class.java).apply {
+                putExtra("operation","CREATE")
+                putExtra("medName", selectedMedication?.prodName ?: "")
+                putExtra("medItemSeq", selectedMedication?.itemSeq ?: "")
+                startActivity(this)
+            }
+            findNavController().popBackStack()
+        }
     }
 
     private fun fetchAndDisplayAttentionDetails(itemSeq: String) {

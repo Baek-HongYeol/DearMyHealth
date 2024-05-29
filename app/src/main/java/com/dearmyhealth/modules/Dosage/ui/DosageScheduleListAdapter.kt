@@ -54,13 +54,16 @@ class DosageScheduleListAdapter(
         holder.binding.dosageSchedulePeriod.text = "$startTime ~ $endTime"
         holder.binding.dosageScheduleDosageAmount.text = "${(Math.round((item.dosage?:0.0)*100)/100)} 개"
 
-        // 버튼 클릭 이벤트 처리하기
-        if (item.dosageTime.size > 0)
+        // 알람 스위치 이벤트 처리하기
+        if (item.dosageTime.isEmpty())
+            holder.binding.dosageScheduleIsalarm.isClickable = false
+        else {
+            holder.binding.dosageScheduleIsalarm.isClickable = true
             holder.binding.dosageScheduleIsalarm.setOnCheckedChangeListener { _, isChecked ->
                 operateClickListener.onAlarmSwitchListener(list[position], isChecked)
             }
-        else
-            holder.binding.dosageScheduleIsalarm.isActivated = false
+        }
+
         holder.binding.dosageScheduleOptionIV.setOnClickListener {
             val editOrDeleteBinding = ViewEditOrDeleteBinding.inflate(LayoutInflater.from(holder.binding.root.context))
             val popup = PopupWindow(editOrDeleteBinding.root, 1,1, true)

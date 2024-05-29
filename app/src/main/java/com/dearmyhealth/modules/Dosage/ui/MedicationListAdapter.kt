@@ -3,9 +3,7 @@ package com.dearmyhealth.modules.Dosage.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.dearmyhealth.R
 import com.dearmyhealth.data.db.entities.Medication
 import com.dearmyhealth.databinding.ViewSingleTextBinding
 
@@ -25,7 +23,6 @@ class MedicationListAdapter(val list: List<Medication>, val listener: ((Medicati
         holder.binding.root.text = list[position].prodName
         holder.binding.root.setOnClickListener {
             listener(list[position])
-            holder.binding.root.setBackgroundColor(ContextCompat.getColor(holder.binding.root.context, R.color.second_panel))
         }
     }
 
