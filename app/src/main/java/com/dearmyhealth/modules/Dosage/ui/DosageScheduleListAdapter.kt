@@ -19,7 +19,8 @@ import java.util.Locale
 
 class DosageScheduleListAdapter(
     var list: List<Dosage>,
-    var operateClickListener: DosageSchedFragment.DosageOperateClickListener): RecyclerView.Adapter<DosageScheduleListAdapter.ViewHodler>() {
+    var operateClickListener: DosageSchedFragment.DosageOperateClickListener
+): RecyclerView.Adapter<DosageScheduleListAdapter.ViewHodler>() {
     class ViewHodler(val binding: ViewDosageScheduleItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
@@ -56,9 +57,12 @@ class DosageScheduleListAdapter(
         Log.d("DosageScheListAdapter", "item name: ${list[position].name}")
 
         // 버튼 클릭 이벤트 처리하기
-        holder.binding.dosageScheduleIsalarm.setOnCheckedChangeListener { _, isChecked ->
-            operateClickListener.onAlarmSwitchListener(list[position], isChecked)
-        }
+        if (item.dosageTime.size > 0)
+            holder.binding.dosageScheduleIsalarm.setOnCheckedChangeListener { _, isChecked ->
+                operateClickListener.onAlarmSwitchListener(list[position], isChecked)
+            }
+        else
+            holder.binding.dosageScheduleIsalarm.isActivated = false
         holder.binding.dosageScheduleOptionIV.setOnClickListener {
             val editOrDeleteBinding = ViewEditOrDeleteBinding.inflate(LayoutInflater.from(holder.binding.root.context))
             val popup = PopupWindow(editOrDeleteBinding.root, 1,1, true)

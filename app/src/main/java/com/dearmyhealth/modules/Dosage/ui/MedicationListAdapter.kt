@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.Dosage
+package com.dearmyhealth.modules.Dosage.ui
 
 
 import android.view.LayoutInflater
