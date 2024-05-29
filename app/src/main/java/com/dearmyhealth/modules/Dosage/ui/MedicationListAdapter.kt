@@ -21,7 +21,7 @@ class MedicationListAdapter(val list: List<Medication>, val listener: ((Medicati
         return MedViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: MedicationListAdapter.MedViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MedViewHolder, position: Int) {
         holder.binding.root.text = list[position].prodName
         holder.binding.root.setOnClickListener {
             listener(list[position])

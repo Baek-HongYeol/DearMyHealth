@@ -12,15 +12,19 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.dearmyhealth.R
+import com.dearmyhealth.data.db.AppDatabase
 import com.dearmyhealth.modules.Alarm.AlarmRepository
 import com.dearmyhealth.modules.Alarm.AlarmRingingActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -81,24 +85,9 @@ class AlarmReceiver : BroadcastReceiver() {
 
         // 노티피케이션 동작시킴
         notificationManager.notify(1234, builder.build())
-        val nextNotifyTime = Calendar.getInstance()
 
-        // 내일 같은 시간으로 알람시간 결정
-        nextNotifyTime.add(Calendar.DATE, 1)
-
-        // DB에 다음 알람 시간 업데이트
-        val alarmRepository = AlarmRepository.getInstance(context)
-        val requestId = intent.extras!!.getInt("requestId")
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val alarm = alarmRepository.findByRequestId(requestId)!!
-            alarm.time = nextNotifyTime.timeInMillis
-            alarmRepository.updateAlarm(alarm)
-        }
-
-        val currentDateTime = nextNotifyTime.time
-        val date_text = SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
-        Toast.makeText(context.applicationContext,"다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
+        // 다음 알람 설정
+        setAlarm(context, intent)
     }
 
     fun setSoundOn(context: Context, intent: Intent) {
@@ -121,48 +110,130 @@ class AlarmReceiver : BroadcastReceiver() {
 //            context.startService(service_intent)
 //        }
     }
+
+    fun setAlarm(context: Context, intent: Intent) {
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+
+        val requestId = intent.extras!!.getInt("requestId")
+        CoroutineScope(Dispatchers.IO).launch {
+            val alarmRepository = AlarmRepository.getInstance(context)
+            val alarm = alarmRepository.findByRequestId(requestId) ?: return@launch
+            val dosageAlarmDao = AppDatabase.getDatabase(context).dosageAlarmDao()
+            val dosageAlarm = dosageAlarmDao.findByRequestCode(requestId) ?: return@launch
+
+            // 다음 알람 시간 구하기
+            var datetime = OffsetDateTime.now()
+            val minutes = TimeUnit.HOURS.toMinutes(datetime.hour.toLong()).toInt() + datetime.minute
+
+            var nextAlarmMinutes = minutes
+
+            for (time in dosageAlarm.dosageTime) {
+                if (time > minutes) {
+                    nextAlarmMinutes = time
+                    break
+                }
+            }
+            if (nextAlarmMinutes == minutes) {
+                nextAlarmMinutes = dosageAlarm.dosageTime[0]
+                datetime = datetime.plusDays(1)
+            }
+            val nextDatetime = datetime
+                .withHour(nextAlarmMinutes/60)
+                .withMinute(nextAlarmMinutes%60)
+                .toInstant().toEpochMilli()
+
+            // DB에 다음 알람 시간 업데이트
+            alarm.time = nextDatetime
+            alarmRepository.updateAlarm(alarm)
+            val alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+                intent.putExtra("requestId", requestId)
+                intent.putExtra("dosageName", alarm.description)
+                PendingIntent.getBroadcast(context, requestId, intent, PendingIntent.FLAG_IMMUTABLE)
+            }
+            alarmManager!!.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                nextDatetime,
+                alarmIntent
+            )
+            val date_text = SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(nextDatetime)
+            withContext(Dispatchers.Main){
+                Toast.makeText(context.applicationContext,"다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
 
 
 class DeviceBootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == "android.intent.action.BOOT_COMPLETED") {
-
             // on device boot complete, reset the alarm
-            val alarmIntent = Intent(context, AlarmReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(
-                context, 0,
-                alarmIntent, PendingIntent.FLAG_IMMUTABLE
-            )
-            val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val current_calendar = Calendar.getInstance()
+            val manager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
-            // TODO db에서 읽어오기
-//            val sharedPreferences = context.getSharedPreferences("daily alarm", MODE_PRIVATE)
-//            val millis =
-//                sharedPreferences.getLong("nextNotifyTime", Calendar.getInstance().timeInMillis)
-//            val nextNotifyTime: Calendar = Calendar.getInstance()
-//            nextNotifyTime.timeInMillis = sharedPreferences.getLong("nextNotifyTime", millis)
+            CoroutineScope(Dispatchers.IO).launch {
+                val alarmRepository = AlarmRepository.getInstance(context)
+                val dosageAlarmDao = AppDatabase.getDatabase(context).dosageAlarmDao()
+                val alarms = alarmRepository.getEnabledAlarms()
+                for (alarm in alarms) {
+                    val dosageAlarm = dosageAlarmDao.findByRequestCode(alarm.requestCode) ?: return@launch
 
-            val nextNotifyTime = Calendar.getInstance()
-            nextNotifyTime.timeInMillis = 0 // TODO
-            if (current_calendar.after(nextNotifyTime)) {
-                nextNotifyTime.add(Calendar.DATE, 1)
+                    // 다음 알람 시간 구하기
+                    var datetime = OffsetDateTime.now()
+                    var nextDatetime = alarm.time
+
+                    if (datetime.isAfter(
+                            OffsetDateTime.ofInstant(Instant.ofEpochSecond(alarm.time), ZoneId.systemDefault())
+                    )) {
+                        val minutes =
+                            TimeUnit.HOURS.toMinutes(datetime.hour.toLong()).toInt() + datetime.minute
+
+                        var nextAlarmMinutes = minutes
+
+                        for (time in dosageAlarm.dosageTime) {
+                            if (time > minutes) {
+                                nextAlarmMinutes = time
+                                break
+                            }
+                        }
+                        if (nextAlarmMinutes == minutes) {
+                            nextAlarmMinutes = dosageAlarm.dosageTime[0]
+                            datetime = datetime.plusDays(1)
+                        }
+                        nextDatetime = datetime
+                            .withHour(nextAlarmMinutes / 60)
+                            .withMinute(nextAlarmMinutes % 60)
+                            .toInstant().toEpochMilli()
+
+                        // DB에 다음 알람 시간 업데이트
+                        CoroutineScope(Dispatchers.IO).launch {
+                            alarm.time = nextDatetime
+                            alarmRepository.updateAlarm(alarm)
+                        }
+                    }
+                    val alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+                        intent.putExtra("requestId", alarm.requestCode)
+                        intent.putExtra("dosageName", alarm.description)
+                        PendingIntent.getBroadcast(context, alarm.requestCode, intent, PendingIntent.FLAG_IMMUTABLE)
+                    }
+                    manager!!.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                        nextDatetime,
+                        alarmIntent
+                    )
+
+                    val currentDateTime = nextDatetime
+                    val date_text = SimpleDateFormat(
+                        "yyyy년 MM월 dd일 EE요일 a hh시 mm분 ",
+                        Locale.getDefault()
+                        ).format(currentDateTime)
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(
+                            context.applicationContext,
+                            "[재부팅후] 다음 알람은 " + date_text + "으로 알람이 설정되었습니다!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
-            val currentDateTime: Date = nextNotifyTime.time
-            val date_text =
-                SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(
-                    currentDateTime
-                )
-            Toast.makeText(
-                context.applicationContext,
-                "[재부팅후] 다음 알람은 " + date_text + "으로 알람이 설정되었습니다!",
-                Toast.LENGTH_SHORT
-            ).show()
-            manager.setRepeating(
-                AlarmManager.RTC_WAKEUP, nextNotifyTime.timeInMillis,
-                AlarmManager.INTERVAL_DAY, pendingIntent
-            )
         }
     }
 }

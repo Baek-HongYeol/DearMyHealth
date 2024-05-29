@@ -27,6 +27,8 @@ import com.dearmyhealth.databinding.ViewDosageScheduleItemBinding
 import com.dearmyhealth.modules.Alarm.AlarmRepository
 import com.dearmyhealth.modules.Dosage.activity.DosageActivity
 import com.dearmyhealth.modules.Dosage.repository.RepositoryProvider
+import com.dearmyhealth.modules.Dosage.ui.DosageScheduleListAdapter
+import com.dearmyhealth.modules.Dosage.ui.MedicationListAdapter
 import com.dearmyhealth.modules.Dosage.viewmodel.DosageViewModel
 import com.dearmyhealth.modules.Dosage.viewmodel.DosageViewModelFactory
 import com.dearmyhealth.service.AlarmReceiver
@@ -34,7 +36,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Calendar
+import java.time.OffsetDateTime
+import java.util.concurrent.TimeUnit
 
 class DosageSchedFragment: Fragment() {
     private lateinit var binding: FragmentDosageScheduleBinding
@@ -213,43 +216,47 @@ class DosageSchedFragment: Fragment() {
 
     fun setAlarm(dosage: Dosage) {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-        val calendar: Calendar = Calendar.getInstance()
 
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
-        val minutes = hour*60+minute.toLong()
-        var nextAlarmMinutes = dosage.dosageTime.fold(1440L) { acc, v ->
-            if (v in (minutes + 1) until acc)
-                v
-            else acc
+        var datetime = OffsetDateTime.now()
+        val minutes = TimeUnit.HOURS.toMinutes(datetime.hour.toLong()).toInt() + datetime.minute
+
+        var nextAlarmMinutes = minutes
+
+        for (time in dosage.dosageTime) {
+            if (time > minutes) {
+                nextAlarmMinutes = time
+                break
+            }
         }
-        if(nextAlarmMinutes.toInt() == 1440) {
+        if (nextAlarmMinutes == minutes) {
             nextAlarmMinutes = dosage.dosageTime[0]
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
+            datetime = datetime.plusDays(1)
         }
-        calendar.set(Calendar.HOUR_OF_DAY, nextAlarmMinutes.toInt()/60)
-        calendar.set(Calendar.MINUTE, nextAlarmMinutes.toInt()%60)
-        var requestId = dosage.dosageId*1000+dosage.dosageTime[0].toInt()
+        val nextDatetime = datetime
+            .withHour(nextAlarmMinutes/60)
+            .withMinute(nextAlarmMinutes%60)
+            .toInstant().toEpochMilli()
+
+        var requestId = dosage.dosageId*1000+dosage.dosageTime[0]
 
         CoroutineScope(Dispatchers.IO).launch {
             val alarm = alarmRepository.findByDosageId(dosage.dosageId)
             if(alarm != null) {
                 alarm.isEnabled = true
-                alarm.time = calendar.timeInMillis
+                alarm.time = nextDatetime
                 alarmRepository.updateAlarm(alarm)
                 requestId = alarm.requestCode
             }
             else
-                alarmRepository.insertAlarm(requestId, dosage.dosageId, calendar.timeInMillis, dosage.name)
+                alarmRepository.insertAlarm(requestId, dosage.dosageId, nextDatetime, dosage.name)
 
             val alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
                 intent.putExtra("requestId", requestId)
                 intent.putExtra("dosageName", dosage.name)
                 PendingIntent.getBroadcast(context, requestId, intent, PendingIntent.FLAG_IMMUTABLE)
             }
-            alarmManager!!.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                AlarmManager.INTERVAL_DAY,
+            alarmManager!!.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                nextDatetime,
                 alarmIntent
             )
         }

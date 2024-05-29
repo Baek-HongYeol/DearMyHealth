@@ -19,7 +19,7 @@ class DosageRepository(private val dosageDao: DosageDao, private val medicationS
         return dosageDao.insert(dosage).toInt()
     }
     suspend fun insert(medItemSeq: String?=null, name:String, startTime: Long, endTime: Long,
-                       dosageTime: List<Long>, dosage: Double?=1.0, user:Int = Session.currentUser.uid): Result<Dosage> {
+                       dosageTime: List<Int>, dosage: Double?=1.0, user:Int = Session.currentUser.uid): Result<Dosage> {
         var itemSeq = "0"
         if (medItemSeq!=null) {
             try {

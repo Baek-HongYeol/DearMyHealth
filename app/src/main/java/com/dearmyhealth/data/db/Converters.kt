@@ -6,10 +6,10 @@ import com.google.gson.Gson
 
 class Converters {
     @TypeConverter
-    fun listToJson(value: List<Long>?) = Gson().toJson(value)
+    fun listToJson(value: List<Int>?) = Gson().toJson(value)
 
     @TypeConverter
-    fun jsonToList(value: String) = Gson().fromJson(value, Array<Long>::class.java).toList()
+    fun jsonToList(value: String) = Gson().fromJson(value, Array<Int>::class.java).toList()
 
     @TypeConverter
     fun boolToInt(value: Boolean): Int = if(value) 1 else 0

@@ -200,7 +200,7 @@ class DosageActivity : AppCompatActivity() {
     private fun initSaveButton() {
         // 저장 버튼 초기화
         binding.saveButton.setOnClickListener {
-            val dosageTime = dosageViewModel.dosageTimeList.value!!.map { time -> TimeUnit.HOURS.toMinutes(time.hour.toLong())+time.minute }
+            val dosageTime = dosageViewModel.dosageTimeList.value!!.map { time -> TimeUnit.HOURS.toMinutes(time.hour.toLong()).toInt()+time.minute }
 
             if(operation == OPERATION.CREATE) {
                 CoroutineScope(Dispatchers.IO).launch {

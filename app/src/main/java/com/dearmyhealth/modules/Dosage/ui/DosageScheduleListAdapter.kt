@@ -1,4 +1,4 @@
-package com.dearmyhealth.modules.Dosage
+package com.dearmyhealth.modules.Dosage.ui
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dearmyhealth.data.db.entities.Dosage
 import com.dearmyhealth.databinding.ViewDosageScheduleItemBinding
 import com.dearmyhealth.databinding.ViewEditOrDeleteBinding
+import com.dearmyhealth.modules.Dosage.DosageSchedFragment
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneId

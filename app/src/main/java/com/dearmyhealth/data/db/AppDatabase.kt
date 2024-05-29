@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import com.dearmyhealth.data.db.dao.AlarmDao
 import com.dearmyhealth.data.db.dao.AttentionDetailDao
 import com.dearmyhealth.data.db.dao.DietDao
+import com.dearmyhealth.data.db.dao.DosageAlarmDao
 import com.dearmyhealth.data.db.dao.DosageDao
 import com.dearmyhealth.data.db.dao.FoodDao
 import com.dearmyhealth.data.db.dao.MedicationDao
@@ -26,6 +27,7 @@ import com.dearmyhealth.data.db.entities.Symptom
 import com.dearmyhealth.data.db.entities.User
 import com.dearmyhealth.data.db.preload.PreloadMedicationsCallback
 import com.dearmyhealth.data.db.preload.PreloadTestUserCallback
+import com.dearmyhealth.data.db.views.DosageAlarm
 
 @Database(
     entities = [
@@ -39,7 +41,8 @@ import com.dearmyhealth.data.db.preload.PreloadTestUserCallback
         Dosage::class,
         Alarm::class,
         Goal::class,
-        Symptom::class,], version = 1, exportSchema = false)
+        Symptom::class,],
+    views =[DosageAlarm::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
@@ -49,6 +52,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun medicationDao(): MedicationDao
     abstract fun attentionDetailDao(): AttentionDetailDao
     abstract fun alarmDao(): AlarmDao
+    abstract fun dosageAlarmDao(): DosageAlarmDao
     abstract fun nutrientStandardDao(): NutrientStandardDao
 
     companion object {
