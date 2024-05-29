@@ -2,7 +2,6 @@ package com.dearmyhealth.modules.Diet.viewmodel
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +10,8 @@ import com.dearmyhealth.data.db.AppDatabase
 import com.dearmyhealth.data.db.entities.Diet
 import com.dearmyhealth.modules.Diet.DietRepository
 import com.dearmyhealth.modules.Diet.model.Nutrients
-import com.dearmyhealth.util.DateTime
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 class DietTodayViewModel(dietRepository: DietRepository): ViewModel() {
@@ -22,7 +22,10 @@ class DietTodayViewModel(dietRepository: DietRepository): ViewModel() {
     private val _todayNutritions = MutableLiveData<Nutrients>()
     val todayNutritions: LiveData<Nutrients> get() = _todayNutritions
 
-    val currentQueryDateString: LiveData<String> = MutableLiveData(DateTime.calToFormattedString())
+    val dtf = DateTimeFormatter.ofPattern("yy년 M월 d일")
+
+    val currentQueryDateString: LiveData<String> = MutableLiveData(OffsetDateTime.now().format(dtf))
+
 
     fun calcNutrients()  {
         val value = todayDiets.value!!

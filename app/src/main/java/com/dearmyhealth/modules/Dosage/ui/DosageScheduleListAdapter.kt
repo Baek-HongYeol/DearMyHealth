@@ -1,7 +1,6 @@
 package com.dearmyhealth.modules.Dosage.ui
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupWindow
@@ -54,7 +53,6 @@ class DosageScheduleListAdapter(
         holder.binding.dosageSchduleName.text = item.name
         holder.binding.dosageSchedulePeriod.text = "$startTime ~ $endTime"
         holder.binding.dosageScheduleDosageAmount.text = "${(Math.round((item.dosage?:0.0)*100)/100)} 개"
-        Log.d("DosageScheListAdapter", "item name: ${list[position].name}")
 
         // 버튼 클릭 이벤트 처리하기
         if (item.dosageTime.size > 0)

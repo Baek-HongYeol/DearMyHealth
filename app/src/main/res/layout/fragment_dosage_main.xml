@@ -82,6 +82,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textView1" />
 
+                <ScrollView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dosage_divline">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/dosage_alarm_RV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </ScrollView>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
