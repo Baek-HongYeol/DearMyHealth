@@ -8,6 +8,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
@@ -18,7 +20,6 @@ import com.dearmyhealth.modules.Alarm.AlarmRingingActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -156,9 +157,11 @@ class AlarmReceiver : BroadcastReceiver() {
                 alarmIntent
             )
             val date_text = SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(nextDatetime)
-            withContext(Dispatchers.Main){
-                Toast.makeText(context.applicationContext,"다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
-            }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed( {
+                Toast.makeText(context.applicationContext,"다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show()
+            }, 0)
         }
     }
 }
@@ -225,13 +228,14 @@ class DeviceBootReceiver : BroadcastReceiver() {
                         "yyyy년 MM월 dd일 EE요일 a hh시 mm분 ",
                         Locale.getDefault()
                         ).format(currentDateTime)
-                    withContext(Dispatchers.Main){
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed( {
                         Toast.makeText(
                             context.applicationContext,
                             "[재부팅후] 다음 알람은 " + date_text + "으로 알람이 설정되었습니다!",
                             Toast.LENGTH_SHORT
                         ).show()
-                    }
+                    }, 0)
                 }
             }
         }
