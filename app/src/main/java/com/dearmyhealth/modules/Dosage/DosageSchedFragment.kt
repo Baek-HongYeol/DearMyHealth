@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
@@ -127,6 +128,20 @@ class DosageSchedFragment: Fragment() {
             }
         }
 
+        binding.medSearchEditText.setOnEditorActionListener { textView, i, _ ->
+            when(i) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    if(textView.text.trim() == "")
+                        return@setOnEditorActionListener true
+                    val searchQuery = textView.text.toString().trim()
+                    if (searchQuery.isNotEmpty()) {
+                        medicationViewModel.searchMedications(searchQuery)
+                    }
+                }
+            }
+            return@setOnEditorActionListener true
+        }
+
         medicationViewModel.medications.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Success -> {
@@ -190,6 +205,8 @@ class DosageSchedFragment: Fragment() {
                 val childBinding = ViewDosageScheduleItemBinding.bind(view)
                 val idx = parent.indexOfChild(view)
                 val dosageId = (parent.adapter as DosageScheduleListAdapter).list[idx].dosageId
+
+                if(!childBinding.dosageScheduleIsalarm.isActivated) return
 
                 CoroutineScope(Dispatchers.IO).launch {
                     val alarms =
