@@ -105,6 +105,16 @@
             android:exported="false"
             android:theme="@style/Theme.Dearmyhealth"
             android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".modules.bpm.TempAddActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Dearmyhealth"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".modules.bpm.WeightAddActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Dearmyhealth"
+            android:parentActivityName=".MainActivity"/>
         <activity android:name=".modules.Alarm.AlarmRingingActivity"
             android:exported="true"
             android:theme="@style/Theme.Dearmyhealth"

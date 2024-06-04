@@ -38,7 +38,7 @@ class WeightFragment : VitalChartFragment<WeightRecord>(VitalType.WEIGHT) {
 
         // 데이터 추가 버튼
         binding.stepAddDataLL.setOnClickListener {
-            startActivity(Intent(requireContext(), StepAddActivity::class.java))
+            startActivity(Intent(requireContext(), WeightAddActivity::class.java))
         }
     }
 

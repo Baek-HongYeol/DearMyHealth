@@ -37,7 +37,7 @@ class TempFragment : VitalChartFragment<BodyTemperatureRecord>(VitalType.TEMPERA
         super.onViewCreated(view, savedInstanceState)
         // 데이터 추가 버튼
         binding.stepAddDataLL.setOnClickListener {
-            startActivity(Intent(requireContext(), StepAddActivity::class.java))
+            startActivity(Intent(requireContext(), TempAddActivity::class.java))
         }
     }
 

@@ -13,6 +13,7 @@ import androidx.health.connect.client.HealthConnectClient.Companion.getSdkStatus
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.aggregate.AggregationResult
 import androidx.health.connect.client.changes.Change
+import androidx.health.connect.client.records.BodyTemperatureRecord
 import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.Record
@@ -28,11 +29,13 @@ import androidx.health.connect.client.response.ReadRecordResponse
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.health.connect.client.units.Energy
 import androidx.health.connect.client.units.Mass
+import androidx.health.connect.client.units.Temperature
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
 import java.time.Instant
+import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlin.reflect.KClass
@@ -106,12 +109,11 @@ class HealthConnectManager(private val context: Context) {
     /**
      * TODO: Writes [WeightRecord] to Health Connect.
      */
-    suspend fun writeWeightInput(weightInput: Double) {
-        val time = ZonedDateTime.now().withNano(0)
+    suspend fun writeWeightInput(weightInput: Double, time: Instant = Instant.now()) {
         val weightRecord = WeightRecord(
             weight = Mass.kilograms(weightInput),
-            time = time.toInstant(),
-            zoneOffset = time.offset
+            time = time,
+            zoneOffset = OffsetDateTime.now().offset
         )
         val records = listOf(weightRecord)
         healthConnectClient.insertRecords(records)
@@ -128,6 +130,26 @@ class HealthConnectManager(private val context: Context) {
         val response = healthConnectClient.readRecords(request)
         return response.records
     }
+
+
+    suspend fun readTemperatureRecords(start:Instant, end: Instant): List<BodyTemperatureRecord> {
+        val request = ReadRecordsRequest(
+            recordType = BodyTemperatureRecord::class,
+            timeRangeFilter = TimeRangeFilter.between(start, end)
+        )
+        val response = healthConnectClient.readRecords(request)
+        return response.records
+    }
+
+    suspend fun writeTempRecord(value: Double, time: Instant = Instant.now()) {
+        val tempRecord = BodyTemperatureRecord(
+            time = time,
+            zoneOffset = OffsetDateTime.now().offset,
+            temperature = Temperature.celsius(value)
+        )
+        healthConnectClient.insertRecords(listOf(tempRecord))
+    }
+
 
     /**
      *
