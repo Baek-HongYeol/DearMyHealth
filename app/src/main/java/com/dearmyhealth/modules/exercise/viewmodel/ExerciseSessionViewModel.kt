@@ -71,9 +71,9 @@ class ExerciseSessionViewModel(private val healthConnectManager: HealthConnectMa
             field = value
             val today = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS)
             startOfRange = when(currentRange) {
-                DietStats.PERIOD.WEEK-> today.minusDays(7)
+                DietStats.PERIOD.WEEK-> today.minusDays(6)
                 DietStats.PERIOD.MONTH -> today.withDayOfMonth(1)
-                DietStats.PERIOD.ThreeMONTH -> today.withDayOfMonth(1).minusMonths(3)
+                DietStats.PERIOD.ThreeMONTH -> today.withDayOfMonth(1).minusMonths(2)
                 DietStats.PERIOD.YEAR -> today.withDayOfMonth(1).minusYears(1).plusMonths(1)
             }
         }
