@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.RemoteException
 import android.util.Log
+import androidx.health.connect.client.aggregate.AggregationResult
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.BodyTemperatureRecord
 import androidx.health.connect.client.records.HeartRateRecord
@@ -146,11 +147,28 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
                 timeRangeFilter = TimeRangeFilter.between(startOfDay, endOfDay)
             )
             val response = client.readRecords(request)
+            Log.d(TAG, "heartrate records size: ${response.records.size}")
             withContext(Dispatchers.Main) {
                 bpmSeries.value = response.records
             }
         }
     }
+
+    suspend fun aggregateHeartRate(
+        startTime: Instant,
+        endTime: Instant
+    ): AggregationResult {
+        val response =
+            healthConnectManager.aggregate(
+                AggregateRequest(
+                    setOf(HeartRateRecord.BPM_MAX, HeartRateRecord.BPM_MIN, HeartRateRecord.BPM_AVG),
+                    timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
+                )
+            )
+        // The result may be null if no data is available in the time range
+        return response
+    }
+
 
     /** read steps record for a given day. */
     suspend fun readStepsRecordsForDay(date: Instant) : List<StepsRecord>{

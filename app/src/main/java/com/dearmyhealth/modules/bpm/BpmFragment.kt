@@ -1,38 +1,59 @@
 package com.dearmyhealth.modules.bpm
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.fragment.app.viewModels
 import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.aggregate.AggregateMetric
 import androidx.health.connect.client.records.HeartRateRecord
+import androidx.lifecycle.Observer
 import com.dearmyhealth.R
 import com.dearmyhealth.databinding.FragmentBpmBinding
-import com.jjoe64.graphview.DefaultLabelFormatter
-import com.jjoe64.graphview.GraphView
-import com.jjoe64.graphview.series.DataPoint
-import com.jjoe64.graphview.series.LineGraphSeries
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.CombinedData
+import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.Instant
 import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.Date
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
+    private val TAG = javaClass.simpleName
 
-    private lateinit var graphView: GraphView
     private lateinit var healthConnectClient: HealthConnectClient
     private lateinit var minBpmTextView: TextView
     private lateinit var avgBpmTextView: TextView
     private lateinit var maxBpmTextView: TextView
     lateinit var _binding: FragmentBpmBinding
+
+
+    var metric: AggregateMetric<Number> = HeartRateRecord.BPM_AVG
+
+    // Steps Livedata Observer 정의
+    val observer = Observer<List<HeartRateRecord>> { value ->
+        Log.d(TAG, "livedata change observed")
+        Log.d(TAG, "size: ${value.size}")
+
+        setChartData(value)
+        analyzeData(
+            value,
+            period.subunit.between(viewModel.startOfRange, viewModel.endOfRange).toInt()
+        )
+    }
 
 
     override fun onCreateView(
@@ -41,7 +62,6 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBpmBinding.inflate(inflater)
-        graphView = _binding.graphView
         return _binding.root
     }
 
@@ -55,15 +75,18 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
         // HealthConnectClient 초기화
 
         // 오늘 날짜
-        viewModel.currentDate = OffsetDateTime.now()
+        viewModel.currentDate = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS)
+        Log.d(TAG, "today: ${viewModel.currentDate}")
+        currentRange = 0
 
         // 버튼 클릭 시 전날의 심박수 데이터 가져오기
         previousDayButton.setOnClickListener {
             viewModel.currentDate = viewModel.currentDate.minus(1, ChronoUnit.DAYS)
-
+            Log.d(TAG, "currentDate: ${viewModel.currentDate}")
             // 다음 날짜 버튼 활성화
             nextDayButton.isEnabled = true
-            updateDateText(viewModel.currentDate.toInstant())
+            updateDateText(viewModel.currentDate)
+            fetchDataForDay(viewModel.currentDate)
         }
 
         // 버튼 클릭 시 다음날의 심박수 데이터 가져오기
@@ -71,102 +94,178 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
             viewModel.currentDate = viewModel.currentDate.plus(1, ChronoUnit.DAYS)
 
             // 오늘이 아닌 경우만 다음 날짜 버튼 비활성화
-            nextDayButton.isEnabled = !viewModel.currentDate.truncatedTo(ChronoUnit.DAYS).equals(Instant.now().truncatedTo(ChronoUnit.DAYS))
-            updateDateText(viewModel.currentDate.toInstant())
+            nextDayButton.isEnabled = viewModel.currentDate.truncatedTo(ChronoUnit.DAYS)
+                .isBefore(OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS))
+            updateDateText(viewModel.currentDate)
+            fetchDataForDay(viewModel.currentDate)
         }
         nextDayButton.isEnabled = false
 
 
-        initializeGraph()
-
         // 초기 데이터 가져오기
-        updateDateText(viewModel.currentDate.toInstant())
+        updateDateText(viewModel.currentDate)
 
-        fetchDataForDay(viewModel.currentDate.toInstant())
+        fetchDataForDay(viewModel.currentDate)
         observeData()
     }
 
     fun observeData(){
         viewModel.bpmSeries.observe(viewLifecycleOwner) { value ->
-            drawGraph(value)
+            Log.d(TAG, "data.size: ${value.size}")
+            setChartData(value)
             displayHeartRateStats(value)
         }
     }
 
-    fun updateDateText(date: Instant) {
-        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
-        _binding.currentDateTextView.text = dateFormat.format(Date.from(date))
+    fun updateDateText(date: OffsetDateTime) {
+        val dateFormat = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일", Locale.getDefault())
+        _binding.currentDateTextView.text = dateFormat.format(date)
     }
 
-    private fun fetchDataForDay(date: Instant) {
+    override fun fetchDataForDay(date: OffsetDateTime) {
+        val start = date.truncatedTo(ChronoUnit.DAYS)
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                // 선택한 날짜의 심박수 데이터를 가져오는 비동기 작업
-                viewModel.tryWithPermissionsCheck { viewModel.readHeartRateRecordsForDay(date) }
-
-            } catch (e: Exception) {
-                // 예외 처리
-                // 데이터를 가져오는 동안 오류가 발생한 경우 처리할 내용을 여기에 추가하세요.
+            viewModel.tryWithPermissionsCheck {
+                viewModel.readHeartRateRecordsForDay(start.toInstant())
             }
         }
     }
 
-    fun initializeGraph() {
+    override fun configureAxis() {
+        val xAxis = _binding.barChart.xAxis
+        val startMillis = viewModel.startOfRange.toInstant().toEpochMilli()
+        val endMillis = viewModel.endOfRange.toInstant().toEpochMilli()
 
-        // X축의 시간 간격을 설정합니다.
-        graphView.viewport.isXAxisBoundsManual = true
-        graphView.viewport.setMinX(0.0)
-        graphView.viewport.setMaxX(24.0) // 24시간으로 설정합니다.
+        // 2시간 단위로 눈금을 추가합니다.
+        xAxis.setLabelCount(12, false) // X축에 표시할 눈금 수를 설정합니다.
+        xAxis.apply {
+            setDrawGridLines(true)
+            setDrawAxisLine(true)
+            setDrawLabels(true)
+            setCenterAxisLabels(false)
+            position = XAxis.XAxisPosition.BOTTOM
+            valueFormatter = XAxisCustomFormatter(currentRange)
+            textColor = resources.getColor(R.color.black, null)
+            textSize = 10f
+            labelRotationAngle = 0f
+            axisMinimum = TimeUnit.MILLISECONDS.toHours(startMillis).toFloat()
+            axisMaximum = TimeUnit.MILLISECONDS.toHours(endMillis).toFloat()
+            granularity = period.subunit.duration.toHours().toFloat()
+            isGranularityEnabled = true
 
-        // Y축의 심박수 범위를 설정합니다.
-        graphView.viewport.isYAxisBoundsManual = true
-        graphView.viewport.setMinY(0.0)
-        graphView.viewport.setMaxY(180.0) // 최대 심박수를 180으로 설정합니다.
+        }
+        _binding.barChart.axisRight.apply {
+            setDrawLabels(false)
+            setDrawAxisLine(false)
+            setDrawGridLines(false)
+        }
+        _binding.barChart.axisLeft.apply {
+            setDrawLabels(true)
+            setDrawGridLines(true)
+            setDrawAxisLine(true)
+            axisMinimum = 0f
+            axisMaximum = 100f
+        }
 
-        // Y축의 눈금 간격을 설정합니다.
-        graphView.gridLabelRenderer.numVerticalLabels = 7 // Y축에 표시할 눈금 수를 설정합니다.
+    }
 
-        // 1시간 단위로 눈금을 추가합니다.
-        graphView.gridLabelRenderer.numHorizontalLabels = 12 // X축에 표시할 눈금 수를 설정합니다.
-        graphView.gridLabelRenderer.setHorizontalLabelsAngle(90) // 눈금 라벨을 90도 회전시킵니다.
-        graphView.gridLabelRenderer.labelFormatter = object : DefaultLabelFormatter() {
-            override fun formatLabel(value: Double, isValueX: Boolean): String {
-                if (isValueX) {
-                    // X축의 눈금을 시간으로 변환하여 표시합니다.
-                    val hour = value.toInt() % 24
-                    return String.format("%02d:00", hour) // 시간을 00:00 형식으로 변환하여 반환합니다.
-                } else {
-                    return super.formatLabel(value, isValueX)
+    override fun setChartData(dataList: List<HeartRateRecord>) {
+        for (record in dataList){
+            val samples = record.samples
+            Log.d(TAG, "startTime: ${record.startTime}")
+            for(sample in samples) {
+            //    Log.d(TAG, "sample: ${sample.beatsPerMinute} / time: ${sample.time.atOffset(OffsetDateTime.now().offset)}")
+            }
+        }
+
+        fun generateGroups(): Map<OffsetDateTime, List<HeartRateRecord>> {
+            val sortedList = dataList.sortedBy { record -> record.startTime }
+
+            return viewModel.startOfRange.run {
+                val map = mutableMapOf<OffsetDateTime, MutableList<HeartRateRecord>>()
+                var cur = this
+                var next = this.plus(1, period.subunit)
+                for (el in sortedList) {
+                    if(el.startTime.toEpochMilli() < this.toInstant().toEpochMilli())
+                        continue
+
+                    while(el.startTime.toEpochMilli() >= next.toInstant().toEpochMilli()) {
+                        if(next.isAfter(viewModel.endOfRange)) break
+                        cur = next
+                        next = next.plus(1, period.subunit)
+                    }
+                    if( el.startTime.toEpochMilli() >= cur.toInstant().toEpochMilli() &&
+                        el.startTime.toEpochMilli() < next.toInstant().toEpochMilli() ){
+                        val middle = OffsetDateTime.ofInstant(
+                            el.startTime.plusSeconds((el.endTime.epochSecond - el.startTime.epochSecond)/2),
+                            ZoneId.systemDefault()
+                        )
+                        Log.d(TAG, "start: ${el.startTime}")
+                        Log.d(TAG, "middle: ${middle.toInstant()}")
+                        Log.d(TAG, "end: ${el.endTime}")
+                        if(!map.contains(middle))
+                            map[middle] = mutableListOf()
+                        val recordList = map[middle]
+                        recordList!!.add(el)
+                        map[middle] = recordList
+                    }
+                    else {
+                        if(next.isAfter(viewModel.endOfRange)) break
+                        cur = next
+                        next = next.plus(1, period.subunit)
+                    }
                 }
+                Log.d(TAG, map.toString())
+                map
             }
         }
 
-        // X축과 Y축의 레이블을 추가합니다.
-        graphView.gridLabelRenderer.horizontalAxisTitle = "시간"
-        graphView.gridLabelRenderer.verticalAxisTitle = "심박수"
+        val groups = generateGroups().mapValues { entry ->
+            entry.value.fold(0f) { acc, record -> (acc + (record.samples.fold(0f){ _acc, sample -> _acc + sample.beatsPerMinute.toFloat()})) }
+        }
+        Log.d(TAG, "groups: ${generateGroups()}")
+        var maxValue = 100f
+        val entries: MutableList<BarEntry> = mutableListOf()
+
+        for (g in groups) {
+            entries.add(BarEntry(TimeUnit.SECONDS.toHours(g.key.toEpochSecond()).toFloat(), g.value))
+            if(maxValue < g.value) maxValue = g.value
+        }
+
+        val barDataSet = BarDataSet(entries,"심박수")
+        barDataSet.apply {
+            color = resources.getColor(R.color.primary, null)
+            setDrawValues(true) // 숫자표시
+            valueTextColor = resources.getColor(R.color.black, null)
+            valueFormatter = DefaultValueFormatter(0)  // 소숫점 자릿수 설정
+            valueTextSize = 10f
+        }
+        val combinedData = CombinedData()
+        combinedData.setData(BarData(barDataSet))
+        combinedData.barData.barWidth = 0.6f
+
+        configureAxis()
+
+        val barChart = _binding.barChart
+        barChart.apply {
+            data = combinedData
+            legend.orientation = Legend.LegendOrientation.HORIZONTAL
+            axisLeft.axisMaximum = maxValue * 1.05f
+            description.isEnabled = false
+            notifyDataSetChanged() //데이터 갱신
+            invalidate() // view갱신
+        }
     }
 
 
-    // displayHeartRateData 및 displayHeartRateStats 함수는 필요에 따라 구현하세요.
-    fun drawGraph(data: List<HeartRateRecord>){
-        // 그래프를 초기화합니다.
-        graphView.removeAllSeries()
+    @SuppressLint("SetTextI18n")
+    fun analyzeData(data: List<HeartRateRecord>, totalUnit: Int) {
+        val minTV = _binding.minBpmTextView
+        val avgTV = _binding.minBpmTextView
+        val maxTV = _binding.minBpmTextView
 
-        // 그래프 데이터를 저장할 리스트를 생성합니다.
-        val series = LineGraphSeries<DataPoint>()
 
-        // 심박수 데이터를 그래프에 추가합니다.
-        for (record in data) {
-            for (sample in record.samples) {
-                val timestamp = sample.time.toEpochMilli().toDouble() // 샘플의 시간을 가져옵니다.
-                val heartRate = sample.beatsPerMinute.toDouble() // 샘플의 심박수를 가져옵니다.
-                val dataPoint = DataPoint(timestamp, heartRate)
-                series.appendData(dataPoint, true, data.size) // 그래프 데이터를 추가합니다.
-            }
-        }
 
-        // 그래프에 시리즈를 추가합니다.
-        graphView.addSeries(series)
     }
 
     fun displayHeartRateStats(heartRateData: List<HeartRateRecord>) {
