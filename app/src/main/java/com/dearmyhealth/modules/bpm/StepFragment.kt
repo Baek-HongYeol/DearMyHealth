@@ -106,7 +106,7 @@ class StepFragment : VitalChartFragment<GroupedAggregationResult>(VitalType.STEP
                 return dataList.groupBy {
                     OffsetDateTime.ofInstant(
                         Instant.ofEpochMilli(it.startTime.toEpochMilli()), ZoneId.systemDefault()
-                    ).truncatedTo(ChronoUnit.DAYS) }
+                    ).truncatedTo(ChronoUnit.DAYS).plusHours(12) }
 
             else
                 return viewModel.startOfRange.run {
@@ -125,7 +125,7 @@ class StepFragment : VitalChartFragment<GroupedAggregationResult>(VitalType.STEP
                         if( el.startTime.toEpochMilli() >= cur.toInstant().toEpochMilli() &&
                             el.startTime.toEpochMilli() < next.toInstant().toEpochMilli() ){
                             val middle = OffsetDateTime.ofInstant(
-                                el.startTime.plusSeconds(el.endTime.epochSecond - el.startTime.epochSecond),
+                                el.startTime.plusSeconds((el.endTime.epochSecond - el.startTime.epochSecond)/2),
                                 ZoneId.systemDefault()
                             )
                             if(!map.contains(middle))
