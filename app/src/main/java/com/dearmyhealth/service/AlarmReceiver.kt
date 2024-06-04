@@ -42,16 +42,18 @@ class AlarmReceiver : BroadcastReceiver() {
     private fun setNotification(context: Context, intent: Intent) {
         val notificationManager: NotificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notificationIntent = Intent(context, AlarmRingingActivity::class.java)
+        val notificationIntent = Intent(context, AlarmRingingActivity::class.java).apply {
+            flags=Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
 
-        notificationIntent.setFlags(
-            Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        )
+        val requestId = intent.getIntExtra("requestId",0)
+        val dosageName: String? = intent.getStringExtra("dosageName")
+        notificationIntent.putExtra("requestId", requestId)
+        notificationIntent.putExtra("dosageName", dosageName)
 
         val pendingI = PendingIntent.getActivity(
             context, 0,
-            notificationIntent, PendingIntent.FLAG_IMMUTABLE
+            notificationIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         val builder = NotificationCompat.Builder(context, "default")
 
@@ -59,19 +61,17 @@ class AlarmReceiver : BroadcastReceiver() {
         //OREO API 26 이상에서는 채널 필요
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            builder.setSmallIcon(R.drawable.ic_launcher_foreground) //mipmap 사용시 Oreo 이상에서 시스템 UI 에러남
-
-
             val channelName ="알람"
             val description = "설정된 복용 시간에 알람합니다."
             var importance = NotificationManager.IMPORTANCE_HIGH //소리와 알림메시지를 같이 보여줌
 
-            val channel = NotificationChannel("default", channelName, importance)
-            channel.setDescription(description)
-
+            val channel = NotificationChannel("default", channelName, importance).apply {
+                this.description = description
+            }
             notificationManager.createNotificationChannel(channel)
+            builder.setSmallIcon(R.drawable.ic_launcher_foreground) //mipmap 사용시 Oreo 이상에서 시스템 UI 에러남
         }
-        else builder.setSmallIcon(R.mipmap.ic_launcher) // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
+        else {builder.setSmallIcon(R.mipmap.ic_launcher)} // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
 
 
         builder.setAutoCancel(true)
@@ -116,7 +116,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
-        val requestId = intent.extras!!.getInt("requestId")
+        val requestId = intent.extras?.getInt("requestId")?:return
         CoroutineScope(Dispatchers.IO).launch {
             val alarmRepository = AlarmRepository.getInstance(context)
             val alarm = alarmRepository.findByRequestId(requestId) ?: return@launch
@@ -227,7 +227,7 @@ class DeviceBootReceiver : BroadcastReceiver() {
                     val date_text = SimpleDateFormat(
                         "yyyy년 MM월 dd일 EE요일 a hh시 mm분 ",
                         Locale.getDefault()
-                        ).format(currentDateTime)
+                    ).format(currentDateTime)
                     val handler = Handler(Looper.getMainLooper())
                     handler.postDelayed( {
                         Toast.makeText(
