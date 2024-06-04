@@ -1,5 +1,8 @@
 package com.dearmyhealth
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,14 +12,16 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.dearmyhealth.home.ui.BottomSheetAccountDialogFragment
 import com.dearmyhealth.databinding.ActivityMainBinding
+import com.dearmyhealth.home.ui.BottomSheetAccountDialogFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -49,6 +54,22 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = binding.drawerLayout
         initView()
         observeViewModel()
+
+        val bodyPermissionStatus = ContextCompat.checkSelfPermission(this, Manifest.permission.BODY_SENSORS)
+        val hasNotificationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+        if(bodyPermissionStatus != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION, Manifest.permission.BODY_SENSORS),
+                100
+            )
+        }
+        if (hasNotificationPermission != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 100)
+            }
+        }
+
         this.onBackPressedDispatcher.addCallback(onBackpressedCallback)
 
         //retrofit 확인
