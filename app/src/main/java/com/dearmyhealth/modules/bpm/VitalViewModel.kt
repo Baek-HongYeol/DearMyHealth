@@ -48,7 +48,7 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
             field = value
             startOfRange = when(currentRange) {
                 PERIOD.DAY -> today
-                PERIOD.WEEK -> today.minusDays(7)
+                PERIOD.WEEK -> today.minusDays(6)
                 PERIOD.MONTH -> today.withDayOfMonth(1)
                 PERIOD.YEAR -> today.withDayOfMonth(1).minusYears(1).plusMonths(1)
             }
@@ -101,7 +101,7 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
 
     suspend fun checkPermission() {
         val result = healthConnectManager.hasAllPermissions(permissions)
-        CoroutineScope(Dispatchers.Main).launch {
+        withContext(Dispatchers.Main) {
             Log.d(TAG, "checkPermission: $result")
             permitted.value = result
         }
@@ -171,10 +171,10 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
 
 
     /** read steps record for a given day. */
-    suspend fun readStepsRecordsForDay(date: Instant) : List<StepsRecord>{
+    suspend fun readStepsRecordsForDay(date: OffsetDateTime) : List<StepsRecord>{
         val startOfDay = date.truncatedTo(ChronoUnit.DAYS)
-        val endOfDay = startOfDay.plus(1, ChronoUnit.DAYS)
-        return healthConnectManager.readStepsRecords(startOfDay, endOfDay)
+        val endOfDay = startOfDay.plus(1, ChronoUnit.DAYS).minusNanos(1)
+        return healthConnectManager.readStepsRecords(startOfDay.toInstant(), endOfDay.toInstant())
     }
 
     /**
@@ -202,7 +202,7 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
 
     suspend fun readStepsForDay(date: Instant) : Long?{
         val startOfDay = date.truncatedTo(ChronoUnit.DAYS)
-        val endOfDay = startOfDay.plus(1, ChronoUnit.DAYS)
+        val endOfDay = startOfDay.plus(1, ChronoUnit.DAYS).minusNanos(1)
 
         val request = AggregateRequest(
             metrics = setOf(StepsRecord.COUNT_TOTAL),

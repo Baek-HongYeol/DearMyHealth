@@ -47,6 +47,11 @@ class StepFragment : VitalChartFragment<GroupedAggregationResult>(VitalType.STEP
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        changeBackground(binding.chartPeriodLL, currentRange, 1)
+        currentRange = 1
+        viewModel.currentRange = period
+        setRangeText()
+
         // 데이터 추가 버튼
         binding.stepAddDataLL.setOnClickListener {
             startActivity(Intent(requireContext(), StepAddActivity::class.java))
@@ -98,6 +103,13 @@ class StepFragment : VitalChartFragment<GroupedAggregationResult>(VitalType.STEP
     /********  setting Chart  **********/
 
     override fun setChartData(dataList: List<GroupedAggregationResult>) {
+        if(currentRange == 0) {
+            val data = CombinedData()
+            data.setData(BarData(BarDataSet(listOf(),"걸음수")))
+            binding.stepBarChart.data = data
+            binding.stepBarChart.invalidate()
+            return
+        }
 
         fun generateGroups(): Map<OffsetDateTime, List<GroupedAggregationResult>> {
             val sortedList = dataList.sortedBy { record -> record.startTime }

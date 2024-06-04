@@ -115,12 +115,13 @@ class DeptFragment : Fragment() {
                 findNavController().popBackStack()
             }
             else -> {
-                CoroutineScope(Dispatchers.Default).launch { viewModel.checkPermission() }
-
-                Log.d(TAG, "checkPermission: ${viewModel.permitted.value}")
-                if(!(viewModel.permitted.value!!)) {
-                    Log.d(TAG, "requestPermissionLauncher")
-                    requestPermissionsLauncher.launch(viewModel.permissions)
+                CoroutineScope(Dispatchers.Default).launch {
+                    viewModel.checkPermission()
+                    Log.d(TAG, "checkPermission: ${viewModel.permitted.value}")
+                    if(!(viewModel.permitted.value!!)) {
+                        Log.d(TAG, "requestPermissionLauncher")
+                        requestPermissionsLauncher.launch(viewModel.permissions)
+                    }
                 }
             }
         }
