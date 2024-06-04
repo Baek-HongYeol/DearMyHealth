@@ -57,38 +57,9 @@ class ExerciseStatsFragment : Fragment() {
 
         observeViewModel()
 
-        // 차트 기간 선택
-        binding.dietRangeWeek.setOnClickListener {
-            changeBackground(binding.chartPeriodLL, currentPosition, 0)
-            currentPosition = 0
-            viewModel.currentPosition = 0
-            setRangeText()
-            fetchData()
-        }
-        binding.dietRangeMonth.setOnClickListener {
-            changeBackground(binding.chartPeriodLL, currentPosition, 1)
-            currentPosition = 1
-            viewModel.currentPosition = 1
-            setRangeText()
-            fetchData()
-        }
-        binding.dietRange3month.setOnClickListener {
-            changeBackground(binding.chartPeriodLL, currentPosition, 2)
-            currentPosition = 2
-            viewModel.currentPosition = 2
-            setRangeText()
-            fetchData()
-        }
-        binding.dietRangeYear.setOnClickListener {
-            changeBackground(binding.chartPeriodLL, currentPosition, 3)
-            currentPosition = 3
-            viewModel.currentPosition = 3
-            setRangeText()
-            fetchData()
-        }
+        setRangeText()
         fetchData()
         configureAxis()
-
 
         return binding.root
     }
@@ -160,6 +131,10 @@ class ExerciseStatsFragment : Fragment() {
             background =
                 ContextCompat.getDrawable(context, R.drawable.shape_radius_square_stroke_r5dp)
         }
+        currentPosition = 0
+        viewModel.currentPosition = 0
+        setRangeText()
+        fetchData()
     }
 
     private fun fetchData() {
@@ -305,7 +280,7 @@ class XAxisCustomFormatter(private val range: Int) : IndexAxisValueFormatter() {
             ZoneId.systemDefault()
         )
         val WEEK_FORMATTER = DateTimeFormatter.ofPattern("d", Locale.getDefault())
-        val ThreeMONTH_FORMATTER = DateTimeFormatter.ofPattern("M월-W주", Locale.getDefault())
+        val ThreeMONTH_FORMATTER = DateTimeFormatter.ofPattern("M/d ", Locale.getDefault())
         val YEAR_FORMATTER = DateTimeFormatter.ofPattern("M월", Locale.getDefault())
         val dtf = when(range) {
             0 -> WEEK_FORMATTER

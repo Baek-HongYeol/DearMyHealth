@@ -2,10 +2,8 @@ package com.dearmyhealth.modules.exercise.viewmodel
 
 import android.app.Application
 import androidx.health.connect.client.permission.HealthPermission
-import androidx.health.connect.client.records.DistanceRecord
 import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.HeartRateRecord
-import androidx.health.connect.client.records.SpeedRecord
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.TotalCaloriesBurnedRecord
 import androidx.health.connect.client.request.AggregateRequest
@@ -36,9 +34,11 @@ class ExerciseSessionViewModel(private val healthConnectManager: HealthConnectMa
     val permissions = setOf(
         HealthPermission.getWritePermission(ExerciseSessionRecord::class),
         HealthPermission.getReadPermission(ExerciseSessionRecord::class),
+        HealthPermission.getReadPermission(TotalCaloriesBurnedRecord::class),
+        HealthPermission.getReadPermission(StepsRecord::class),
         HealthPermission.getWritePermission(StepsRecord::class),
         HealthPermission.getWritePermission(TotalCaloriesBurnedRecord::class),
-        HealthPermission.getWritePermission(HeartRateRecord::class)
+        HealthPermission.getReadPermission(HeartRateRecord::class)
     )
 
     val permissionsLauncher = healthConnectManager.requestPermissionsActivityContract()
@@ -82,7 +82,7 @@ class ExerciseSessionViewModel(private val healthConnectManager: HealthConnectMa
             field = value
 
             endOfRange = when(currentRange) {
-                DietStats.PERIOD.WEEK -> value.plusDays(1).minusNanos(1)
+                DietStats.PERIOD.WEEK -> value.plusDays(7).minusNanos(1)
                 DietStats.PERIOD.MONTH -> value.plusMonths(1).minusNanos(1)
                 DietStats.PERIOD.ThreeMONTH -> value.plusMonths(3).minusNanos(1)
                 DietStats.PERIOD.YEAR -> value.plusYears(1).minusNanos(1)
@@ -155,7 +155,6 @@ class ExerciseSessionViewModel(private val healthConnectManager: HealthConnectMa
         val aggregateDataTypes = setOf(
             ExerciseSessionRecord.EXERCISE_DURATION_TOTAL,
             StepsRecord.COUNT_TOTAL,
-            DistanceRecord.DISTANCE_TOTAL,
             TotalCaloriesBurnedRecord.ENERGY_TOTAL,
             HeartRateRecord.BPM_AVG,
             HeartRateRecord.BPM_MAX,
@@ -171,7 +170,6 @@ class ExerciseSessionViewModel(private val healthConnectManager: HealthConnectMa
             dataOriginFilter = dataOriginFilter
         )
         val aggregateData = healthConnectManager.aggregate(aggregateRequest)
-        val speedData = healthConnectManager.readData<SpeedRecord>(timeRangeFilter, dataOriginFilter)
         val heartRateData = healthConnectManager.readData<HeartRateRecord>(timeRangeFilter, dataOriginFilter)
 
         return ExerciseSessionData(
@@ -180,13 +178,11 @@ class ExerciseSessionViewModel(private val healthConnectManager: HealthConnectMa
             endTime = exerciseSession.record.endTime,
             totalActiveTime = aggregateData[ExerciseSessionRecord.EXERCISE_DURATION_TOTAL],
             totalSteps = aggregateData[StepsRecord.COUNT_TOTAL],
-            totalDistance = aggregateData[DistanceRecord.DISTANCE_TOTAL],
             totalEnergyBurned = aggregateData[TotalCaloriesBurnedRecord.ENERGY_TOTAL],
             minHeartRate = aggregateData[HeartRateRecord.BPM_MIN],
             maxHeartRate = aggregateData[HeartRateRecord.BPM_MAX],
             avgHeartRate = aggregateData[HeartRateRecord.BPM_AVG],
             heartRateSeries = heartRateData,
-            speedRecord = speedData,
         )
     }
 
