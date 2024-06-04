@@ -84,10 +84,14 @@ class ExerciseStatsFragment : Fragment() {
             ContextCompat.getColor(
                 requireContext(), R.color.secondary
             ))
+        parent.getChildAt(oldIdx)?.background = null
         parent.getChildAt(newIdx)?.backgroundTintList = ColorStateList.valueOf(
             ContextCompat.getColor(
                 requireContext(), R.color.white
             ))
+        parent.getChildAt(newIdx)?.background = ContextCompat.getDrawable(
+            requireContext(), R.drawable.shape_radius_square_stroke_r5dp
+        )
     }
 
     @SuppressLint("SetTextI18n")
