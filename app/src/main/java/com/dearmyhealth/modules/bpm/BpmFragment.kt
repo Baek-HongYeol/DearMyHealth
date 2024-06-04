@@ -25,7 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.OffsetDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
@@ -133,8 +132,8 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
 
     override fun configureAxis() {
         val xAxis = _binding.barChart.xAxis
-        val startMillis = viewModel.startOfRange.toInstant().toEpochMilli()
-        val endMillis = viewModel.endOfRange.toInstant().toEpochMilli()
+        val startMillis = viewModel.currentDate.toInstant().toEpochMilli()
+        val endMillis = viewModel.currentDate.plusDays(1).toInstant().toEpochMilli()
 
         // 2시간 단위로 눈금을 추가합니다.
         xAxis.setLabelCount(12, false) // X축에 표시할 눈금 수를 설정합니다.
@@ -170,47 +169,41 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
     }
 
     override fun setChartData(dataList: List<HeartRateRecord>) {
+        val sampleList: MutableList<HeartRateRecord.Sample> = mutableListOf()
         for (record in dataList){
             val samples = record.samples
-            Log.d(TAG, "startTime: ${record.startTime}")
             for(sample in samples) {
-            //    Log.d(TAG, "sample: ${sample.beatsPerMinute} / time: ${sample.time.atOffset(OffsetDateTime.now().offset)}")
+                sampleList.add(sample)
             }
         }
 
-        fun generateGroups(): Map<OffsetDateTime, List<HeartRateRecord>> {
-            val sortedList = dataList.sortedBy { record -> record.startTime }
+        fun generateGroups(): Map<OffsetDateTime, List<HeartRateRecord.Sample>> {
+            val sortedList = sampleList.sortedBy { sample -> sample.time }
 
-            return viewModel.startOfRange.run {
-                val map = mutableMapOf<OffsetDateTime, MutableList<HeartRateRecord>>()
+            return viewModel.currentDate.run {
+                val map = mutableMapOf<OffsetDateTime, MutableList<HeartRateRecord.Sample>>()
                 var cur = this
                 var next = this.plus(1, period.subunit)
-                for (el in sortedList) {
-                    if(el.startTime.toEpochMilli() < this.toInstant().toEpochMilli())
+                var end = this.plusDays(1).minusNanos(1)
+                for (sample in sortedList) {
+                    if (sample.time.toEpochMilli() < this.toInstant().toEpochMilli())
                         continue
 
-                    while(el.startTime.toEpochMilli() >= next.toInstant().toEpochMilli()) {
-                        if(next.isAfter(viewModel.endOfRange)) break
+                    while(sample.time.toEpochMilli() >= next.toInstant().toEpochMilli()) {
+                        if(next.isAfter(end)) break
                         cur = next
                         next = next.plus(1, period.subunit)
                     }
-                    if( el.startTime.toEpochMilli() >= cur.toInstant().toEpochMilli() &&
-                        el.startTime.toEpochMilli() < next.toInstant().toEpochMilli() ){
-                        val middle = OffsetDateTime.ofInstant(
-                            el.startTime.plusSeconds((el.endTime.epochSecond - el.startTime.epochSecond)/2),
-                            ZoneId.systemDefault()
-                        )
-                        Log.d(TAG, "start: ${el.startTime}")
-                        Log.d(TAG, "middle: ${middle.toInstant()}")
-                        Log.d(TAG, "end: ${el.endTime}")
-                        if(!map.contains(middle))
+                    if( sample.time.toEpochMilli() >= cur.toInstant().toEpochMilli() &&
+                        sample.time.toEpochMilli() < next.toInstant().toEpochMilli() ){
+                        val middle = cur.plusSeconds((next.toEpochSecond() - cur.toEpochSecond())/2)
+                        if (!map.contains(middle))
                             map[middle] = mutableListOf()
                         val recordList = map[middle]
-                        recordList!!.add(el)
+                        recordList!!.add(sample)
                         map[middle] = recordList
-                    }
-                    else {
-                        if(next.isAfter(viewModel.endOfRange)) break
+                    } else {
+                        if (next.isAfter(end)) break
                         cur = next
                         next = next.plus(1, period.subunit)
                     }
@@ -221,9 +214,12 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
         }
 
         val groups = generateGroups().mapValues { entry ->
-            entry.value.fold(0f) { acc, record -> (acc + (record.samples.fold(0f){ _acc, sample -> _acc + sample.beatsPerMinute.toFloat()})) }
+            if(entry.value.isEmpty()) 0f
+            else
+                entry.value.fold(0f) { acc, record ->
+                    (acc + (record.beatsPerMinute.toFloat()))
+                } / entry.value.size
         }
-        Log.d(TAG, "groups: ${generateGroups()}")
         var maxValue = 100f
         val entries: MutableList<BarEntry> = mutableListOf()
 
@@ -270,13 +266,16 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
 
     fun displayHeartRateStats(heartRateData: List<HeartRateRecord>) {
         // 최소, 평균, 최대 심박수를 계산하여 텍스트뷰에 표시합니다.
-        val minBpm: Long = heartRateData
-            .flatMap { it.samples.mapNotNull { sample -> sample.beatsPerMinute } } // 모든 샘플의 심박수를 추출하여 하나의 리스트로 만듭니다.
-            .minOrNull() ?: 0L // 리스트에서 최소값을 찾습니다. 값이 없으면 기본값으로 0L을 반환합니다.
-        val avgBpm = heartRateData.flatMap { it.samples.map { it.beatsPerMinute } }.average().toLong()
-        val maxBpm: Long = heartRateData
-            .flatMap { it.samples.mapNotNull { sample -> sample.beatsPerMinute } } // 모든 샘플의 심박수를 추출하여 하나의 리스트로 만듭니다.
-            .maxOrNull() ?: 0L // 리스트에서 최대값을 찾습니다. 값이 없으면 기본값으로 0L을 반환합니다.
+        val samples = mutableListOf<HeartRateRecord.Sample>()
+        for(record in heartRateData) {
+            samples.addAll(record.samples)
+        }
+        val targetSamples = samples.filter { sample -> sample.time > viewModel.currentDate.toInstant() }
+            .filter { sample -> sample.time < viewModel.currentDate.plusDays(1).toInstant() }
+
+        val minBpm: Long = targetSamples.minOfOrNull { sample -> sample.beatsPerMinute } ?: 0L // 리스트에서 최소값을 찾습니다. 값이 없으면 기본값으로 0L을 반환합니다.
+        val avgBpm = targetSamples.map { it.beatsPerMinute }.average().toLong()
+        val maxBpm: Long = targetSamples.maxOfOrNull { it.beatsPerMinute } ?: 0L // 리스트에서 최대값을 찾습니다. 값이 없으면 기본값으로 0L을 반환합니다.
 
         minBpmTextView.text = minBpm.toString()
         avgBpmTextView.text = avgBpm.toString()

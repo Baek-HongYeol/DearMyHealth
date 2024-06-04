@@ -138,7 +138,7 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
     fun readHeartRateRecordsForDay(date: Instant) {
         // 날짜의 시작 시간과 종료 시간을 계산합니다.
         val startOfDay = date.truncatedTo(ChronoUnit.DAYS)
-        val endOfDay = startOfDay.plus(1, ChronoUnit.DAYS)
+        val endOfDay = startOfDay.plus(3, ChronoUnit.DAYS)
 
         // 시작 시간부터 종료 시간까지의 데이터를 가져옵니다.
         CoroutineScope(Dispatchers.IO).launch {
@@ -294,6 +294,7 @@ class VitalViewModel(val healthConnectManager: HealthConnectManager) : ViewModel
                 )
             )
             withContext(Dispatchers.Main) {
+                Log.d(TAG, "weight: ${response.records}")
                 weightRecords.value = response.records
             }
         }
