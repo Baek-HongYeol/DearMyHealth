@@ -11,6 +11,7 @@ import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILA
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
 import androidx.health.connect.client.HealthConnectClient.Companion.getSdkStatus
 import androidx.health.connect.client.PermissionController
+import androidx.health.connect.client.aggregate.AggregationResult
 import androidx.health.connect.client.changes.Change
 import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.HeartRateRecord
@@ -22,7 +23,10 @@ import androidx.health.connect.client.records.metadata.DataOrigin
 import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.request.ChangesTokenRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
+import androidx.health.connect.client.response.InsertRecordsResponse
+import androidx.health.connect.client.response.ReadRecordResponse
 import androidx.health.connect.client.time.TimeRangeFilter
+import androidx.health.connect.client.units.Energy
 import androidx.health.connect.client.units.Mass
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +35,7 @@ import java.io.IOException
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import kotlin.reflect.KClass
 
 // The minimum android level that can use Health Connect
 const val MIN_SUPPORTED_SDK = Build.VERSION_CODES.O_MR1
@@ -149,7 +154,7 @@ class HealthConnectManager(private val context: Context) {
     /**
      * Convenience function to reuse code for reading data.
      */
-    private suspend inline fun <reified T : Record> readData(
+    suspend inline fun <reified T : Record> readData(
         timeRangeFilter: TimeRangeFilter,
         dataOriginFilter: Set<DataOrigin> = setOf(),
     ): List<T> {
@@ -159,6 +164,13 @@ class HealthConnectManager(private val context: Context) {
             timeRangeFilter = timeRangeFilter
         )
         return healthConnectClient.readRecords(request).records
+    }
+
+    suspend inline fun <reified T : Record> readRecord(recordId: String): ReadRecordResponse<T> {
+        return healthConnectClient.readRecord(T::class, recordId)
+    }
+    suspend fun aggregate(aggregateRequest: AggregateRequest): AggregationResult {
+        return healthConnectClient.aggregate(aggregateRequest)
     }
 
     /**
@@ -171,6 +183,71 @@ class HealthConnectManager(private val context: Context) {
         )
         val response = healthConnectClient.aggregate(request)
         return response[WeightRecord.WEIGHT_AVG]
+    }
+
+
+    /**
+     *
+     *
+     */
+    suspend fun writeExerciseSession(start:ZonedDateTime, end:ZonedDateTime): InsertRecordsResponse{
+        return healthConnectClient.insertRecords(
+            listOf(
+                ExerciseSessionRecord(
+                    startTime = start.toInstant(),
+                    startZoneOffset = start.offset,
+                    endTime = end.toInstant(),
+                    endZoneOffset = end.offset,
+                    exerciseType = ExerciseSessionRecord.EXERCISE_TYPE_RUNNING,
+                    title = "DearMyHealth_Exercise #${start.dayOfMonth}"
+                ),
+                TotalCaloriesBurnedRecord(
+                    startTime = start.toInstant(),
+                    startZoneOffset = start.offset,
+                    endTime = end.toInstant(),
+                    endZoneOffset = end.offset,
+                    energy = Energy.calories((140) * 0.01)
+                )
+            )
+        )
+    }
+
+    /**
+     * Obtains a list of [ExerciseSessionRecord]s in a specified time frame. An Exercise Session Record is a
+     * period of time given to an activity, that would make sense to a user, e.g. "Afternoon run"
+     * etc. It does not necessarily mean, however, that the user was *running* for that entire time,
+     * more that conceptually, this was the activity being undertaken.
+     */
+    suspend fun readExerciseSessions(start: Instant, end: Instant): List<ExerciseSessionRecord> {
+        val request = ReadRecordsRequest(
+            recordType = ExerciseSessionRecord::class,
+            timeRangeFilter = TimeRangeFilter.between(start, end)
+        )
+        val response = healthConnectClient.readRecords(request)
+        return response.records
+    }
+
+    /**
+     * Deletes an [ExerciseSessionRecord] and underlying data.
+     */
+    suspend fun deleteExerciseSession(uid: String) {
+        val exerciseSession = healthConnectClient.readRecord(ExerciseSessionRecord::class, uid)
+        healthConnectClient.deleteRecords(
+            ExerciseSessionRecord::class,
+            recordIdsList = listOf(uid),
+            clientRecordIdsList = emptyList()
+        )
+        val timeRangeFilter = TimeRangeFilter.between(
+            exerciseSession.record.startTime,
+            exerciseSession.record.endTime
+        )
+        val rawDataTypes: Set<KClass<out Record>> = setOf(
+            HeartRateRecord::class,
+            TotalCaloriesBurnedRecord::class
+        )
+        rawDataTypes.forEach { rawType ->
+            healthConnectClient.deleteRecords(rawType, timeRangeFilter)
+        }
     }
 
     /**

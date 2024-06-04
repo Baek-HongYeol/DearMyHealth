@@ -5,24 +5,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.dearmyhealth.modules.exercise.model.Exercise
+import com.dearmyhealth.modules.exercise.model.ExerciseSession
 import com.dearmyhealth.modules.exercise.model.ExerciseType
 
 class ExerciseChooseViewModel: ViewModel() {
 
     val supportedExerciseType: LiveData<Array<ExerciseType>> = MutableLiveData(ExerciseType.values())
     val selectedPosition: MutableLiveData<Int> = MutableLiveData(0)
-    val selectedExercise: MutableLiveData<ExerciseType?> = MutableLiveData(Exercise.currentExerciseType)
+    val selectedExercise: MutableLiveData<ExerciseType?> = MutableLiveData(ExerciseSession.currentExerciseType)
 
 
     fun setExercise() {
         selectedExercise.value = supportedExerciseType.value?.get(selectedPosition.value!!)
-        Exercise.currentExerciseType = selectedExercise.value
+        ExerciseSession.currentExerciseType = selectedExercise.value
     }
 
     fun clearExercise() {
         selectedExercise.value = null
-        Exercise.currentExerciseType = null
+        ExerciseSession.currentExerciseType = null
     }
 
 

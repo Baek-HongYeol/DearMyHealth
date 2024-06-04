@@ -2,7 +2,6 @@ package com.dearmyhealth.modules.exercise.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dearmyhealth.R
 import com.dearmyhealth.databinding.FragmentExerciseChooseBinding
-import com.dearmyhealth.modules.exercise.model.Exercise
+import com.dearmyhealth.modules.exercise.model.ExerciseSession
 import com.dearmyhealth.modules.exercise.ui.ExerciseTypeListAdapter
 import com.dearmyhealth.modules.exercise.viewmodel.ExerciseChooseViewModel
 
@@ -42,7 +41,7 @@ class ExerciseChooseFragment: Fragment() {
         // 선택한 운동 저장
         binding.exerciseChooseApply.setOnClickListener {
             // 지금 진행 중인 운동이라면 무시
-            if(Exercise.currentExerciseType ==
+            if(ExerciseSession.currentExerciseType ==
                 viewModel.supportedExerciseType.value?.get(viewModel.selectedPosition.value!!)) {
                 return@setOnClickListener
             }
@@ -81,7 +80,7 @@ class ExerciseChooseFragment: Fragment() {
             }
             else {
                 binding.exerciseStatusIV.setImageDrawable(
-                    Exercise.getDrawableOf(requireContext(), type)
+                    ExerciseSession.getDrawableOf(requireContext(), type)
                 )
                 binding.exerciseNowIs.text = type.displayName
             }

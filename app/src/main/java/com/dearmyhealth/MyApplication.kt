@@ -24,7 +24,7 @@ class MyApplication: Application() {
         AppDatabase.getDatabase(this)
     }
     companion object {
-        private lateinit var INSTANCE: MyApplication
+        lateinit var INSTANCE: MyApplication
         fun ApplicationContext() = INSTANCE.applicationContext
     }
 }

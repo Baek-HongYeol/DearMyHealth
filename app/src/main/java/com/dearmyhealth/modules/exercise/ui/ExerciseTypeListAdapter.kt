@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.dearmyhealth.R
 import com.dearmyhealth.databinding.ViewExerciseTypeBinding
-import com.dearmyhealth.modules.exercise.model.Exercise
+import com.dearmyhealth.modules.exercise.model.ExerciseSession
 import com.dearmyhealth.modules.exercise.model.ExerciseType
 
 
@@ -60,7 +60,7 @@ class ExerciseTypeListAdapter(
         val item = list[position]
         val binding = holder.binding
 
-        binding.exerciseIconIV.setImageDrawable(Exercise.getDrawableOf(binding.root.context, item))
+        binding.exerciseIconIV.setImageDrawable(ExerciseSession.getDrawableOf(binding.root.context, item))
         binding.exerciseNameTV.text = item.displayName
 
         if(position == lastSelectedItem)

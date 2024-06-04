@@ -124,11 +124,15 @@ class StepFragment : VitalChartFragment<GroupedAggregationResult>(VitalType.STEP
                         }
                         if( el.startTime.toEpochMilli() >= cur.toInstant().toEpochMilli() &&
                             el.startTime.toEpochMilli() < next.toInstant().toEpochMilli() ){
-                            if(!map.contains(cur))
-                                map[cur] = mutableListOf()
-                            val recordList = map[cur]
+                            val middle = OffsetDateTime.ofInstant(
+                                el.startTime.plusSeconds(el.endTime.epochSecond - el.startTime.epochSecond),
+                                ZoneId.systemDefault()
+                            )
+                            if(!map.contains(middle))
+                                map[middle] = mutableListOf()
+                            val recordList = map[middle]
                             recordList!!.add(el)
-                            map[cur] = recordList
+                            map[middle] = recordList
                         }
                         else {
                             if(next.isAfter(viewModel.endOfRange)) break

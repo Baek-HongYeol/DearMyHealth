@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import com.dearmyhealth.R
+import java.time.ZonedDateTime
 
 enum class ExerciseType(val id: Int, val displayName: String) {
     WALKING(79, "걷기"),
@@ -14,7 +15,16 @@ enum class ExerciseType(val id: Int, val displayName: String) {
     UNKNOWN(0, "UNKNOWN")
 }
 
-class Exercise {
+
+/**
+ * Represents an exercise session.
+ */
+data class ExerciseSession(
+    val startTime: ZonedDateTime,
+    val endTime: ZonedDateTime,
+    val id: String,
+    val title: String?,
+){
 
     companion object {
         var currentExerciseType: ExerciseType? = null
@@ -32,5 +42,4 @@ class Exercise {
         }
 
     }
-
 }

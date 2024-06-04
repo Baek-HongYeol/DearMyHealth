@@ -10,7 +10,7 @@
         android:id="@+id/exerciseScreen"
         android:name="com.dearmyhealth.modules.exercise.fragment.ExerciseFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_exercise"/>
+        tools:layout="@layout/fragment_exercise_details"/>
 
     <fragment
         android:id="@+id/exerciseSettingScreen"
