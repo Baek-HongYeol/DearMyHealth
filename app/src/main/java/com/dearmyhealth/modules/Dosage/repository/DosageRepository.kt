@@ -28,8 +28,10 @@ class DosageRepository(private val dosageDao: DosageDao, private val medicationS
                     itemSeq = result.itemSeq
                     Log.d("DosageRepository", "insert: medication exists")
                 }
-                else
+                else {
                     medicationSource.insertMedication(medItemSeq, name)
+                    itemSeq = medItemSeq
+                }
             }
             catch (e:Exception) {
                 itemSeq = "0"
