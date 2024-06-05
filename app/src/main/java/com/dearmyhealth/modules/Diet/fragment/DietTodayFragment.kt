@@ -2,12 +2,12 @@ package com.dearmyhealth.modules.Diet.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout.LayoutParams
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dearmyhealth.data.db.entities.Diet
@@ -80,9 +80,16 @@ class DietTodayFragment : Fragment() {
         val proteinR = round((protein*100)/sum)/10
         val fatR = round((fat*100)/sum)/10
         binding.todayDietNutrientsRatioTV.text = "${carboR}:${proteinR}:${fatR}"
-        (binding.todayDietCarboBar.layoutParams as LayoutParams).weight = carboR.toFloat()
-        (binding.todayDietProteinBar.layoutParams as LayoutParams).weight = proteinR.toFloat()
-        (binding.todayDietFatBar.layoutParams as LayoutParams).weight = fatR.toFloat()
+        var temp: LayoutParams = binding.todayDietCarboBar.layoutParams as LayoutParams
+        temp.weight = carboR.toFloat()
+        binding.todayDietCarboBar.layoutParams = temp
+        temp = binding.todayDietProteinBar.layoutParams as LayoutParams
+        temp.weight = proteinR.toFloat()
+        (binding.todayDietProteinBar.layoutParams) = temp
+        temp = binding.todayDietFatBar.layoutParams as LayoutParams
+        temp.weight = fatR.toFloat()
+        (binding.todayDietFatBar.layoutParams) = temp
+        (binding.todayNutrientBar.invalidate())
     }
 
 }
