@@ -2,7 +2,9 @@ package com.dearmyhealth.modules.Diet.ui
 
 import android.annotation.SuppressLint
 import android.app.ActionBar.LayoutParams
+import android.view.ContextMenu
 import android.view.View
+import android.view.View.OnCreateContextMenuListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dearmyhealth.data.db.entities.Diet
@@ -11,13 +13,21 @@ import com.dearmyhealth.data.db.entities.Diet
 class DietHolder(
     var view: DietDetailItemView,
     val listener: ((View, Int) -> Unit)?
-) : RecyclerView.ViewHolder(view) {
+) : RecyclerView.ViewHolder(view), OnCreateContextMenuListener {
     init {
+        view.setOnCreateContextMenuListener(this)
         if (listener != null)
             view.setOnClickListener { v->
                 if (adapterPosition != RecyclerView.NO_POSITION)
                     listener.invoke(v, adapterPosition)
             }
+    }
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        menu?.add(adapterPosition, 121, 0, "삭제")
     }
 }
 

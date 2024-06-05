@@ -73,4 +73,8 @@ class DietRepository(private val datasource: DietDao) {
         }
     }
 
+    suspend fun delete(diet: Diet) {
+        datasource.delete(diet)
+    }
+
 }

@@ -14,7 +14,7 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
-class DietTodayViewModel(dietRepository: DietRepository): ViewModel() {
+class DietTodayViewModel(val dietRepository: DietRepository): ViewModel() {
     private val TAG = javaClass.simpleName
     val todayDiets: LiveData<List<Diet>> =
         dietRepository.findByPeriodLive(getTodayMsec())
@@ -54,6 +54,10 @@ class DietTodayViewModel(dietRepository: DietRepository): ViewModel() {
         return now.timeInMillis
     }
 
+    suspend fun deleteDiet(pos: Int) {
+        if(todayDiets.value!!.size >= pos)
+            dietRepository.delete(todayDiets.value!![pos])
+    }
 
     class Factory(val application: Application) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")

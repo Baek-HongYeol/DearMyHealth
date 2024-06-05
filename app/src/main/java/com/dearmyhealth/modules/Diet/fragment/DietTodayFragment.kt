@@ -3,6 +3,7 @@ package com.dearmyhealth.modules.Diet.fragment
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout.LayoutParams
@@ -16,6 +17,9 @@ import com.dearmyhealth.modules.Diet.model.Nutrients
 import com.dearmyhealth.modules.Diet.ui.DietListAdapter
 import com.dearmyhealth.modules.Diet.ui.NutritionStandardReferenceView
 import com.dearmyhealth.modules.Diet.viewmodel.DietTodayViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.math.round
 
 
@@ -90,6 +94,13 @@ class DietTodayFragment : Fragment() {
         temp.weight = fatR.toFloat()
         (binding.todayDietFatBar.layoutParams) = temp
         (binding.todayNutrientBar.invalidate())
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            121 -> CoroutineScope(Dispatchers.IO).launch { viewModel.deleteDiet(item.groupId) }
+        }
+        return true
     }
 
 }
