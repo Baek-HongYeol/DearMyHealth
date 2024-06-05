@@ -1,14 +1,12 @@
 package com.dearmyhealth.modules.Diet.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.dearmyhealth.R
 import com.dearmyhealth.databinding.FragmentDietDetailBinding
-import com.dearmyhealth.modules.Diet.viewmodel.DietDetailViewModel
-
 import com.google.android.material.tabs.TabLayout
 
 
@@ -16,7 +14,6 @@ class DietDetailFragment : Fragment() {
 
     private val TAG = "DietTodayFragment"
 
-    private lateinit var viewModel : DietDetailViewModel
     private lateinit var binding : FragmentDietDetailBinding
 
     override fun onCreateView(

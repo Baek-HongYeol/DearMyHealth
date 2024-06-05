@@ -1,6 +1,5 @@
 package com.dearmyhealth.modules.bpm
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,10 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.health.connect.client.HealthConnectClient
-import androidx.health.connect.client.aggregate.AggregateMetric
 import androidx.health.connect.client.records.HeartRateRecord
-import androidx.lifecycle.Observer
 import com.dearmyhealth.R
 import com.dearmyhealth.databinding.FragmentBpmBinding
 import com.github.mikephil.charting.components.Legend
@@ -33,26 +29,10 @@ import java.util.concurrent.TimeUnit
 class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
     private val TAG = javaClass.simpleName
 
-    private lateinit var healthConnectClient: HealthConnectClient
     private lateinit var minBpmTextView: TextView
     private lateinit var avgBpmTextView: TextView
     private lateinit var maxBpmTextView: TextView
     lateinit var _binding: FragmentBpmBinding
-
-
-    var metric: AggregateMetric<Number> = HeartRateRecord.BPM_AVG
-
-    // Steps Livedata Observer 정의
-    val observer = Observer<List<HeartRateRecord>> { value ->
-        Log.d(TAG, "livedata change observed")
-        Log.d(TAG, "size: ${value.size}")
-
-        setChartData(value)
-        analyzeData(
-            value,
-            period.subunit.between(viewModel.startOfRange, viewModel.endOfRange).toInt()
-        )
-    }
 
 
     override fun onCreateView(
@@ -251,17 +231,6 @@ class BpmFragment : VitalChartFragment<HeartRateRecord>(VitalType.BPM) {
             notifyDataSetChanged() //데이터 갱신
             invalidate() // view갱신
         }
-    }
-
-
-    @SuppressLint("SetTextI18n")
-    fun analyzeData(data: List<HeartRateRecord>, totalUnit: Int) {
-        val minTV = _binding.minBpmTextView
-        val avgTV = _binding.minBpmTextView
-        val maxTV = _binding.minBpmTextView
-
-
-
     }
 
     fun displayHeartRateStats(heartRateData: List<HeartRateRecord>) {
