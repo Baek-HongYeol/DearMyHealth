@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.dearmyhealth.R
+import com.dearmyhealth.data.db.entities.Diet
 import com.dearmyhealth.databinding.FragmentDietBinding
 import com.dearmyhealth.modules.Diet.activity.DietCreateActivity
 import com.dearmyhealth.modules.Diet.ui.NutritionStandardReferenceView
@@ -22,6 +24,9 @@ class DietFragment : Fragment() {
     private val TAG = this.javaClass.simpleName
     private lateinit var viewModel: DietViewModel
     private lateinit var binding : FragmentDietBinding
+    private val observer = Observer<List<Diet>> { value ->
+        viewModel.calNuts(value)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,10 +57,19 @@ class DietFragment : Fragment() {
         binding.todayNutrient.suggestedCalories.textSize = 20f
 
         observeViewModel()
-        viewModel.observeTodayDiet()
 
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.todayDiets.observe(viewLifecycleOwner, observer)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.todayDiets.removeObserver(observer)
     }
 
     fun observeViewModel() {

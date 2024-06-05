@@ -20,11 +20,11 @@ class DietViewModel(val lifecycleOwner:LifecycleOwner, val dietRepository: DietR
     private val _todayNutrients = MutableLiveData<Nutrients>()
     val todayNutrients: LiveData<Nutrients> get() = _todayNutrients
 
-    private val todayDiets: LiveData<List<Diet>> =
+    val todayDiets: LiveData<List<Diet>> =
         dietRepository.findByPeriodLive(getTodayMSec())
 
-    fun observeTodayDiet() {
-        todayDiets.observe(lifecycleOwner) { value ->
+    fun calNuts(value: List<Diet>) {
+
             Log.d(TAG, "diet size is : ${value.size}")
             var nuts: Nutrients = Nutrients(0, getTodayMSec(),0.0, mutableMapOf())
             for(diet in value) {
@@ -39,7 +39,6 @@ class DietViewModel(val lifecycleOwner:LifecycleOwner, val dietRepository: DietR
                 ))
             }
             _todayNutrients.value = nuts
-        }
     }
 
     fun getTodayMSec(): Long = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS).toEpochSecond()*1000
