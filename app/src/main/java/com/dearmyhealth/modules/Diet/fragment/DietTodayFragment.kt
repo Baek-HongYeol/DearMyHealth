@@ -83,17 +83,22 @@ class DietTodayFragment : Fragment() {
         val carboR = round((carbo*100)/sum)/10
         val proteinR = round((protein*100)/sum)/10
         val fatR = round((fat*100)/sum)/10
-        binding.todayDietNutrientsRatioTV.text = "${carboR}:${proteinR}:${fatR}"
-        var temp: LayoutParams = binding.todayDietCarboBar.layoutParams as LayoutParams
-        temp.weight = carboR.toFloat()
-        binding.todayDietCarboBar.layoutParams = temp
-        temp = binding.todayDietProteinBar.layoutParams as LayoutParams
-        temp.weight = proteinR.toFloat()
-        (binding.todayDietProteinBar.layoutParams) = temp
-        temp = binding.todayDietFatBar.layoutParams as LayoutParams
-        temp.weight = fatR.toFloat()
-        (binding.todayDietFatBar.layoutParams) = temp
-        (binding.todayNutrientBar.invalidate())
+        if (sum == 0.0){
+            binding.todayDietNutrientsRatioTV.text = "${0}:${0}:${0}"
+        }
+        else {
+            binding.todayDietNutrientsRatioTV.text = "${carboR}:${proteinR}:${fatR}"
+            var temp: LayoutParams = binding.todayDietCarboBar.layoutParams as LayoutParams
+            temp.weight = carboR.toFloat()
+            binding.todayDietCarboBar.layoutParams = temp
+            temp = binding.todayDietProteinBar.layoutParams as LayoutParams
+            temp.weight = proteinR.toFloat()
+            (binding.todayDietProteinBar.layoutParams) = temp
+            temp = binding.todayDietFatBar.layoutParams as LayoutParams
+            temp.weight = fatR.toFloat()
+            (binding.todayDietFatBar.layoutParams) = temp
+            (binding.todayNutrientBar.invalidate())
+        }
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {

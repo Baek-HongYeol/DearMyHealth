@@ -14,6 +14,7 @@ import com.dearmyhealth.R
 import com.dearmyhealth.data.db.entities.Diet
 import com.dearmyhealth.databinding.FragmentDietBinding
 import com.dearmyhealth.modules.Diet.activity.DietCreateActivity
+import com.dearmyhealth.modules.Diet.model.Nutrients
 import com.dearmyhealth.modules.Diet.ui.NutritionStandardReferenceView
 import com.dearmyhealth.modules.Diet.ui.TodayNutrientsView
 import com.dearmyhealth.modules.Diet.viewmodel.DietViewModel
@@ -26,6 +27,10 @@ class DietFragment : Fragment() {
     private lateinit var binding : FragmentDietBinding
     private val observer = Observer<List<Diet>> { value ->
         viewModel.calNuts(value)
+    }
+    private val nutrientObserver = Observer<Nutrients> { value ->
+        val todayNutrientsView = TodayNutrientsView(requireContext(), binding.todayNutrient.root)
+        todayNutrientsView.setNutrients(value)
     }
 
     override fun onCreateView(
@@ -56,7 +61,6 @@ class DietFragment : Fragment() {
         binding.todayNutrient.todayCalories.textSize = 20f
         binding.todayNutrient.suggestedCalories.textSize = 20f
 
-        observeViewModel()
 
 
         return binding.root
@@ -65,17 +69,12 @@ class DietFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.todayDiets.observe(viewLifecycleOwner, observer)
+        viewModel.todayNutrients.observe(viewLifecycleOwner, nutrientObserver)
     }
 
     override fun onPause() {
         super.onPause()
         viewModel.todayDiets.removeObserver(observer)
-    }
-
-    fun observeViewModel() {
-        viewModel.todayNutrients.observe(viewLifecycleOwner) { value ->
-            val todayNutrientsView = TodayNutrientsView(requireContext(), binding.todayNutrient.root)
-            todayNutrientsView.setNutrients(value)
-        }
+        viewModel.todayNutrients.removeObserver(nutrientObserver)
     }
 }
