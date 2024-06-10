@@ -22,8 +22,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dearmyhealth.R
 import com.dearmyhealth.data.Result
+import com.dearmyhealth.data.db.entities.Dosage
 import com.dearmyhealth.data.db.entities.Medication
-import com.dearmyhealth.data.db.views.DosageAlarm
 import com.dearmyhealth.databinding.FragmentDosageScheduleBinding
 import com.dearmyhealth.modules.Alarm.AlarmRepository
 import com.dearmyhealth.modules.Dosage.activity.DosageActivity
@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit
 
 class DosageSchedFragment: Fragment() {
     private lateinit var binding: FragmentDosageScheduleBinding
-    private var scheduleList = mutableListOf<DosageAlarm>()
+    private var scheduleList = mutableListOf<Dosage>()
     private var medicationList = mutableListOf<Medication>()
     private lateinit var medicationAdapter: MedicationAdapter
     private lateinit var medicationViewModel: MedicationViewModel
@@ -51,9 +51,9 @@ class DosageSchedFragment: Fragment() {
     private var selectedMedication: Medication? = null
 
     interface DosageOperateClickListener { // dosage ItemView에 넘겨줄 클릭 리스너 정의
-        fun onAlarmSwitchListener(dosage:DosageAlarm, isEnabled:Boolean)
-        fun onEditClickListener(dosage: DosageAlarm)
-        fun onDeleteClickListener(dosage: DosageAlarm)
+        fun onAlarmSwitchListener(dosage: Dosage, isEnabled:Boolean)
+        fun onEditClickListener(dosage: Dosage)
+        fun onDeleteClickListener(dosage: Dosage)
     }
 
     override fun onCreateView(
@@ -166,8 +166,8 @@ class DosageSchedFragment: Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     fun setupScheduleFunctionality() {
-        binding.dosageScheduleListRV.adapter = DosageScheduleListAdapter(scheduleList, object: DosageOperateClickListener{
-            override fun onAlarmSwitchListener(dosage: DosageAlarm, isEnabled: Boolean) {
+        binding.dosageScheduleListRV.adapter = DosageScheduleListAdapter(scheduleList, null, object: DosageOperateClickListener{
+            override fun onAlarmSwitchListener(dosage: Dosage, isEnabled: Boolean) {
                 if(isEnabled) setAlarm(dosage)
                 else {
                     CoroutineScope(Dispatchers.IO).launch {
@@ -178,35 +178,39 @@ class DosageSchedFragment: Fragment() {
                     }
                 }
             }
-            override fun onEditClickListener(dosage: DosageAlarm) {
+            override fun onEditClickListener(dosage: Dosage) {
                 Intent(requireContext(), DosageActivity::class.java).apply {
                     putExtra("operation","EDIT")
                     putExtra("dosageId", dosage.dosageId)
                     startActivity(this)
                 }
             }
-            override fun onDeleteClickListener(dosage: DosageAlarm) {
+            override fun onDeleteClickListener(dosage: Dosage) {
                 dosageViewModel.deleteDosage(dosage)
                 Toast.makeText(requireContext(), "삭제가 완료되었습니다.", Toast.LENGTH_LONG).show()
 
                 CoroutineScope(Dispatchers.IO).launch {
                     val alarm = alarmRepository.findByDosageId(dosage.dosageId)
                     alarm?.let {
-                        cancelAlarm(alarm.requestCode)
                         alarmRepository.deleteAlarms(alarm)
                     }
                 }
             }
         })
 
-        dosageViewModel.dosageAlarmList.observe(viewLifecycleOwner) { list ->
+        dosageViewModel.dosageList.observe(viewLifecycleOwner) { list ->
             scheduleList = list.toMutableList()
             (binding.dosageScheduleListRV.adapter as DosageScheduleListAdapter).list = list
             (binding.dosageScheduleListRV.adapter as DosageScheduleListAdapter).notifyDataSetChanged()
         }
+        dosageViewModel.dosageAlarmList.observe(viewLifecycleOwner) { list ->
+            (binding.dosageScheduleListRV.adapter as DosageScheduleListAdapter).alarmList = list
+            (binding.dosageScheduleListRV.adapter as DosageScheduleListAdapter).notifyDataSetChanged()
+        }
+
     }
 
-    fun setAlarm(dosage: DosageAlarm) {
+    fun setAlarm(dosage: Dosage) {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
         var datetime = OffsetDateTime.now()

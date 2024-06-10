@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
 import androidx.recyclerview.widget.RecyclerView
+import com.dearmyhealth.data.db.entities.Dosage
 import com.dearmyhealth.data.db.views.DosageAlarm
 import com.dearmyhealth.databinding.ViewDosageScheduleItemBinding
 import com.dearmyhealth.databinding.ViewEditOrDeleteBinding
@@ -17,7 +18,8 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class DosageScheduleListAdapter(
-    var list: List<DosageAlarm>,
+    var list: List<Dosage>,
+    var alarmList: List<DosageAlarm>?,
     var operateClickListener: DosageSchedFragment.DosageOperateClickListener
 ): RecyclerView.Adapter<DosageScheduleListAdapter.ViewHodler>() {
     class ViewHodler(val binding: ViewDosageScheduleItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -43,7 +45,7 @@ class DosageScheduleListAdapter(
         holder.binding.root.layoutParams = layoutParams
 
         // UI 데이터 넣어주기
-        val item: DosageAlarm = list[position]
+        val item: Dosage = list[position]
         val startTime: String = dtf.format(
             OffsetDateTime.ofInstant(Instant.ofEpochMilli(item.startTime), ZoneId.systemDefault())
         )
@@ -62,7 +64,9 @@ class DosageScheduleListAdapter(
             holder.binding.dosageScheduleIsalarm.setOnCheckedChangeListener { _, isChecked ->
                 operateClickListener.onAlarmSwitchListener(list[position], isChecked)
             }
-            holder.binding.dosageScheduleIsalarm.isChecked = item.isEnabled
+            alarmList?.find { alarm -> alarm.dosageId == item.dosageId }?.run {
+                holder.binding.dosageScheduleIsalarm.isChecked = this.isEnabled
+            }
         }
 
         holder.binding.dosageScheduleOptionIV.setOnClickListener {

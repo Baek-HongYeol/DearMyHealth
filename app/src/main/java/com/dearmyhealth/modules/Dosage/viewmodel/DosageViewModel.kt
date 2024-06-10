@@ -22,6 +22,7 @@ class DosageViewModel(private val repository: DosageRepository) : ViewModel() {
     private val _addResult: MutableLiveData<Result<Dosage>> = MutableLiveData()
     val addResult: LiveData<Result<Dosage>> = _addResult
 
+    val dosageList: LiveData<List<Dosage>> = repository.listLiveDosage()
     val dosageAlarmList: LiveData<List<DosageAlarm>> = AppDatabase.getDatabase(MyApplication.ApplicationContext())
         .dosageAlarmDao()
         .list()
