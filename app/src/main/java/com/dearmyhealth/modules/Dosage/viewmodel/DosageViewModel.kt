@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dearmyhealth.MyApplication
 import com.dearmyhealth.data.Result
+import com.dearmyhealth.data.db.AppDatabase
 import com.dearmyhealth.data.db.entities.Dosage
+import com.dearmyhealth.data.db.views.DosageAlarm
 import com.dearmyhealth.modules.Dosage.repository.DosageRepository
 import com.dearmyhealth.modules.login.Session
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +22,9 @@ class DosageViewModel(private val repository: DosageRepository) : ViewModel() {
     private val _addResult: MutableLiveData<Result<Dosage>> = MutableLiveData()
     val addResult: LiveData<Result<Dosage>> = _addResult
 
-    val dosageList: LiveData<List<Dosage>> = repository.listLiveDosage()
+    val dosageAlarmList: LiveData<List<DosageAlarm>> = AppDatabase.getDatabase(MyApplication.ApplicationContext())
+        .dosageAlarmDao()
+        .list()
 
     val getResult: MutableLiveData<Dosage> = MutableLiveData()
 
@@ -45,6 +50,13 @@ class DosageViewModel(private val repository: DosageRepository) : ViewModel() {
 
     fun deleteDosage(dosage: Dosage) {
         CoroutineScope(Dispatchers.IO).launch {
+            repository.deleteDosage(dosage)
+        }
+    }
+
+    fun deleteDosage(dosageAlarm: DosageAlarm) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val dosage = repository.getDosage(dosageAlarm.dosageId) ?: return@launch
             repository.deleteDosage(dosage)
         }
     }

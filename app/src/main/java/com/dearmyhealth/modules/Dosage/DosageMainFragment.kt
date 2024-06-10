@@ -57,6 +57,8 @@ class DosageMainFragment: Fragment() {
             }
         }
 
+        alarmRepository = AlarmRepository.getInstance(requireContext().applicationContext)
+
         alarms.observe(viewLifecycleOwner) { values ->
             list = values
             (binding.dosageAlarmRV.adapter as DosageAlarmListAdapter).apply{
