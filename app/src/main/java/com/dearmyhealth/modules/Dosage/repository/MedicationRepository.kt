@@ -142,8 +142,19 @@ class MedicationRepository(
                             typeName = typeName,
                             prhbtContent = detail.prohibitContent
                         )
-                        attentionDetailDao.insert(attentionDetail)
-                        attentionDetails.add(attentionDetail)
+                        val prevs = attentionDetailDao.findByItemSeq(detail.itemSeq)
+                        for(prev in prevs){
+                            if(prev == attentionDetail) {
+                                attentionDetail.attid = prev.attid
+                                attentionDetailDao.update(attentionDetail)
+                                attentionDetails.add(attentionDetail)
+                                break
+                            }
+                        }
+                        if(attentionDetail.attid == 0) {
+                            attentionDetailDao.insert(attentionDetail)
+                            attentionDetails.add(attentionDetail)
+                        }
                     }
                 } else {
                     Log.e("API Error", "No items found for $typeName, items: $items")
