@@ -45,6 +45,12 @@ class ExerciseChooseFragment: Fragment() {
                 viewModel.supportedExerciseType.value?.get(viewModel.selectedPosition.value!!)) {
                 return@setOnClickListener
             }
+            else if(ExerciseSession.currentExerciseType != null) {
+                AlertDialog.Builder(requireContext())
+                    .setMessage("진행 중인 운동을 종료하세요.")
+                    .show()
+                return@setOnClickListener
+            }
             viewModel.setExercise()
             findNavController().popBackStack()
         }
@@ -58,7 +64,10 @@ class ExerciseChooseFragment: Fragment() {
                 .setMessage("운동을 종료하시겠습니까?")
                 .setCancelable(true)
                 .setNegativeButton(R.string.cancel) { _, _ -> }
-                .setPositiveButton(R.string.apply) { _, _ -> viewModel.clearExercise() }
+                .setPositiveButton(R.string.apply) { _, _ ->
+                    viewModel.clearExercise()
+                    findNavController().popBackStack()
+                }
                 .show()
         }
 

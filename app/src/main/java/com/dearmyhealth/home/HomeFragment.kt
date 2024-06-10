@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.dearmyhealth.databinding.FragmentHomeBinding
 import com.dearmyhealth.modules.Diet.ui.TodayNutrientsView
+import com.dearmyhealth.modules.exercise.model.ExerciseSession
 
 class HomeFragment : Fragment() {
     private val TAG = this.javaClass.simpleName
@@ -26,7 +27,11 @@ class HomeFragment : Fragment() {
         )[HomeViewModel::class.java]
 
         binding = FragmentHomeBinding.inflate(inflater)
-        binding.homeExerciseStatus.isEmpty = true
+        binding.homeExerciseStatus.isEmpty = (ExerciseSession.currentExerciseType == null)
+        if(ExerciseSession.currentExerciseType != null)
+            binding.homeExerciseStatus.todayActStatusIV.setImageDrawable(
+                ExerciseSession.getDrawableOf(requireContext(), ExerciseSession.currentExerciseType!!)
+            )
         binding.homeExerciseStatus.isHome = true
 
         viewModel.observeTodayDiet()
